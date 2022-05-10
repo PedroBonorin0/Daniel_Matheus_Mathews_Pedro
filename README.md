@@ -9,8 +9,8 @@ Muitos estudantes ao ingressarem em algum curso da área de exatas, encontram di
 
 ```
 Daniel Muller Rezende                   202065020AC      daniel.rezende@estudante.ufjf.br
-Matheus dos Reis Casarim                    =                          = 
-Mathews Edwirds Gomes Almeida           201765503AB                    =
+Matheus dos Reis Casarim                201765512AB      matheus.casarim@estudante.ufjf.br
+Mathews Edwirds Gomes Almeida           201765503AB      mathews.gomes@engenharia.ufjf.br
 Pedro Luiz Bonorino Braga               202065177A       pedro.bonorino@estudante.ufjf.br
 ```
 
