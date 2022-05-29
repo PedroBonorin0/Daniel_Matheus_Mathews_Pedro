@@ -2,7 +2,7 @@
   <div class="geral">
     <nav>
       <div class="logo-esq divisao-nav">
-        LOGO
+        LOGO banana
       </div>
       <div class="btn-dir divisao-nav">
         <button class="btn-cadastro" @click="handleCadastro">Cadastrar</button>
@@ -17,12 +17,13 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  methods: {
+    methods: {
     handleCadastro() {
       console.log('CADASTRO');
     },
+    
     handleEntrar() {
-      console.log('ENTRAR');
+      this.$router.push({ path: '/login' });
     },
   },
   computed: {
@@ -30,6 +31,7 @@ export default {
   },
 };
 </script>
+
 <style>
 * {
   margin: 0;

@@ -17,7 +17,7 @@ export default {
     //   state.coaches.push(payload);
     // },
   },
-  actions: {
+  actions: { //requisições
     // async registerCoach(context, payload) {
     //   const { userId } = context.rootGetters;
 
