@@ -5,6 +5,7 @@ export default {
         {
           id: 1,
           dificuldade: 1,
+          pergunta: 'Questionario',
           opcoesResposta: ['a', 'b', 'c', 'd'],
           respostaCorreta: 'a',
           dicas: 'Letra a',
