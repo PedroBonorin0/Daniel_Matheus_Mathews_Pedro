@@ -2,6 +2,10 @@
   <div class="contents">
     <h1>CONTENTS PAGE</h1>
     <div class="container-botoes">
+      <router-link to="/principal" class="item">Conteudo 1</router-link>
+      <router-link to="/principal" class="item">Conteudo 2</router-link>
+      <router-link to="/principal" class="item">Conteudo 3</router-link>
+      <router-link to="/principal" class="item">Conteudo 4</router-link>
       <router-link to="/principal" class="item centralizado">Voltar</router-link>
     </div>
   </div>
@@ -25,7 +29,7 @@ export default {
   height: 100vh;
 }
 .container-botoes {
-  width: 40%;
+  width: 50%;
   margin: 10% auto;
   height: 100%;
   display: grid;
@@ -44,13 +48,13 @@ export default {
   text-decoration: none;
   color: #ffffff;
   padding: 20px;
-  background-color: #CC5036;
+  background-color: #4531b8;
   width: 200px;
   transition: 0.3s;
   cursor: pointer;
 }
 .item:hover {
-  background-color: #b84831;
+  background-color: #4531b8;
 }
 .centralizado {
   grid-column-start: 1;

@@ -44,13 +44,13 @@ export default {
   text-decoration: none;
   color: #ffffff;
   padding: 20px;
-  background-color: #CC5036;
+  background-color: #4531b8;
   width: 200px;
   transition: 0.3s;
   cursor: pointer;
 }
 .item:hover {
-  background-color: #b84831;
+  background-color: #4531b8;
 }
 .centralizado {
   grid-column-start: 1;
