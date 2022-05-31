@@ -1,15 +1,17 @@
 <template>
-  <div class="home">
-    <h1>HOME PAGE</h1>
+  <div class="principal">
+    <h1>PRINCIPAL PAGE</h1>
     <div class="container-botoes">
-      <router-link to="/principal" class="item centralizado">Entrar</router-link>
+      <router-link to="/contents" class="item centralizado">Jogar</router-link>
+      <router-link to="/instruction" class="item centralizado">Instruções</router-link>
+      <router-link to="/" class="item centralizado">Sair</router-link>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HomePage',
+  name: 'PrincipalPage',
   components: {
   },
 };
