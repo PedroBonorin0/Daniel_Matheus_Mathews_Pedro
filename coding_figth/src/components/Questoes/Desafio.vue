@@ -3,7 +3,7 @@
 		<h1>Questao: {{id}}</h1>
 		<h2>Pergunta:<br> {{pergunta}}</h2>
 		<!-- <h2>Respostas {{opcoesResposta}}</h2> -->
-		<button id="i" v-for="i in opcoesResposta" @click="handleResposta">{{i}}</button>
+		<button id='{{i.id}}' v-for="i in opcoesResposta" @click="handleResposta(i)">{{i.resposta}}</button>
 	</div>
 </template>
 
@@ -15,8 +15,8 @@
 		components: {
 		},
 		methods: {
-			handleResposta(e) {
-				console.log(e)
+			handleResposta(args) {
+				console.log(args.id == this.respostaCorreta);
 			},
 		},
 		computed: {
