@@ -17,16 +17,31 @@
 
 	export default {
 		name: "Desafio",
-		modulo:undefined,
+		// Referece ao modulo onde o desafio está provavelmente necessitaria de alterar o store
+		modulo:undefined, 
 		components: {
 		},
 		methods: {
+			/**
+			 * Verifica a resposta de acordo com o que o usuario aperta o botão
+			 * @param {object} opcao Recebe como parametro as informações do botão preciondo, ID e conteudo
+			 */
 			handleResposta(opcao) {
-				console.log(opcao.id == this.respostaCorreta);
+				if(opcao.id == this.respostaCorreta){
+					console.log("Acertou")
+					//Dano no enimigo
+				}else{
+					console.log("Errou")
+					// Sofre dano
+				}
 			},
-			shortRespostas(args){
-				for(var i=0;i<args.length/2 + 1;){
-					var aux = Math.floor(Math.random()*(args.length))
+			/**
+			 * Randomiza as opções de respostas
+			 * @param {object} opcoes Recebe como parametro as opções de respostas da questão	
+			 */
+			shortRespostas(opcoes){
+				for(var i=0;i<opcoes.length/2 + 1;){
+					var aux = Math.floor(Math.random()*(opcoes.length))
 					if( aux != i){
 						var i_aux = this.opcoesResposta[i]
 						this.opcoesResposta[i] = this.opcoesResposta[aux]
