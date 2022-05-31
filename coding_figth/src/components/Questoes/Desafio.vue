@@ -1,8 +1,14 @@
 <template>
-	<div>
-		<h1>Questao: {{id}}</h1>
-		<h2>Pergunta:<br> {{pergunta}}</h2>
-		<button v-for="i in opcoesResposta" @click="handleResposta(i)">{{i.resposta}}</button>
+	<div class="conteudo">
+		<div class="questao">
+			Questao: {{id}}
+		</div>
+		<div class="pergunta">
+			Pergunta:<br> {{pergunta}}
+		</div>
+		<div class="container-botoes">
+			<button class="opcoes" v-for="i in opcoesResposta" @click="handleResposta(i)">{{i.resposta}}</button>
+		</div>
 	</div>
 </template>
 
@@ -53,3 +59,44 @@
 		},
 	};
 </script>
+<style>
+.conteudo{
+	background: #ce9d9d;
+}
+.questao {
+	width: 100%;
+	margin: 0%;
+	height: auto;
+	color: black;
+	font-size: 50px;
+}
+.pergunta {
+	background: #bedadf;
+}
+.container-botoes {
+  width: 100% auto;
+  margin: 0% auto;
+  height: 100% auto;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  grid-template-rows: repeat(3);
+  grid-template-columns: 1fr 1fr;
+}
+.opcoes {
+  /* text-align: center; */
+  height: auto;
+  font-size: 20px;
+  margin: 16px;
+  text-decoration: none;
+  color: #ffffff;
+  padding: 20px;
+  background-color: #4531b8;
+  width: auto;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.opcoes:hover {
+  background-color: #281e5f;
+}
+</style>
