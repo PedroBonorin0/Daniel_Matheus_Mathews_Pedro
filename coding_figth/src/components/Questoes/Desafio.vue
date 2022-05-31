@@ -17,6 +17,7 @@
 
 	export default {
 		name: "Desafio",
+		modulo:undefined,
 		components: {
 		},
 		methods: {
@@ -24,14 +25,14 @@
 				console.log(opcao.id == this.respostaCorreta);
 			},
 			shortRespostas(args){
-				for(var i=0;i<args.length/2 + 1;i++){
+				for(var i=0;i<args.length/2 + 1;){
 					var aux = Math.floor(Math.random()*(args.length))
-					var i_aux = this.opcoesResposta[i]
-					this.opcoesResposta[i] = this.opcoesResposta[aux]
-					this.opcoesResposta[aux] = i_aux
-				}
-				for(var i=0;i<args.length;i++){
-					console.log(this.opcoesResposta[i])
+					if( aux != i){
+						var i_aux = this.opcoesResposta[i]
+						this.opcoesResposta[i] = this.opcoesResposta[aux]
+						this.opcoesResposta[aux] = i_aux
+						i++;
+					}
 				}
 			}	
 		},
@@ -61,6 +62,8 @@
 </script>
 <style>
 .conteudo{
+	width: 100% auto;
+	height: 100% auto;
 	background: #ce9d9d;
 }
 .questao {
