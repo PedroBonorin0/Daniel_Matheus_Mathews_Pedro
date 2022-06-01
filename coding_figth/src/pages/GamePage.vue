@@ -26,7 +26,7 @@
 import { mapGetters } from 'vuex';
 
 export default {
-  name: 'Desafio',
+  name: 'GamePage',
   // Referencia o modulo onde o desafio está (provavelmente necessitaria de alterar o store)
   modulo: undefined,
   data() {
