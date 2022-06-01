@@ -1,11 +1,17 @@
 <template>
 	<div class="conteudo">
 		<div class="questao">
-			Questao: {{id}}
+			Questao: {{desafios[this.perguntaEscolhida].id}}
 		</div>
+		
+		<div class="dificuldade">
+			<h1>Dificuldade: {{desafios[this.perguntaEscolhida].dificuldade}} </h1>
+		</div>
+
 		<div class="pergunta">
-			Pergunta:<br> {{pergunta}}
+			<h1>Pergunta: {{desafios[this.perguntaEscolhida].pergunta}} </h1>
 		</div>
+
 		<div class="container-botoes">
 			<button class="opcoes" v-for="i in opcoesResposta" @click="handleResposta(i)">{{i.resposta}}</button>
 		</div>
@@ -17,32 +23,48 @@
 
 	export default {
 		name: "Desafio",
-		// Referece ao modulo onde o desafio está provavelmente necessitaria de alterar o store
+		// Referencia o modulo onde o desafio está (provavelmente necessitaria de alterar o store)
 		modulo:undefined, 
 		components: {
 		},
 		methods: {
+
 			/**
-			 * Verifica a resposta de acordo com o que o usuario aperta o botão
-			 * @param {object} Opcao Recebe como parametro as informações do botão preciondo, ID e conteudo
+			 * Verifica a resposta de acordo com o clique do usuário
+			 * @param {object} Opcao Recebe como parametro as informações do botão pressionado, ID e conteudo
 			 */
 			handleResposta(opcao) {
-				if(opcao.id == this.respostaCorreta){
+				this.contaPerguntas = this.contaPerguntas + 1;
+				this.respostaCorreta = this.desafios[this.perguntaEscolhida].respostaCorreta;
+
+				if(opcao.id == this.respostaCorreta){ 	//Se o usuário acertou a questão
+					console.log("Acertou");
+					this.contaAcertos += 1;
+					
 					//Dano no enimigo
 					this.calcDano(true);
-					// console.log("Acertou");
-				}else{
+
+					//Gerencia a próxima pergunta
+					this.gerenciaPerguntas();
+				}else{									//Se o usuário errou a questão
+					//console.log("Errou");
+					this.contaErros += 1;
+					
 					// Sofre dano
 					this.calcDano(false);
-					// console.log("Errou");
+					
+					this.gerenciaPerguntas();
 				}
 			},
+
 			/**
 			 * Randomiza as opções de respostas
-			 * @param {object} Opcoes Recebe como parametro as opções de respostas da questão	
+			 * @param {object} Opcoes Recebe como parâmetro as opções de respostas da questão	
 			 */
 			shortRespostas(opcoes){
-				for(var i=0;i<opcoes.length/2 + 1;){
+				this.opcoesResposta = this.desafios[this.perguntaEscolhida].opcoesResposta;
+
+				for(var i=0; i<opcoes.length/2 + 1;){
 					var aux = Math.floor(Math.random()*(opcoes.length))
 					if( aux != i){
 						var i_aux = this.opcoesResposta[i]
@@ -52,27 +74,40 @@
 					}
 				}
 			},
+
 			/**
-			 * Calcula o dano sofrido de acordo com a dificuldade da questão.
-			 * 
-			 * ◦ Se for mais facil a questão caso o usuario erre ele toma mais dano caso acerte da menos dano.
-			 * 
-			 * ◦ Se for normal a questão caso o usuario erre ele toma dano caso acerte da dano.
-			 * 
-			 * ◦ Se for dificil a questão caso o usuario erre ele toma pouco dano caso acerte da menos dano.
-			 * 
-			 * @param {boolean} Verificador se o usuario acertou a pergunta
-			 */
+			* Calcula o dano sofrido/causado de acordo com a dificuldade da questão.
+			* 
+			* * Questão fácil:
+			*
+			*&emsp; ◦ &nbsp; Acertou: Inimigo sofre dano baixo.
+			*
+			*&emsp; ◦ &nbsp; Errou: Aluno sofre dano alto.
+			* 
+			* * Questão Média:
+			* 
+			*&emsp; ◦ &nbsp; Acertou: Inimigo sofre dano médio.
+			*
+			*&emsp; ◦ &nbsp; Errou: Aluno sofre médio.
+			*
+			* * Questão Difícil:
+			* 
+			*&emsp; ◦ &nbsp; Acertou: Inimigo sofre dano alto.
+			*
+			*&emsp; ◦ &nbsp; Errou: Aluno sofre baixo.
+			* 
+			* @param {boolean} Verificador se o usuario acertou a pergunta
+			*/
 			calcDano(verificador){
 				const dano_base = 10;// dano
 				const incremento = 0.2;// Incremento no dano (dificuldade)
-				if(this.dificuldade <= 3){//Facil
+				if(this.desafios[this.perguntaEscolhida].dificuldade == 1){//Facil
 					if(verificador){
 						//dano_base*(1-incremento) //Dano dado caso acerte
 					}else{
 						//dano_base*(1+incremento) //Dano sofrido caso erre
 					}
-				}else if(this.dificuldade <= 7){//Medio
+				}else if(this.desafios[this.perguntaEscolhida].dificuldade == 2){//Medio
 					//dano_base*(1) //Dano sofrido ou dado
 				}else{//Dificil
 					if(verificador){
@@ -81,33 +116,99 @@
 						//dano_base*(1-incremento) //Dano sofrido 
 					}
 				}
-			}	
+			},
+
+			/**
+			 * Controla toda a lógica por trás das questões e desafios do jogo.
+			 * 
+			 */
+			gerenciaPerguntas(){
+				if (this.contaPerguntas <= Math.floor(this.tamanhoDesafio/3) || this.controlaDificuldade == 1) {
+					// Randomizo as perguntas e respostas
+					this.auxGerencia()
+
+					if (this.contaPerguntas == Math.floor(this.tamanhoDesafio/3)) { //Se for a última pergunta fácil, aumenta a dificuldade
+						this.controlaDificuldade=2;
+					}
+				}
+				else if (this.contaPerguntas > Math.floor(this.tamanhoDesafio/3) && this.contaPerguntas <= 2*Math.floor(this.tamanhoDesafio/3) && this.controlaDificuldade == 2) {		//dificuldade média
+					// Randomizo as perguntas e respostas
+					this.auxGerencia()
+					
+					if (this.contaPerguntas == 2*Math.floor(this.tamanhoDesafio/3)) { //Se for a última pergunta média, aumenta a dificuldade
+						this.controlaDificuldade=3;
+					}
+				}
+				else{
+					if (this.contaPerguntas <= this.tamanhoDesafio && this.contaPerguntas <= this.totalPerguntas){ //Se ainda não superamos o tamanho do desafio e ainda existem perguntas não respondidas
+						// Randomizo as perguntas e respostas
+						this.auxGerencia()
+					}
+					else{ //Ao encerrar todas as questões do desafio, devemos prosseguir para uma próxima fase, conteúdo ou para tela de pontuação?
+						console.log("Desafio concluído! Todas as perguntas do desafio foram respondidas!")
+						console.log("Perguntas Marcadas: " + this.perguntasMarcadas)
+						console.log("Você acertou: " + this.contaAcertos)
+						console.log("Você errou: " + this.contaErros)
+					}
+				}
+			}, 
+
+			/**Função auxiliar responsável por randomizar as perguntas e respostas. 
+			* Isso é feito "ignorando" as perguntas que já foram respondidas.
+			*/
+			auxGerencia(){
+				// Randomizo a pergunta até encontrar o primeiro desafio com dificuldade esperada e que ainda não tenha sido respondida
+					var j = Math.floor(Math.random() * (this.desafios.length));
+					while (this.desafios[j].dificuldade != this.controlaDificuldade || (this.perguntasMarcadas.includes(j))) {
+						j=Math.floor(Math.random() * (this.desafios.length));
+					}
+					this.perguntaEscolhida = j;
+
+					// Essa pergunta será adicionada numa lista para que não seja escolhida novamente
+					this.perguntasMarcadas.push(this.perguntaEscolhida);
+
+					// Randomiza as respostas de acordo com a pergunta
+					this.shortRespostas(this.desafios[this.perguntaEscolhida].opcoesResposta);
+			}
 		},
 		computed: {
 			...mapGetters(["desafios"]),
 		},
 		mounted(){
-			this.shortRespostas(this.opcoesResposta);
+
 		},
 		created(){
-			this.id = this.desafios[0].id;
-			this.pergunta = this.desafios[0].pergunta;
-			this.opcoesResposta = this.desafios[0].opcoesResposta;
-			this.respostaCorreta = this.desafios[0].respostaCorreta;
-			this.dica = this.desafios[0].dica;
-			this.dificuldade = this.desafios[0].dificuldade;
+			//Conta a qtd total de desafios de mesma dificuldade
+			//const totalPerguntasPorDificuldades = this.desafios.filter((obj) => obj.dificuldade === this.controlaDificuldade).length;
+
+			//Variáveis iniciais do game
+			this.contaPerguntas = 1; // Serve para controlar se é a primeira questão - A primeira questão já começa sendo exibida
+			this.controlaDificuldade = 1; // Serve para controlar a dificuldade da questão - A primeira questão deve ser fácil
+
+			//Variáveis gerais
+			this.totalPerguntas = this.desafios.length;	// Total de perguntas
+			this.perguntasMarcadas = [];	// Array que guarda as perguntas já marcadas
+
+			//Variáveis de controle do jogo
+			this.tamanhoDesafio = 10 //Total de perguntas por desafio
+			this.contaAcertos = 0; //Conta a qtd de acertos
+			this.contaErros = 0; //Conta a qtd de erros
+			
+			//Inicializa e controla as exibição das perguntas
+			this.gerenciaPerguntas();
 		},
 		data() {
 			return {
-				id: -0,
-				pergunta: "",
-				opcoesResposta: "",
-				respostaCorreta: "",
-				dica: ""
+				// id: -0,
+				// pergunta: "",
+				// opcoesResposta: "",
+				// respostaCorreta: "",
+				// dica: ""
 			};
 		},
 	};
 </script>
+
 <style>
 .conteudo{
 	width: 100% auto;
