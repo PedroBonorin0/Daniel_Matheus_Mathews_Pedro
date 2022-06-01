@@ -2,18 +2,18 @@
   <div class="contents">
     <h1>CONTENTS PAGE</h1>
     <div class="container-botoes">
-      <router-link to="/principal" class="item">Conteudo 1</router-link>
-      <router-link to="/principal" class="item">Conteudo 2</router-link>
-      <router-link to="/principal" class="item">Conteudo 3</router-link>
-      <router-link to="/principal" class="item">Conteudo 4</router-link>
-      <router-link to="/principal" class="item centralizado">Voltar</router-link>
+      <router-link to="/" class="item">Conteudo 1</router-link>
+      <router-link to="/" class="item">Conteudo 2</router-link>
+      <router-link to="/" class="item">Conteudo 3</router-link>
+      <router-link to="/" class="item">Conteudo 4</router-link>
+      <router-link to="/" class="item centralizado">Voltar</router-link>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ContentsPage',
+  name: 'GamePage',
   components: {
   },
 };

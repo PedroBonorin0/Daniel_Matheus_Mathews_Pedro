@@ -1,8 +1,9 @@
 <template>
-  <div class="home">
-    <h1>HOME PAGE</h1>
+  <div class="principal">
+    <h1>Coding Fight</h1>
     <div class="container-botoes">
-      <router-link to="/principal" class="item centralizado">Entrar</router-link>
+      <router-link to="/game" class="item centralizado">Jogar</router-link>
+      <router-link to="/instruction" class="item centralizado">Instruções</router-link>
     </div>
   </div>
 </template>
@@ -44,13 +45,13 @@ export default {
   text-decoration: none;
   color: #ffffff;
   padding: 20px;
-  background-color: #4531b8;
+  background-color: #CC5036;
   width: 200px;
   transition: 0.3s;
   cursor: pointer;
 }
 .item:hover {
-  background-color: #4531b8;
+  background-color: #b84831;
 }
 .centralizado {
   grid-column-start: 1;
