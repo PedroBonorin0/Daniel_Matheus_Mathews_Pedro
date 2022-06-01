@@ -199,11 +199,11 @@
 		},
 		data() {
 			return {
-				// id: -0,
-				// pergunta: "",
-				// opcoesResposta: "",
-				// respostaCorreta: "",
-				// dica: ""
+				id: -0,
+				pergunta: "",
+				opcoesResposta: "",
+				respostaCorreta: "",
+				dica: ""
 			};
 		},
 	};
