@@ -1,13 +1,13 @@
 <template>
   <div class="content">
     <img
-      v-if="personagem === 'player' && vivo"
+      v-if="personagem === 'player' && hp > 0"
       src="../assets/img/playerIdle.png" alt="personagemVivo">
     <img
-      v-else-if="personagem === 'player' && !vivo"
+      v-else-if="personagem === 'player' && hp <= 0"
       src="../assets/img/playerDead.png" alt="personagemMorto">
     <img
-      v-else-if="personagem === 'enemy' && vivo"
+      v-else-if="personagem === 'enemy' && hp > 0"
       src="../assets/img/enemyIdle.png" alt="inimigoVivo">
     <img
       v-else
@@ -21,7 +21,6 @@ export default {
   name: 'SpritePersonagem',
   props: {
     personagem: { type: String, required: true },
-    vivo: { type: Boolean, required: true },
     hp: { type: Number, required: true },
   },
 };

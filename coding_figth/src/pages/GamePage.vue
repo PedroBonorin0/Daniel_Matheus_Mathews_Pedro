@@ -1,44 +1,42 @@
 <template>
-<div class="geral">
+<div class="geral-game">
   <div class="personagens">
     <SpritePersonagem
       personagem="player"
-      :vivo="true"
       :hp="playerHp"
     />
     <SpritePersonagem
       personagem="enemy"
-      :vivo="true"
       :hp="enemyHp"
     />
   </div>
-  <div class="conteudo">
-    <div class="questao">
-      Questao: {{desafios[this.perguntaEscolhida].id}}
-    </div>
+  <HitMessage
+    :style="{ visibility: visible ? 'visible' : 'hidden'}"
+    :hit="playerHit"
+  />
+  <BaseCard :noUnderWidth="true">
+    <div class="conteudo">
+      <div class="pergunta">
+        <h1>Desafio: </h1>
+        <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
+      </div>
 
-    <div class="dificuldade">
-      <h1>Dificuldade: {{desafios[this.perguntaEscolhida].dificuldade}} </h1>
+      <div class="container-botoes">
+        <BaseButton
+          class="opcoes"
+          v-for="opcao in opcoesResposta"
+          :key="opcao.id"
+          @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
+      </div>
     </div>
-
-    <div class="pergunta">
-      <h1>Pergunta: {{desafios[this.perguntaEscolhida].pergunta}} </h1>
-    </div>
-
-    <div class="container-botoes">
-      <BaseButton
-        class="opcoes"
-        v-for="opcao in opcoesResposta"
-        :key="opcao.id"
-        @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
-    </div>
-  </div>
+  </BaseCard>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import SpritePersonagem from '@/components/SpritePersonagem.vue';
+import HitMessage from '@/components/HitMessage.vue';
 
 export default {
   name: 'GamePage',
@@ -54,10 +52,14 @@ export default {
 
       playerHp: 100,
       enemyHp: 100,
+
+      visible: false,
+      playerHit: false,
     };
   },
   components: {
     SpritePersonagem,
+    HitMessage,
   },
   created() {
     // Conta a qtd total de desafios de mesma dificuldade
@@ -96,6 +98,7 @@ export default {
 
         // Dano no enimigo
         this.calcDano(true);
+        this.playerHit = true;
 
         // Gerencia a próxima pergunta
         this.gerenciaPerguntas();
@@ -105,9 +108,15 @@ export default {
 
         // Sofre dano
         this.calcDano(false);
+        this.playerHit = false;
 
         this.gerenciaPerguntas();
       }
+
+      this.visible = true;
+      setTimeout(() => {
+        this.visible = false;
+      }, 1500);
     },
 
     /**
@@ -156,7 +165,7 @@ export default {
         if (verificador) {
           this.enemyHp -= 15;
         } else {
-          this.playerHp -= 15;
+          this.playerHp -= 30;
         }
       } else if (this.desafios[this.perguntaEscolhida].dificuldade == 2) { // Medio
         if (verificador) {
@@ -168,8 +177,19 @@ export default {
         if (verificador) {
           this.enemyHp -= 30;
         } else {
-          this.playerHp -= 30;
+          this.playerHp -= 15;
         }
+      }
+      if(this.playerHp <= 0){
+        this.playerHp = 0;
+      }
+      if(this.enemyHp <= 0){
+        this.enemyHp = 0;
+      }
+      if(this.playerHp <= 0 || this.enemyHp <= 0){
+        setTimeout(() => {
+          this.$router.replace("/endgame");
+        }, 3000);
       }
     },
 
@@ -229,32 +249,16 @@ export default {
 
 <style>
 .conteudo{
-  
+  text-align: center;
   width: 100% auto;
-  height: 80vh;
-  background: #84d6d6;
+  height: 100% auto;
+  padding: 0 10rem;
 }
-.questao {
-  width: 20%;
-  height: auto;
-  color: rgb(0, 0, 0);
-  font-size: 30px;
 
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  padding: 1rem;
-  margin: 2rem auto;
-  max-width: 30rem;
+.pergunta h1 {
+  display: inline;
+}
 
-  display: flex;
-  height: 5vh;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.pergunta {
-  background: #84d6d6;
-}
 .container-botoes {
   width: 150% auto;
   margin: 0% auto;
@@ -266,20 +270,7 @@ export default {
   grid-template-columns: 1fr 1fr;
 }
 .opcoes {
-  /* text-align: center; */
-  height: auto;
-  font-size: 20px;
   margin: 16px;
-  text-decoration: none;
-  color: #84d6d6;
-  padding: 20px;
-  background-color: #84d6d6;
-  width: auto;
-  transition: 0.3s;
-  cursor: pointer;
-}
-.opcoes:hover {
-  background-color: #84d6d6;
 }
 
 .personagens {

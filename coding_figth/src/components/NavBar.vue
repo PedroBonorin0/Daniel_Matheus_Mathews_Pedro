@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <span>CODING FIGTH</span>
+    <router-link to="/">CODING FIGTH</router-link>
   </nav>
 </template>
 
@@ -13,12 +13,14 @@ nav {
   background-color: #9cccd3;
 }
 
-nav span {
+nav a {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 150px;
   height: 30px;
   font-weight: bold;
+  text-decoration: none;
+  color: black;
 }
 </style>

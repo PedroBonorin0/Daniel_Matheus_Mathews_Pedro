@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '../pages/HomePage.vue';
 import InstructionPage from '../pages/InstructionPage.vue';
 import GamePage from '../pages/GamePage.vue';
+import EndGame from '../pages/Endgame.vue';
 
 const routes = [
   {
@@ -18,6 +19,15 @@ const routes = [
     path: '/game',
     name: 'game',
     component: GamePage,
+  },
+  {
+    path: '/endgame',
+    name: 'endgame',
+    component: EndGame,
+  },
+  {
+    path: '/:notFound(.*)',
+    redirect: '/',
   },
 ];
 
