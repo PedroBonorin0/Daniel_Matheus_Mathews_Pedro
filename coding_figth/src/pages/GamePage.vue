@@ -1,33 +1,44 @@
 <template>
-<div class="conteudo">
+<div class="geral">
   <div class="personagens">
-    <h1>Vida Personagem: {{}}</h1>
-    <h1>Vida Inimigo: {{100}}</h1>
+    <SpritePersonagem
+      personagem="player"
+      :vivo="true"
+      :hp="playerHp"
+    />
+    <SpritePersonagem
+      personagem="enemy"
+      :vivo="true"
+      :hp="enemyHp"
+    />
   </div>
-  <div class="questao">
-    Questao: {{desafios[this.perguntaEscolhida].id}}
-  </div>
+  <div class="conteudo">
+    <div class="questao">
+      Questao: {{desafios[this.perguntaEscolhida].id}}
+    </div>
 
-  <div class="dificuldade">
-    <h1>Dificuldade: {{desafios[this.perguntaEscolhida].dificuldade}} </h1>
-  </div>
+    <div class="dificuldade">
+      <h1>Dificuldade: {{desafios[this.perguntaEscolhida].dificuldade}} </h1>
+    </div>
 
-  <div class="pergunta">
-    <h1>Pergunta: {{desafios[this.perguntaEscolhida].pergunta}} </h1>
-  </div>
+    <div class="pergunta">
+      <h1>Pergunta: {{desafios[this.perguntaEscolhida].pergunta}} </h1>
+    </div>
 
-  <div class="container-botoes">
-    <BaseButton
-      class="opcoes"
-      v-for="opcao in opcoesResposta"
-      :key="opcao.id"
-      @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
+    <div class="container-botoes">
+      <button
+        class="opcoes"
+        v-for="opcao in opcoesResposta"
+        :key="opcao.id"
+        @click="handleResposta(opcao)">{{opcao.resposta}}</button>
+    </div>
   </div>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import SpritePersonagem from '@/components/SpritePersonagem.vue';
 
 export default {
   name: 'GamePage',
@@ -40,7 +51,13 @@ export default {
       opcoesResposta: '',
       respostaCorreta: '',
       dica: '',
+
+      playerHp: 100,
+      enemyHp: 100,
     };
+  },
+  components: {
+    SpritePersonagem,
   },
   created() {
     // Conta a qtd total de desafios de mesma dificuldade
@@ -261,5 +278,11 @@ export default {
 }
 .opcoes:hover {
   background-color: #84d6d6;
+}
+
+.personagens {
+  width: 100%;
+  margin: 20px auto;
+  text-align: center;
 }
 </style>
