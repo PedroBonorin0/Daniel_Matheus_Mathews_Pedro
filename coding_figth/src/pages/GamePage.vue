@@ -1,5 +1,9 @@
 <template>
 <div class="conteudo">
+  <div class="personagens">
+    <h1>Vida Personagem: {{}}</h1>
+    <h1>Vida Inimigo: {{100}}</h1>
+  </div>
   <div class="questao">
     Questao: {{desafios[this.perguntaEscolhida].id}}
   </div>
@@ -13,11 +17,11 @@
   </div>
 
   <div class="container-botoes">
-    <button
+    <BaseButton
       class="opcoes"
       v-for="opcao in opcoesResposta"
       :key="opcao.id"
-      @click="handleResposta(opcao)">{{opcao.resposta}}</button>
+      @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
   </div>
 </div>
 </template>
@@ -206,22 +210,34 @@ export default {
 
 <style>
 .conteudo{
+  
   width: 100% auto;
-  height: 100% auto;
-  background: #ce9d9d;
+  height: 80vh;
+  background: #84d6d6;
 }
 .questao {
-  width: 100%;
-  margin: 0%;
+  width: 20%;
   height: auto;
-  color: black;
-  font-size: 50px;
+  color: rgb(0, 0, 0);
+  font-size: 30px;
+
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  padding: 1rem;
+  margin: 2rem auto;
+  max-width: 30rem;
+
+  display: flex;
+  height: 5vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .pergunta {
-  background: #bedadf;
+  background: #84d6d6;
 }
 .container-botoes {
-  width: 100% auto;
+  width: 150% auto;
   margin: 0% auto;
   height: 100% auto;
   display: grid;
@@ -236,14 +252,14 @@ export default {
   font-size: 20px;
   margin: 16px;
   text-decoration: none;
-  color: #ffffff;
+  color: #84d6d6;
   padding: 20px;
-  background-color: #4531b8;
+  background-color: #84d6d6;
   width: auto;
   transition: 0.3s;
   cursor: pointer;
 }
 .opcoes:hover {
-  background-color: #281e5f;
+  background-color: #84d6d6;
 }
 </style>
