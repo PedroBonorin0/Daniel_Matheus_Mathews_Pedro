@@ -26,11 +26,11 @@
     </div>
 
     <div class="container-botoes">
-      <button
+      <BaseButton
         class="opcoes"
         v-for="opcao in opcoesResposta"
         :key="opcao.id"
-        @click="handleResposta(opcao)">{{opcao.resposta}}</button>
+        @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
     </div>
   </div>
 </div>
@@ -152,21 +152,23 @@ export default {
     * @param {boolean} Verificador se o usuario acertou a pergunta
     */
     calcDano(verificador) {
-      const dano_base = 10;// dano
-      const incremento = 0.2;// Incremento no dano (dificuldade)
       if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Facil
         if (verificador) {
-          // dano_base*(1-incremento) //Dano dado caso acerte
+          this.enemyHp -= 15;
         } else {
-          // dano_base*(1+incremento) //Dano sofrido caso erre
+          this.playerHp -= 15;
         }
       } else if (this.desafios[this.perguntaEscolhida].dificuldade == 2) { // Medio
-        // dano_base*(1) //Dano sofrido ou dado
+        if (verificador) {
+          this.enemyHp -= 20;
+        } else {
+          this.playerHp -= 20;
+        }
       } else { // Dificil
         if (verificador) {
-          // dano_base*(1+incremento) //Dano dado
+          this.enemyHp -= 30;
         } else {
-          // dano_base*(1-incremento) //Dano sofrido
+          this.playerHp -= 30;
         }
       }
     },
