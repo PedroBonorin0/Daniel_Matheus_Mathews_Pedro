@@ -4,9 +4,8 @@
       <div class="texto-instrucoes">
         <h2>Bem vindo ao Coding Figth!</h2>
         <p>O jogo é bem simples, ao iniciar um jogo, um desafio irá aparecer na tela
-          e você tem que acertar a respota.<br>
-          Caso a resposta seja correta, o inimigo perde vida, caso contrário, você é quem
-          perde vida.
+          e você tem que acertar a resposta. Caso a resposta seja correta, o inimigo
+          perde vida, caso contrário, você é quem perde vida.
         </p>
       </div>
       <BaseButton link="true" to="/">Voltar</BaseButton>

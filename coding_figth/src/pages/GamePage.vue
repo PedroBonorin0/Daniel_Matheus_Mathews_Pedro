@@ -1,44 +1,42 @@
 <template>
-<div class="geral">
+<div class="geral-game">
   <div class="personagens">
     <SpritePersonagem
       personagem="player"
-      :vivo="true"
       :hp="playerHp"
     />
     <SpritePersonagem
       personagem="enemy"
-      :vivo="true"
       :hp="enemyHp"
     />
   </div>
-  <div class="conteudo">
-    <div class="questao">
-      Questao: {{desafios[this.perguntaEscolhida].id}}
-    </div>
+  <HitMessage
+    :style="{ visibility: visible ? 'visible' : 'hidden'}"
+    :hit="playerHit"
+  />
+  <BaseCard :noUnderWidth="true">
+    <div class="conteudo">
+      <div class="pergunta">
+        <h1>Desafio: </h1>
+        <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
+      </div>
 
-    <div class="dificuldade">
-      <h1>Dificuldade: {{desafios[this.perguntaEscolhida].dificuldade}} </h1>
+      <div class="container-botoes">
+        <BaseButton
+          class="opcoes"
+          v-for="opcao in opcoesResposta"
+          :key="opcao.id"
+          @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
+      </div>
     </div>
-
-    <div class="pergunta">
-      <h1>Pergunta: {{desafios[this.perguntaEscolhida].pergunta}} </h1>
-    </div>
-
-    <div class="container-botoes">
-      <button
-        class="opcoes"
-        v-for="opcao in opcoesResposta"
-        :key="opcao.id"
-        @click="handleResposta(opcao)">{{opcao.resposta}}</button>
-    </div>
-  </div>
+  </BaseCard>
 </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import SpritePersonagem from '@/components/SpritePersonagem.vue';
+import HitMessage from '@/components/HitMessage.vue';
 
 export default {
   name: 'GamePage',
@@ -54,10 +52,14 @@ export default {
 
       playerHp: 100,
       enemyHp: 100,
+
+      visible: false,
+      playerHit: false,
     };
   },
   components: {
     SpritePersonagem,
+    HitMessage,
   },
   created() {
     // Conta a qtd total de desafios de mesma dificuldade
@@ -96,6 +98,7 @@ export default {
 
         // Dano no enimigo
         this.calcDano(true);
+        this.playerHit = true;
 
         // Gerencia a próxima pergunta
         this.gerenciaPerguntas();
@@ -105,9 +108,15 @@ export default {
 
         // Sofre dano
         this.calcDano(false);
+        this.playerHit = false;
 
         this.gerenciaPerguntas();
       }
+
+      this.visible = true;
+      setTimeout(() => {
+        this.visible = false;
+      }, 1500);
     },
 
     /**
@@ -227,20 +236,20 @@ export default {
 
 <style>
 .conteudo{
+  text-align: center;
   width: 100% auto;
   height: 100% auto;
-  background: #ce9d9d;
+  padding: 0 10rem;
 }
-.questao {
-  width: 100%;
-  margin: 0%;
-  height: auto;
-  color: black;
-  font-size: 50px;
-}
+
 .pergunta {
   background: #bedadf;
 }
+
+.pergunta h1 {
+  display: inline;
+}
+
 .container-botoes {
   width: 100% auto;
   margin: 0% auto;
@@ -252,20 +261,7 @@ export default {
   grid-template-columns: 1fr 1fr;
 }
 .opcoes {
-  /* text-align: center; */
-  height: auto;
-  font-size: 20px;
   margin: 16px;
-  text-decoration: none;
-  color: #ffffff;
-  padding: 20px;
-  background-color: #4531b8;
-  width: auto;
-  transition: 0.3s;
-  cursor: pointer;
-}
-.opcoes:hover {
-  background-color: #281e5f;
 }
 
 .personagens {

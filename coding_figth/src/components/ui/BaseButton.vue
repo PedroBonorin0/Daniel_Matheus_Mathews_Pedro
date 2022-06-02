@@ -28,7 +28,8 @@ a, button {
   border-radius: 5px;
   margin-right: 0.5rem;
   display: inline-block;
-  min-width: 150px;
+  min-width: 160px;
+  max-width: 200px;
 }
 
 a:hover,
