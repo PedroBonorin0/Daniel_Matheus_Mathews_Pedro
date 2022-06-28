@@ -1,10 +1,10 @@
 import { createStore } from 'vuex';
 
-import jogador from './modules/jogador';
+import user from './modules/user';
 import turma from './modules/turma';
-import professor from './modules/professor';
 import conteudo from './modules/conteudo';
 import desafio from './modules/desafio';
+import auth from './modules/auth';
 
 export default createStore({
   state: {
@@ -16,10 +16,10 @@ export default createStore({
   actions: {
   },
   modules: {
-    jogador,
     turma,
-    professor,
     conteudo,
+    user,
     desafio,
+    auth,
   },
 });

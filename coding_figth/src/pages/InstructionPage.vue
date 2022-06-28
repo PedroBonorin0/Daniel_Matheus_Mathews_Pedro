@@ -8,7 +8,7 @@
           perde vida, caso contrário, você é quem perde vida.
         </p>
       </div>
-      <BaseButton link="true" to="/">Voltar</BaseButton>
+      <BaseButton :link="true" to="/">Voltar</BaseButton>
     </BaseCard>
   </div>
 </template>

@@ -1,6 +1,7 @@
 <template>
   <nav>
     <router-link to="/">CODING FIGTH</router-link>
+    <router-link to="/login" class="btnLogin">Entrar</router-link>
   </nav>
 </template>
 

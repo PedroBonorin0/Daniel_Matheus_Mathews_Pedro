@@ -6,23 +6,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import NavBar from '@/components/NavBar.vue';
 
 export default {
   components: {
     NavBar,
-  },
-  methods: {
-    handleCadastro() {
-      console.log('CADASTRO');
-    },
-    handleEntrar() {
-      console.log('ENTRAR');
-    },
-  },
-  computed: {
-    ...mapGetters(['jogadores']),
   },
 };
 </script>

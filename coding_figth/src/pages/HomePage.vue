@@ -3,10 +3,10 @@
     <h1>CODING FIGTH</h1>
     <BaseCard class="menu-options">
       <div class="button">
-        <BaseButton link="true" to="/game">Jogar</BaseButton>
+        <BaseButton :link="true" to="/game">Jogar</BaseButton>
       </div>
       <div class="button">
-        <BaseButton link="true" to="/instruction">Instruções</BaseButton>
+        <BaseButton :link="true" to="/instruction">Instruções</BaseButton>
       </div>
     </BaseCard>
 
