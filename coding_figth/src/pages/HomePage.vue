@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>CODING FIGTH</h1>
+    <img src="../assets/img/logo.png" alt="Coding Fight">
     <BaseCard class="menu-options">
       <div class="button">
         <BaseButton :link="true" to="/game">Jogar</BaseButton>
@@ -28,8 +28,8 @@ export default {
   align-items: center;
 }
 
-.home h1 {
-  margin-bottom: 4rem;
+.home img {
+  width: 18rem;
 }
 
 .menu-options {

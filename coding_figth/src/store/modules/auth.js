@@ -27,6 +27,7 @@ export default {
         .then(() => {
           // Signed in
           const userData = {
+            id: auth.currentUser.reloadUserInfo.localId,
             email: payload.email,
             nomeUsuario: payload.nomeUsuario,
             isProfessor: payload.isProfessor,
