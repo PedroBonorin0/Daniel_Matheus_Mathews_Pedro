@@ -1,9 +1,23 @@
 <template>
   <nav>
     <router-link to="/">CODING FIGTH</router-link>
-    <router-link to="/login" class="btnLogin">Entrar</router-link>
+    <router-link to="/login" class="btnLogin" v-if="!isAuthenticated">Entrar</router-link>
+    <router-link to="/login" class="btnLogin" @click="logout" v-else>Logout</router-link>
   </nav>
 </template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex';
+
+export default {
+  methods: {
+    ...mapActions(['logout']),
+  },
+  computed: {
+    ...mapGetters(['isAuthenticated']),
+  },
+};
+</script>
 
 <style scoped>
 nav {

@@ -5,7 +5,7 @@ import GamePage from '../pages/GamePage.vue';
 import EndGame from '../pages/Endgame.vue';
 import LoginPage from '../pages/LoginPage.vue';
 
-// import store from '../store/index';
+import store from '../store/index';
 
 const routes = [
   {
@@ -46,9 +46,9 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, _from, next) => {
-//   if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
-//   else next();
-// });
+router.beforeEach((to, _from, next) => {
+  if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
+  else next();
+});
 
 export default router;

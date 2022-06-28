@@ -7,10 +7,19 @@
 
 <script>
 import NavBar from '@/components/NavBar.vue';
+import { mapActions } from 'vuex';
 
 export default {
   components: {
     NavBar,
+  },
+
+  mounted() {
+    this.autoLogin();
+  },
+
+  methods: {
+    ...mapActions(['autoLogin']),
   },
 };
 </script>
