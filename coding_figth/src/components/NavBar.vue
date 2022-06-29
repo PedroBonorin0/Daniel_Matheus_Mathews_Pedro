@@ -1,17 +1,37 @@
 <template>
   <nav>
-    <router-link to="/">CODING FIGTH</router-link>
-    <router-link to="/login" class="btnLogin">Entrar</router-link>
+    <router-link to="/"><img src="../assets/img/logo-espada.png" alt="Coding Fight"></router-link>
+    <router-link to="/login" class="btnLogin" v-if="!isAuthenticated">Entrar</router-link>
+    <router-link to="/login" class="btnLogin" @click="logout" v-else>Logout</router-link>
   </nav>
 </template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex';
+
+export default {
+  methods: {
+    ...mapActions(['logout']),
+  },
+  computed: {
+    ...mapGetters(['isAuthenticated']),
+  },
+};
+</script>
 
 <style scoped>
 nav {
   height: 5rem;
   display: flex;
   align-items: center;
-  justify-content: center;
+  padding: 0 10rem;
+  justify-content: space-between;
   background-color: #9cccd3;
+}
+
+nav img {
+  width: 90px;
+  transform: rotateZ(-45deg);
 }
 
 nav a {

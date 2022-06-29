@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   data() {
@@ -112,9 +112,16 @@ export default {
   },
 
   methods: {
-    ...mapActions(['signup']),
+    ...mapActions(['signup', 'login', 'getLoggedUserInfo']),
     submitLogin() {
+      const loginData = {
+        email: this.emailLogin,
+        senha: this.senhaLogin,
+      };
 
+      this.login(loginData);
+      if (this.isAuthenticated)
+        this.$router.replace('/');
     },
 
     submitCadastro() {
@@ -129,10 +136,12 @@ export default {
 
         // console.log(userData);
         this.signup(userData);
+        this.$router.replace('/');
       }
     },
 
     verificaCadastro() {
+      this.getLoggedUserInfo();
       if (this.emailCadastro.value === '' || !this.emailCadastro.value.includes('@'))
         this.emailCadastro.isValid = false;
 
@@ -158,6 +167,7 @@ export default {
         }, 3000);
       }
     },
+    ...mapGetters(['isAuthenticated']),
   },
 };
 </script>
