@@ -24,13 +24,13 @@ export default {
     },
   },
   actions: {
-    signup(_context, payload) {
+    signup(context, payload) {
       const auth = getAuth();
       createUserWithEmailAndPassword(auth, payload.email, payload.senha)
         .then(() => {
           // Signed in
           const userData = {
-            id: auth.currentUser.reloadUserInfo.localId,
+            id: -1,
             email: payload.email,
             nomeUsuario: payload.nomeUsuario,
             isProfessor: payload.isProfessor,
@@ -40,7 +40,19 @@ export default {
           };
 
           axios.post('https://coding-fight-default-rtdb.firebaseio.com/users.json', userData)
-            .then()
+            .then((res) => {
+              const newId = String(res.data.name);
+              const newUser = {
+                id: newId,
+                email: payload.email,
+                nomeUsuario: payload.nomeUsuario,
+                isProfessor: payload.isProfessor,
+                turma: payload.turma,
+                pontosDesafios: [],
+                totalPontos: 0,
+              };
+              axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${newId}.json`, newUser);
+            })
             .catch((err) => {
               throw new Error(err.message || 'Failed to add User to list');
             });
