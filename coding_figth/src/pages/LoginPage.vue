@@ -45,6 +45,16 @@
             <p class="msg-erro" v-if="!emailCadastro.isValid">Email deve ser válido</p>
           </label>
         </div>
+        <div class="linha-input" v-if="!isProfessor">
+          <label for="turma">
+            Turma <br>
+            <select id="turma" v-model="turmaCadastro.value">
+              <option v-for="turma in turmas" :key="turma.id"
+              :value="turma.id">{{ turma.nome }}</option>
+            </select>
+            <p class="msg-erro" v-if="!turmaCadastro.isValid">Uma turma deve ser selecionada</p>
+          </label>
+        </div>
         <div class="linha-input">
           <label for="pass">
             Senha <br>
@@ -92,6 +102,10 @@ export default {
         value: '',
         isValid: true,
       },
+      turmaCadastro: {
+        value: null,
+        isValid: true,
+      },
       senhaCadastro: {
         value: '',
         isValid: true,
@@ -112,7 +126,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['signup', 'login', 'getLoggedUserInfo']),
+    ...mapActions(['signup', 'login', 'getUserInfo']),
     submitLogin() {
       const loginData = {
         email: this.emailLogin,
@@ -120,8 +134,7 @@ export default {
       };
 
       this.login(loginData);
-      if (this.isAuthenticated)
-        this.$router.replace('/');
+      this.$router.replace('/');
     },
 
     submitCadastro() {
@@ -134,16 +147,17 @@ export default {
           isProfessor: this.isProfessor,
         };
 
-        // console.log(userData);
         this.signup(userData);
         this.$router.replace('/');
       }
     },
 
     verificaCadastro() {
-      this.getLoggedUserInfo();
       if (this.emailCadastro.value === '' || !this.emailCadastro.value.includes('@'))
         this.emailCadastro.isValid = false;
+
+      if (this.turmaCadastro.value === null)
+        this.turmaCadastro.isValid = false;
 
       if (this.nomeExibicao.value === '')
         this.nomeExibicao.isValid = false;
@@ -160,6 +174,7 @@ export default {
 
         setTimeout(() => {
           this.emailCadastro.isValid = true;
+          this.turmaCadastro.isValid = true;
           this.senhaCadastro.isValid = true;
           this.confirmaSenha.isValid = true;
           this.nomeExibicao.isValid = true;
@@ -167,7 +182,10 @@ export default {
         }, 3000);
       }
     },
-    ...mapGetters(['isAuthenticated']),
+
+  },
+  computed: {
+    ...mapGetters(['isAuthenticated', 'turmas']),
   },
 };
 </script>
@@ -204,6 +222,10 @@ export default {
   flex-direction: column;
   text-align: left;
   margin: 8px 0;
+}
+
+.linha-input select {
+  width: 100px;
 }
 
 .linha-input .msg-erro {

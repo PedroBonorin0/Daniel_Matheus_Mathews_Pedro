@@ -9,14 +9,17 @@ import {
 export default {
   state() {
     return {
+      userData: null,
       userId: null,
     };
   },
   mutations: {
     setUser(state, payload) {
-      state.userId = payload;
+      state.userData = payload;
+      state.userId = payload.id;
     },
     logoutUser(state) {
+      state.userData = null;
       state.userId = null;
     },
   },
@@ -31,10 +34,13 @@ export default {
             email: payload.email,
             nomeUsuario: payload.nomeUsuario,
             isProfessor: payload.isProfessor,
+            turma: payload.turma,
+            pontosDesafios: [],
+            totalPontos: 0,
           };
 
           axios.post('https://coding-fight-default-rtdb.firebaseio.com/users.json', userData)
-            .then() // Return true to make redirect
+            .then()
             .catch((err) => {
               throw new Error(err.message || 'Failed to add User to list');
             });
@@ -47,16 +53,34 @@ export default {
       const auth = getAuth();
       signInWithEmailAndPassword(auth, payload.email, payload.senha)
         .then(() => {
-          localStorage.setItem('userId', auth.currentUser.reloadUserInfo.localId);
-          context.dispatch('setLoggedUserInfo', auth.currentUser);
+          axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json')
+            .then((res) => {
+              Object.values(res.data).forEach((user) => {
+                if (user.id === auth.currentUser.reloadUserInfo.localId) {
+                  localStorage.setItem('userId', user.id);
+                  context.dispatch('setLoggedUserInfo', user);
+                }
+              });
+            });
         })
         .catch((error) => {
           throw new Error(error.message || 'Failed to Login');
         });
     },
     autoLogin(context) {
-      if (localStorage.getItem('userId')) {
-        context.commit('setUser', localStorage.getItem('userId'));
+      const userId = localStorage.getItem('userId');
+      if (userId) {
+        axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json')
+          .then((res) => {
+            Object.values(res.data).forEach((user) => {
+              if (user.id === userId) {
+                context.dispatch('setLoggedUserInfo', user);
+              }
+            });
+          })
+          .catch((error) => {
+            throw new Error(error.message || 'Failed to Login');
+          });
       }
     },
     logout(context) {
@@ -70,15 +94,18 @@ export default {
       });
     },
     setLoggedUserInfo(context, payload) {
-      context.commit('setUser', payload.reloadUserInfo.localId);
+      context.commit('setUser', payload);
     },
   },
   getters: {
-    userId(state) {
-      return state.userId;
-    },
     isAuthenticated(state) {
-      return state.userId !== null;
+      return state.userData !== null;
+    },
+    professorLogged(state) {
+      return state.userData.isProfessor;
+    },
+    userLogado(state) {
+      return state.userData;
     },
   },
 };

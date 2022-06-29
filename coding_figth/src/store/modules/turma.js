@@ -1,48 +1,40 @@
+import { orderBy } from 'lodash-es';
+import axios from 'axios';
+
 export default {
   state() {
     return {
-      turmas: [
-        {
-          id: 1,
-          nome: 'Turma 1',
-          professor: 1,
-          alunos: [1, 2, 3, 4],
-          conteudos: [1, 2],
-        },
-      ],
+      turmas: [],
     };
   },
   mutations: {
-    // registerCoach(state, payload) {
-    //   state.coaches.push(payload);
-    // },
+    setAllTurmas(state, payload) {
+      state.turmas = payload;
+    },
   },
   actions: {
-    // async registerCoach(context, payload) {
-    //   const { userId } = context.rootGetters;
-
-    //   const coachData = {
-    //     id: userId,
-    //     firstName: payload.first,
-    //     lastName: payload.last,
-    //     description: payload.desc,
-    //     hourlyRate: payload.rate,
-    //     areas: payload.areas,
-    //   };
-
-    //   const { token } = context.rootGetters;
-
-    //   await axios.put(
-    //     `https://vue-course-http-82d72-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${token}`,
-    //     JSON.stringify(coachData),
-    //   );
-
-    //   context.commit('registerCoach', coachData);
-    // },
+    setTurmas(context) {
+      axios.get('https://coding-fight-default-rtdb.firebaseio.com/turmas.json')
+        .then((res) => {
+          context.commit('setAllTurmas', Object.values(res.data));
+        })
+        .catch((err) => {
+          throw new Error(err.message || 'Failed to get Turmas');
+        });
+    },
+    createNewTurma(context, payload) {
+      axios.post('https://coding-fight-default-rtdb.firebaseio.com/turmas.json', payload)
+        .then(() => {
+          context.dispatch('setTurmas');
+        })
+        .catch((err) => {
+          throw new Error(err.message || 'Failed to create Turma');
+        });
+    },
   },
   getters: {
     turmas(state) {
-      return state.turmas;
+      return orderBy(state.turmas, 'nome');
     },
   },
 };

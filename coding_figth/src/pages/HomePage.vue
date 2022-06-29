@@ -8,14 +8,33 @@
       <div class="button">
         <BaseButton :link="true" to="/instruction">Instruções</BaseButton>
       </div>
+      <div v-if="isAuthenticated" id="btn-turmas">
+        <div v-if="!professorLogged" class="button-turmas">
+          <BaseButton :link="true" :to="linkSalaAluno">Turma</BaseButton>
+        </div>
+        <div v-else class="button-turmas">
+          <BaseButton :link="true" to="/turmas">Turmas</BaseButton>
+        </div>
+      </div>
     </BaseCard>
 
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'HomePage',
+
+  computed: {
+    ...mapGetters(['professorLogged', 'users', 'isAuthenticated', 'userLogado']),
+    linkSalaAluno() {
+      const user = this.userLogado;
+      console.log(user);
+      return '/turmas';
+    },
+  },
 };
 </script>
 

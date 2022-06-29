@@ -15,11 +15,17 @@ export default {
   },
 
   mounted() {
-    this.autoLogin();
+    this.iniciaProjeto();
   },
 
   methods: {
-    ...mapActions(['autoLogin']),
+    ...mapActions(['autoLogin', 'setUsers', 'setTurmas']),
+
+    iniciaProjeto() {
+      this.autoLogin();
+      this.setUsers();
+      this.setTurmas();
+    },
   },
 };
 </script>
@@ -32,6 +38,6 @@ export default {
 
 .geral {
   background: #bedadf;
-  height: 100vh;
+  min-height: 100vh;
 }
 </style>

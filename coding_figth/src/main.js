@@ -1,6 +1,7 @@
 import { createApp } from 'vue';
 import BaseCard from '@/components/ui/BaseCard.vue';
 import BaseButton from '@/components/ui/BaseButton.vue';
+import BaseDialog from '@/components/ui/BaseDialog.vue';
 import { initializeApp } from 'firebase/app';
 import App from './App.vue';
 import router from './router';
@@ -26,5 +27,6 @@ app.use(store).use(router);
 
 app.component('BaseCard', BaseCard);
 app.component('BaseButton', BaseButton);
+app.component('BaseDialog', BaseDialog);
 
 app.mount('#app');

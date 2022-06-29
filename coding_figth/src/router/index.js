@@ -4,35 +4,42 @@ import InstructionPage from '../pages/InstructionPage.vue';
 import GamePage from '../pages/GamePage.vue';
 import EndGame from '../pages/Endgame.vue';
 import LoginPage from '../pages/LoginPage.vue';
+import TurmasPage from '../pages/TurmasPage.vue';
 
 import store from '../store/index';
 
 const routes = [
   {
     path: '/',
-    name: 'home',
     component: HomePage,
   },
   {
     path: '/instruction',
-    name: 'instruction',
     component: InstructionPage,
   },
   {
     path: '/game',
-    name: 'game',
     component: GamePage,
     meta: { requiresAuth: true },
   },
   {
     path: '/endgame',
-    name: 'endgame',
     component: EndGame,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, requiresProf: true },
   },
   {
+    path: '/turmas',
+    component: TurmasPage,
+    meta: { requiresAuth: true },
+  },
+  // {
+  //   path: '/turmas/:id',
+  //   component: TurmaDetails,
+  //   props: true,
+  //   meta: { requiresAuth: true },
+  // },
+  {
     path: '/login',
-    name: 'login',
     component: LoginPage,
   },
   {

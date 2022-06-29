@@ -1,8 +1,8 @@
 <template>
   <nav>
     <router-link to="/"><img src="../assets/img/logo-espada.png" alt="Coding Fight"></router-link>
-    <router-link to="/login" class="btnLogin" v-if="!isAuthenticated">Entrar</router-link>
-    <router-link to="/login" class="btnLogin" @click="logout" v-else>Logout</router-link>
+    <router-link to="/login" class="btn-login" v-if="!isAuthenticated">Entrar</router-link>
+    <router-link to="/login" class="btn-login" @click="logout" v-else>Logout</router-link>
   </nav>
 </template>
 
@@ -40,8 +40,13 @@ nav a {
   justify-content: center;
   width: 150px;
   height: 30px;
-  font-weight: bold;
+}
+
+nav .btn-login {
+  background: #248b8b;
+  width: 80px;
+  border-radius: 4px;
   text-decoration: none;
-  color: black;
+  color: white;
 }
 </style>
