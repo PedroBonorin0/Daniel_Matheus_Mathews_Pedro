@@ -6,6 +6,7 @@ import EndGame from '../pages/Endgame.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import TurmasPage from '../pages/TurmasPage.vue';
 import SelecaoTema from '../pages/SelecaoTema.vue';
+import Ranking from '../pages/RankingPage.vue';
 
 import store from '../store/index';
 
@@ -27,6 +28,12 @@ const routes = [
     path: '/endgame/:hp:hpinimigo',
     props: true,
     component: EndGame,
+    meta: { requiresAuth: true, requiresProf: true },
+  },
+  {
+    path: '/ranking',
+    props: true,
+    component: Ranking,
     meta: { requiresAuth: true, requiresProf: true },
   },
   {
@@ -58,11 +65,11 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
+/*
 router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
   else next();
 });
-
+*/
 
 export default router;
