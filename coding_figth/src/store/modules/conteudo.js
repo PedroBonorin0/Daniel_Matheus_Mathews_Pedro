@@ -5,7 +5,17 @@ export default {
         {
           id: 1,
           nome: 'Condicionais',
-          contexto: 'Contexto aqui!',
+          contexto: 'Contexto aqui 1!',
+        },
+        {
+          id: 2,
+          nome: 'Loop',
+          contexto: 'Contexto aqui 2!',
+        },
+        {
+          id: 3,
+          nome: 'String',
+          contexto: 'Contexto aqui 3!',
         },
       ],
     };
