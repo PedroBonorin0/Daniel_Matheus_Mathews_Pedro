@@ -3,10 +3,11 @@
     <h1 class="mensagem">{{mensagem}}</h1>
     <div class="botoes">
       <div><BaseButton :link="true" to="/">Menu</BaseButton></div>
-      <div><BaseButton :link="true" to="/ranking">Ranking</BaseButton></div>
+      <div><BaseButton :link="true" to="/ranking">Ranking Geral</BaseButton></div>
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
