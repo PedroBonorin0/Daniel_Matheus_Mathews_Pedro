@@ -1,5 +1,7 @@
 <template>
 <div class="geral-game">
+  <div class="timer"> {{ countDown }} </div>
+  <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
   <div class="personagens">
     <SpritePersonagem
       personagem="player"
@@ -55,6 +57,10 @@ export default {
 
       visible: false,
       playerHit: false,
+
+      countDown: 5,
+      mensagemAviso: '',
+      visibilidade: false,
     };
   },
   components: {
@@ -78,10 +84,32 @@ export default {
     this.contaAcertos = 0; // Conta a qtd de acertos
     this.contaErros = 0; // Conta a qtd de erros
 
+    this.timer = 0;
+
     // Inicializa e controla as exibição das perguntas
     this.gerenciaPerguntas();
   },
   methods: {
+
+    countDownTimer() {
+      clearInterval(this.timer);
+      this.timer = setInterval(() => {
+        if (this.countDown > 0) {
+          this.countDown--;
+        } else {
+          clearInterval(this.timer);        //Se o tempo acabar, o jogador leva dano
+
+          this.visibilidade = true;
+          this.mensagemAviso = 'Cuidado com o tempo, você sofreu dano!';
+          this.contaErros += 1;
+
+          // Sofre dano
+          this.calcDano(false);
+          this.playerHit = false;
+
+        }
+      }, 1000);
+    },
 
     /**
      * Verifica a resposta de acordo com o clique do usuário
@@ -180,16 +208,15 @@ export default {
           this.playerHp -= 15;
         }
       }
+      // Jogador perdeu
       if(this.playerHp <= 0){
         this.playerHp = 0;
+        this.$router.replace("/endgame");
       }
+      //Jogador venceu
       if(this.enemyHp <= 0){
         this.enemyHp = 0;
-      }
-      if(this.playerHp <= 0 || this.enemyHp <= 0){
-        setTimeout(() => {
-          this.$router.replace("/endgame");
-        }, 3000);
+        this.$router.replace("/endgame");
       }
     },
 
@@ -198,6 +225,13 @@ export default {
      *
      */
     gerenciaPerguntas() {
+
+      if(this.contaPerguntas>1){
+        this.visibilidade = false;
+        this.countDown = 10;
+        this.countDownTimer();
+      }
+
       if (this.contaPerguntas <= Math.floor(this.tamanhoDesafio / 3) || this.controlaDificuldade == 1) {
         // Randomizo as perguntas e respostas
         this.auxGerencia();
@@ -241,6 +275,9 @@ export default {
       this.shortRespostas(this.desafios[this.perguntaEscolhida].opcoesResposta);
     },
   },
+  mounted() {
+    this.countDownTimer();
+  },
   computed: {
     ...mapGetters(['desafios']),
   },
@@ -248,6 +285,38 @@ export default {
 </script>
 
 <style>
+.timer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+
+  padding: 0.5em;
+  width: 2em;
+  height: 1em;
+
+  font-size: 1.5em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.76);
+  border-radius: 2em;
+}
+
+.aviso{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+
+  padding: 0.5em;
+  width: fit-content;
+  height: 1em;
+
+  font-size: 1.5em;
+  color: white;
+  background-color: rgba(187, 60, 60, 0.76);
+  border-radius: 2em;
+}
+
 .conteudo{
   text-align: center;
   width: 100% auto;
