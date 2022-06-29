@@ -29,29 +29,56 @@ export default {
       createUserWithEmailAndPassword(auth, payload.email, payload.senha)
         .then(() => {
           // Signed in
-          const userData = {
-            id: -1,
-            email: payload.email,
-            nomeUsuario: payload.nomeUsuario,
-            isProfessor: payload.isProfessor,
-            turma: payload.turma,
-            pontosDesafios: [],
-            totalPontos: 0,
-          };
+          let userData = {};
+          if (payload.isProfessor) {
+            userData = {
+              id: -1,
+              email: payload.email,
+              nomeUsuario: payload.nomeUsuario,
+              isProfessor: payload.isProfessor,
+            };
+          } else {
+            userData = {
+              id: -1,
+              email: payload.email,
+              nomeUsuario: payload.nomeUsuario,
+              isProfessor: payload.isProfessor,
+              turma: payload.turma,
+              pontosDesafios: [],
+              totalPontos: 0,
+            };
+          }
 
           axios.post('https://coding-fight-default-rtdb.firebaseio.com/users.json', userData)
             .then((res) => {
               const newId = String(res.data.name);
-              const newUser = {
-                id: newId,
-                email: payload.email,
-                nomeUsuario: payload.nomeUsuario,
-                isProfessor: payload.isProfessor,
-                turma: payload.turma,
-                pontosDesafios: [],
-                totalPontos: 0,
-              };
-              axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${newId}.json`, newUser);
+              let newUser = {};
+              if (payload.isProfessor) {
+                newUser = {
+                  id: newId,
+                  email: payload.email,
+                  nomeUsuario: payload.nomeUsuario,
+                  isProfessor: payload.isProfessor,
+                };
+              } else {
+                newUser = {
+                  id: newId,
+                  email: payload.email,
+                  nomeUsuario: payload.nomeUsuario,
+                  isProfessor: payload.isProfessor,
+                  turma: payload.turma,
+                  pontosDesafios: [],
+                  totalPontos: 0,
+                };
+              }
+              axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${newId}.json`, newUser)
+                .then(() => {
+                  const objLogin = {
+                    email: payload.email,
+                    senha: payload.senha,
+                  };
+                  context.dispatch('login', objLogin);
+                });
             })
             .catch((err) => {
               throw new Error(err.message || 'Failed to add User to list');
@@ -68,7 +95,7 @@ export default {
           axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json')
             .then((res) => {
               Object.values(res.data).forEach((user) => {
-                if (user.id === auth.currentUser.reloadUserInfo.localId) {
+                if (user.email === payload.email) {
                   localStorage.setItem('userId', user.id);
                   context.dispatch('setLoggedUserInfo', user);
                 }
