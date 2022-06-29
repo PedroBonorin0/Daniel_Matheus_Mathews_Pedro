@@ -1,8 +1,13 @@
 <template>
   <nav>
     <router-link to="/"><img src="../assets/img/logo-espada.png" alt="Coding Fight"></router-link>
-    <router-link to="/login" class="btn-login" v-if="!isAuthenticated">Entrar</router-link>
-    <router-link to="/login" class="btn-login" @click="logout" v-else>Logout</router-link>
+    <div>
+      <h3 v-if="isAuthenticated">
+        olá, {{ nomeUser }}
+      </h3>
+      <router-link to="/login" class="btn-login" v-if="!isAuthenticated">Entrar</router-link>
+      <router-link to="/login" class="btn-login" @click="logout" v-else>Logout</router-link>
+    </div>
   </nav>
 </template>
 
@@ -14,7 +19,10 @@ export default {
     ...mapActions(['logout']),
   },
   computed: {
-    ...mapGetters(['isAuthenticated']),
+    ...mapGetters(['isAuthenticated', 'userLogado']),
+    nomeUser(){
+      return this.userLogado.nome;
+    },
   },
 };
 </script>

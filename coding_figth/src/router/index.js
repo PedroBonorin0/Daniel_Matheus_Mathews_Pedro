@@ -6,6 +6,7 @@ import EndGame from '../pages/Endgame.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import TurmasPage from '../pages/TurmasPage.vue';
 import SelecaoTema from '../pages/SelecaoTema.vue';
+import DesafiosPage from '../pages/DesafiosPage.vue';
 
 import store from '../store/index';
 
@@ -33,6 +34,11 @@ const routes = [
     component: TurmasPage,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/desafios',
+    component: DesafiosPage,
+    meta: { requiresAuth: true },
+  },
   // {
   //   path: '/turmas/:id',
   //   component: TurmaDetails,
@@ -46,6 +52,7 @@ const routes = [
   {
     path: '/tema',
     component: SelecaoTema,
+    meta: { requiresAuth: true },
   },
   {
     path: '/:notFound(.*)',

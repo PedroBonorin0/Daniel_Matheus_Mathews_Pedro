@@ -8,8 +8,8 @@
         <label for="turma">
           Turma
           <input type="text" placeholder="Digite o nome da turma" v-model="nomeTurma">
-          <BaseButton type="submit">Criar</BaseButton>
         </label>
+          <BaseButton type="submit">Criar</BaseButton>
       </form>
     </BaseDialog>
     <ul class="list-turmas">

@@ -14,6 +14,7 @@
         </div>
         <div v-else class="button-turmas">
           <BaseButton :link="true" to="/turmas">Turmas</BaseButton>
+          <BaseButton :link="true" to="/desafios">Desafios</BaseButton>
         </div>
       </div>
     </BaseCard>
