@@ -32,7 +32,7 @@ export default {
     linkSalaAluno() {
       const user = this.userLogado;
       console.log(user);
-      return '/turmas';
+      return '/turmas/' + user.turma.id;
     },
   },
 };

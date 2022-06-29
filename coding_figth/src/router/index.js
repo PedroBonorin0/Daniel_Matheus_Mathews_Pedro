@@ -24,7 +24,8 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
-    path: '/endgame',
+    path: '/endgame/:hp:hpinimigo',
+    props: true,
     component: EndGame,
     meta: { requiresAuth: true, requiresProf: true },
   },
@@ -62,5 +63,6 @@ router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
   else next();
 });
+
 
 export default router;

@@ -121,7 +121,7 @@ export default {
       this.respostaCorreta = this.desafios[this.perguntaEscolhida].respostaCorreta;
 
       if (opcao.id == this.respostaCorreta) { 	// Se o usuário acertou a questão
-        console.log('Acertou');
+        //console.log('Acertou');
         this.contaAcertos += 1;
 
         // Dano no enimigo
@@ -189,34 +189,35 @@ export default {
     * @param {boolean} Verificador se o usuario acertou a pergunta
     */
     calcDano(verificador) {
-      if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Facil
-        if (verificador) {
+      if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Fácil
+        if (verificador) { // Acertou a pergunta
           this.enemyHp -= 15;
         } else {
           this.playerHp -= 30;
         }
-      } else if (this.desafios[this.perguntaEscolhida].dificuldade == 2) { // Medio
-        if (verificador) {
+      } else if (this.desafios[this.perguntaEscolhida].dificuldade == 2) { // Médio
+        if (verificador) { // Acertou a pergunta
           this.enemyHp -= 20;
         } else {
           this.playerHp -= 20;
         }
-      } else { // Dificil
-        if (verificador) {
+      } else { // Difícil
+        if (verificador) { // Acertou a pergunta
           this.enemyHp -= 30;
         } else {
           this.playerHp -= 15;
         }
       }
-      // Jogador perdeu
+
+      // O Jogador perdeu
       if(this.playerHp <= 0){
         this.playerHp = 0;
-        this.$router.replace("/endgame");
+        this.$router.replace("/endgame/" + this.playerHp + this.enemyHp);
       }
-      //Jogador venceu
+      // O Jogador venceu
       if(this.enemyHp <= 0){
         this.enemyHp = 0;
-        this.$router.replace("/endgame");
+        this.$router.replace("/endgame/" + this.playerHp + this.enemyHp);
       }
     },
 
@@ -250,10 +251,12 @@ export default {
         // Randomizo as perguntas e respostas
         this.auxGerencia();
       } else { // Ao encerrar todas as questões do desafio, devemos prosseguir para uma próxima fase, conteúdo ou para tela de pontuação?
+        /*
         console.log('Desafio concluído! Todas as perguntas do desafio foram respondidas!');
         console.log(`Perguntas Marcadas: ${this.perguntasMarcadas}`);
         console.log(`Você acertou: ${this.contaAcertos}`);
         console.log(`Você errou: ${this.contaErros}`);
+        */
       }
     },
 
