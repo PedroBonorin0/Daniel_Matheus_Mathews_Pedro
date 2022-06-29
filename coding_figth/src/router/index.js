@@ -5,6 +5,7 @@ import GamePage from '../pages/GamePage.vue';
 import EndGame from '../pages/Endgame.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import TurmasPage from '../pages/TurmasPage.vue';
+import SelecaoTema from '../pages/SelecaoTema.vue';
 
 import store from '../store/index';
 
@@ -41,6 +42,10 @@ const routes = [
   {
     path: '/login',
     component: LoginPage,
+  },
+  {
+    path: '/tema',
+    component: SelecaoTema,
   },
   {
     path: '/:notFound(.*)',

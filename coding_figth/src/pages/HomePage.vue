@@ -3,7 +3,7 @@
     <img src="../assets/img/logo.png" alt="Coding Fight">
     <BaseCard class="menu-options">
       <div class="button">
-        <BaseButton :link="true" to="/game">Jogar</BaseButton>
+        <BaseButton :link="true" to="/tema">Jogar</BaseButton>
       </div>
       <div class="button">
         <BaseButton :link="true" to="/instruction">Instruções</BaseButton>
