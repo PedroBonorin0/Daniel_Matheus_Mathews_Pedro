@@ -19,11 +19,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(['autoLogin', 'setUsers', 'setTurmas']),
+    ...mapActions(['autoLogin', 'setTurmas']),
 
     iniciaProjeto() {
       this.autoLogin();
-      this.setUsers();
       this.setTurmas();
     },
   },
