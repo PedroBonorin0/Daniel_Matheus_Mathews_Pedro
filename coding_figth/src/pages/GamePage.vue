@@ -203,6 +203,7 @@ export default {
     * @param {boolean} Verificador se o usuario acertou a pergunta
     */
     calcDano(verificador) {
+      this.dica_visibilidade = false;
       if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Fácil
         if (verificador) { // Acertou a pergunta
           this.enemyHp -= 15;
