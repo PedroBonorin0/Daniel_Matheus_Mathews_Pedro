@@ -22,7 +22,14 @@
         <h1>Desafio: </h1>
         <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
       </div>
-
+      <div class="dica">
+        <BaseButton class="Dica" @click="handleDicas()"
+        :style="{visibility: dica_visibilidade ? 'hidden' : 'visible'}">Dica</BaseButton>
+        <div :style="{ visibility: dica_visibilidade ? 'visible' : 'hidden'}">
+          <h1>Dica: </h1>
+          <span> {{desafios[this.perguntaEscolhida].dica[this.dica_cont].dica}} </span>
+        </div>
+      </div>
       <div class="container-botoes">
         <BaseButton
           class="opcoes"
@@ -66,6 +73,9 @@ export default {
       tamanhoDesafio: 10, // Total de perguntas por desafio
       contaAcertos: 0, // Conta a qtd de acertos
       contaErros: 0, // Conta a qtd de erros
+
+      dica_visibilidade: false,
+      dica_cont: 0,
     };
   },
   components: {
@@ -113,6 +123,10 @@ export default {
           this.playerHit = false;
         }
       }, 1000);
+    },
+
+    handleDicas() {
+      this.dica_visibilidade = true;
     },
 
     /**
@@ -193,6 +207,7 @@ export default {
     * @param {boolean} Verificador se o usuario acertou a pergunta
     */
     calcDano(verificador) {
+      this.dica_visibilidade = false;
       if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Fácil
         if (verificador) { // Acertou a pergunta
           this.enemyHp -= 15;
