@@ -8,14 +8,14 @@ export default {
   },
   mutations: {
     setUsers(state, payload) {
-      state.users = payload.users;
+      state.users = payload;
     },
   },
   actions: {
     setUsers(context) {
       axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json')
         .then((res) => {
-          context.commit('setUsers', res.data);
+          context.commit('setUsers', Object.values(res.data));
         })
         .catch((err) => {
           throw new Error(err.message || 'Failed to fecth users');

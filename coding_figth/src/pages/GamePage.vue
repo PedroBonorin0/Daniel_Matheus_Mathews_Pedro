@@ -58,7 +58,7 @@ export default {
       visible: false,
       playerHit: false,
 
-      countDown: 5,
+      countDown: 40,
       mensagemAviso: '',
       visibilidade: false,
     };
@@ -229,7 +229,7 @@ export default {
 
       if(this.contaPerguntas>1){
         this.visibilidade = false;
-        this.countDown = 10;
+        this.countDown = 40;
         this.countDownTimer();
       }
 
