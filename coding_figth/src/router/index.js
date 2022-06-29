@@ -35,7 +35,7 @@ const routes = [
     path: '/ranking',
     props: true,
     component: Ranking,
-    meta: { requiresAuth: true, requiresProf: true },
+    meta: {  },
   },
   {
     path: '/turmas',
@@ -72,11 +72,11 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-/*
+
 router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
   else next();
 });
-*/
+
 
 export default router;

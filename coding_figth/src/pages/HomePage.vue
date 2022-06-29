@@ -8,6 +8,9 @@
       <div class="button">
         <BaseButton :link="true" to="/instruction">Instruções</BaseButton>
       </div>
+      <div class="button">
+        <BaseButton :link="true" to="/ranking">Ranking Geral</BaseButton>
+      </div>
       <div v-if="isAuthenticated" id="btn-turmas">
         <div v-if="!professorLogged" class="button-turmas">
           <BaseButton :link="true" :to="linkSalaAluno">Turma</BaseButton>
@@ -32,8 +35,8 @@ export default {
     ...mapGetters(['professorLogged', 'users', 'isAuthenticated', 'userLogado']),
     linkSalaAluno() {
       const user = this.userLogado;
-      console.log(user);
-      return `/turmas/${user.turma.id}`;
+      //console.log(user);
+      //return `/turmas/${user.turma.id}`;
     },
   },
 };
