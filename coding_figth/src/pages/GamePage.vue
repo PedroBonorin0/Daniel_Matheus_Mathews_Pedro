@@ -22,7 +22,14 @@
         <h1>Desafio: </h1>
         <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
       </div>
-
+      <div class="dica">
+        <BaseButton class="Dica" @click="handleDicas()"
+        :style="{visibility: dica_visibilidade ? 'hidden' : 'visible'}">Dica</BaseButton>
+        <div :style="{ visibility: dica_visibilidade ? 'visible' : 'hidden'}">
+          <h1>Dica: </h1>
+          <span> {{desafios[this.perguntaEscolhida].dica[this.dica_cont].dica}} </span>
+        </div>
+      </div>
       <div class="container-botoes">
         <BaseButton
           class="opcoes"
@@ -61,6 +68,9 @@ export default {
       countDown: 40,
       mensagemAviso: '',
       visibilidade: false,
+
+      dica_visibilidade: false,
+      dica_cont: 0,
     };
   },
   components: {
@@ -109,6 +119,10 @@ export default {
 
         }
       }, 1000);
+    },
+
+    handleDicas() {
+      this.dica_visibilidade = true;
     },
 
     /**
