@@ -22,7 +22,14 @@
         <h1>Desafio: </h1>
         <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
       </div>
-
+      <div class="dica">
+        <BaseButton class="Dica" @click="handleDicas()"
+        :style="{visibility: dica_visibilidade ? 'hidden' : 'visible'}">Dica</BaseButton>
+        <div :style="{ visibility: dica_visibilidade ? 'visible' : 'hidden'}">
+          <h1>Dica: </h1>
+          <span> {{desafios[this.perguntaEscolhida].dica[this.dica_cont].dica}} </span>
+        </div>
+      </div>
       <div class="container-botoes">
         <BaseButton
           class="opcoes"
@@ -36,7 +43,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import SpritePersonagem from '@/components/SpritePersonagem.vue';
 import HitMessage from '@/components/HitMessage.vue';
 
@@ -61,6 +68,14 @@ export default {
       countDown: 40,
       mensagemAviso: '',
       visibilidade: false,
+
+      // Variáveis de controle do jogo
+      tamanhoDesafio: 10, // Total de perguntas por desafio
+      contaAcertos: 0, // Conta a qtd de acertos
+      contaErros: 0, // Conta a qtd de erros
+
+      dica_visibilidade: false,
+      dica_cont: 0,
     };
   },
   components: {
@@ -90,14 +105,14 @@ export default {
     this.gerenciaPerguntas();
   },
   methods: {
-
+    ...mapActions(['updateUser']),
     countDownTimer() {
       clearInterval(this.timer);
       this.timer = setInterval(() => {
         if (this.countDown > 0) {
           this.countDown--;
         } else {
-          clearInterval(this.timer);        //Se o tempo acabar, o jogador leva dano
+          clearInterval(this.timer); // Se o tempo acabar, o jogador leva dano
 
           this.visibilidade = true;
           this.mensagemAviso = 'Cuidado com o tempo, você sofreu dano!';
@@ -106,9 +121,12 @@ export default {
           // Sofre dano
           this.calcDano(false);
           this.playerHit = false;
-
         }
       }, 1000);
+    },
+
+    handleDicas() {
+      this.dica_visibilidade = true;
     },
 
     /**
@@ -120,8 +138,8 @@ export default {
       this.contaPerguntas += 1;
       this.respostaCorreta = this.desafios[this.perguntaEscolhida].respostaCorreta;
 
-      if (opcao.id == this.respostaCorreta) { 	// Se o usuário acertou a questão
-        //console.log('Acertou');
+      if (opcao.id === this.respostaCorreta) { 	// Se o usuário acertou a questão
+        // console.log('Acertou');
         this.contaAcertos += 1;
 
         // Dano no enimigo
@@ -189,6 +207,7 @@ export default {
     * @param {boolean} Verificador se o usuario acertou a pergunta
     */
     calcDano(verificador) {
+      this.dica_visibilidade = false;
       if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Fácil
         if (verificador) { // Acertou a pergunta
           this.enemyHp -= 15;
@@ -210,14 +229,16 @@ export default {
       }
 
       // O Jogador perdeu
-      if(this.playerHp <= 0){
+      if (this.playerHp <= 0) {
         this.playerHp = 0;
-        this.$router.replace("/endgame/" + this.playerHp + this.enemyHp);
+        this.atualizaPontos();
+        this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
       }
       // O Jogador venceu
-      if(this.enemyHp <= 0){
+      if (this.enemyHp <= 0) {
         this.enemyHp = 0;
-        this.$router.replace("/endgame/" + this.playerHp + this.enemyHp);
+        this.atualizaPontos();
+        this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
       }
     },
 
@@ -226,8 +247,7 @@ export default {
      *
      */
     gerenciaPerguntas() {
-
-      if(this.contaPerguntas>1){
+      if (this.contaPerguntas > 1) {
         this.visibilidade = false;
         this.countDown = 40;
         this.countDownTimer();
@@ -277,12 +297,17 @@ export default {
       // Randomiza as respostas de acordo com a pergunta
       this.shortRespostas(this.desafios[this.perguntaEscolhida].opcoesResposta);
     },
+    atualizaPontos() {
+      const user = this.userLogado;
+      user.totalPontos += this.contaAcertos;
+      this.updateUser(user);
+    },
   },
   mounted() {
     this.countDownTimer();
   },
   computed: {
-    ...mapGetters(['desafios']),
+    ...mapGetters(['desafios', 'userLogado']),
   },
 };
 </script>
