@@ -66,11 +66,15 @@
         </div>
       </form>
     </BaseDialog>
-    <ul class="list-desafios">
-      <li v-for="desafio in desafios" :key="desafio.id">
-        {{ desafio.nome }}
-      </li>
-    </ul>
+    <div class="linha-input">
+        <label for="conteudo">
+            Conteúdo <br>
+            <select id="desafio" v-model="conteudo">
+              <option v-for="conteudo in contudos" :key="conteudo.id"
+              :value="conteudo.nome">{{ conteudo.nome }}</option>
+            </select>
+        </label>
+    </div>
   </div>
 </template>
 
