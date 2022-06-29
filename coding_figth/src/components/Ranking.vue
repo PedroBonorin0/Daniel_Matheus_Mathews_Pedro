@@ -1,10 +1,19 @@
 <template>
   <div class="ranking-information">
-    <div class="aluno-info">{{this.nomeAlunos}}</div>
+    <BaseCard class="menu-options">
+      <h2 class="titulo">
+        Ranking Geral
+      </h2>
+      <p class="aluno-info" v-for="user in usersOrderedByPontos" :key="user.id"> 
+      Nome do aluno: {{user.nomeUsuario}} <br>
+      Potuação total: {{user.totalPontos}}
+      </p>
+    </BaseCard>
   </div>
 </template>
 
 <script>
+//<div class="aluno-info">{{this.nomeAlunos}}</div>
 //<p v-for="user in users" :key="user.nomeUsuario">{{user.nomeUsuario}}</p>
 import { orderBy } from 'lodash-es';
 import { mapGetters, mapActions } from 'vuex';
@@ -32,18 +41,16 @@ export default {
       this.users.forEach(element => {
         if (!element.isProfessor){ //Adiciono todos os alunos na lista de alunos
           this.nomeAlunos.push(element.nomeUsuario)
-          this.emailAlunos.push(element.nomeUsuario)
-          this.totalPontos.push(element.nomeUsuario)
+          this.emailAlunos.push(element.email)
+          this.totalPontos.push(element.totalPontos)
         }
       });
-      //console.log(this.nomeAlunos)
-      //console.log(this.users);
     },
   },
   computed: {
     ...mapGetters(['users']),
     usersOrderedByPontos() {
-      return orderBy(this.users, 'pontos', 'desc');
+      return orderBy(this.users, 'pontos', 'desc').filter(user => !user.isProfessor);
     },
   },
 }
@@ -53,29 +60,39 @@ export default {
 <style scoped>
 .ranking-information {
   display: flex;
+  flex-direction: column;;
   align-items: center;
   justify-content: center;
-  border-width: 2px;
-  border-style: solid;
-  width: 500px;
-  margin: 20px auto;
-  padding: 0 8px;
+
+  width: 60em;
+  height: auto;
+  margin: 2em auto;
   min-height: 30px;
   font-size: 20px;
   border-radius: 8px;
 }
 .aluno-info{
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  border-width: 2px;
+  justify-content: left;
+
+  width: auto;
+  height: auto;
+  border-width: 1px;
   border-style: solid;
-  border-radius: 8px;
-  padding: 0 8px;
+  border-radius: 2em;
+  margin: 1em 2em;
+  padding: 0.5em 1em;
   min-height: 30px;
   font-size: 20px;
+}
+.titulo{
+  font-size: 30px;
+  margin: 20px auto;
+  text-align: center;
+}
+.menu-options {
+  margin: auto auto;
 }
 </style>
