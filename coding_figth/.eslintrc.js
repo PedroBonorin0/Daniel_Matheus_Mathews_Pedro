@@ -16,5 +16,6 @@ module.exports = {
     'linebreak-style': 'off',
     'nonblock-statement-body-position': 'off',
     curly: 'off',
+    'no-plusplus': 'off',
   },
 };
