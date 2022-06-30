@@ -24,7 +24,7 @@ export default {
     iniciaProjeto() {
       this.autoLogin();
       this.setTurmas();
-      // this.setDesafios();
+      this.setDesafios();
     },
   },
 };
