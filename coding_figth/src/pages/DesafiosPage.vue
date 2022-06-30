@@ -3,7 +3,7 @@
     <div class="add-desafio">
       <BaseButton @click="criandoDesafio = true">Criar Desafio</BaseButton>
     </div>
-    <BaseDialog :show="criandoDesafio" title="Criar Novo Desafio">
+    <BaseDialog :show="criandoDesafio" title="Criar Novo Desafio" @close="criandoDesafio = false">
       <form @submit.prevent="criaDesafio">
         <div class="linha-input">
             <label for="conteudo">
@@ -82,7 +82,7 @@
       <label for="desafio">
           Desafio <br>
           <select id="desafio" v-model="desafioSelecionado" @change="aa">
-            <option v-for="desafio in desafios" :key="desafio.id"
+            <option v-for="desafio in desafiosProfLogado" :key="desafio.id"
             :value="desafio.id">{{ desafio.dica }}</option>
           </select>
       </label>
@@ -142,11 +142,19 @@ export default {
   },
   computed: {
     ...mapGetters(['desafios', 'userLogado', 'conteudos']),
+    desafiosProfLogado() {
+      return this.desafios.filter((dsf) => dsf.professor == this.userLogado.id);
+    },
   },
 };
 </script>
 
 <style scoped>
+
+#geral-desafios {
+  text-align: center;
+  margin: 0 auto;
+}
 
 .linha-input {
   line-height: 24px;
@@ -154,6 +162,10 @@ export default {
   flex-direction: column;
   text-align: left;
   margin: 8px 0;
+}
+
+#desafio {
+  max-width: 60%;
 }
 
 </style>

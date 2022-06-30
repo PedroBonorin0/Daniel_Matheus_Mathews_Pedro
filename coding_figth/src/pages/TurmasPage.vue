@@ -3,7 +3,7 @@ NewTurm<template>
     <div class="add-turma">
       <BaseButton @click="criandoTurma = true">Criar Turma</BaseButton>
     </div>
-    <BaseDialog :show="criandoTurma" title="Criar Nova Turma">
+    <BaseDialog :show="criandoTurma" title="Criar Nova Turma" @close="criandoTurma = false">
       <form @submit.prevent="criaTurma">
         <label for="turma">
           Turma
@@ -13,7 +13,7 @@ NewTurm<template>
       </form>
     </BaseDialog>
     <ul class="list-turmas">
-      <li v-for="turma in turmas" :key="turma.id">
+      <li v-for="turma in turmasProf" :key="turma.id">
         {{ turma.nome }}
       </li>
     </ul>
@@ -48,6 +48,9 @@ export default {
   },
   computed: {
     ...mapGetters(['turmas', 'userLogado']),
+    turmasProf() {
+      return this.turmas.filter((trm) => trm.professor == this.userLogado.id);
+    },
   },
 };
 </script>

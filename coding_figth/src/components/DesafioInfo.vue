@@ -2,12 +2,15 @@
     <BaseCard>
       <p>Conteudo: {{ desafioData.nomeConteudo }}</p>
       <p>Pergunta: {{ desafioData.pergunta }}</p>
-      <ul>
-        <li v-for="opc in desafioData.opcoesResposta" :key="opc.id">
-          <span v-if="desafioData.respostaCorreta == opc.id">&#9989; {{ opc.resposta }}</span>
-          <span v-else>{{ opc.resposta }}</span>
-        </li>
-      </ul>
+      <p>
+        Respostas: <br>
+        <ol>
+          <li v-for="opc in desafioData.opcoesResposta" :key="opc.id">
+            <span v-if="desafioData.respostaCorreta == opc.id">&#9989; {{ opc.resposta }}</span>
+            <span v-else>{{ opc.resposta }}</span>
+          </li>
+        </ol>
+      </p>
       <p>Dica: {{ desafioData.dica }}</p>
       <p>Dificuldade: {{ desafioData.dificuldade }}</p>
       <p>Criador: {{ desafioData.nomeProfessor }}</p>
@@ -64,5 +67,11 @@ export default {
 </script>
 
 <style scoped>
+p {
+  margin: 8px;
+}
 
+ol {
+  list-style-position: inside;
+}
 </style>
