@@ -27,7 +27,7 @@
         :style="{visibility: dica_visibilidade ? 'hidden' : 'visible'}">Dica</BaseButton>
         <div :style="{ visibility: dica_visibilidade ? 'visible' : 'hidden'}">
           <h1>Dica: </h1>
-          <span> {{desafios[this.perguntaEscolhida].dica[this.dica_cont].dica}} </span>
+          <span> {{desafios[this.perguntaEscolhida].dica}} </span>
         </div>
       </div>
       <div class="container-botoes">
@@ -88,7 +88,7 @@ export default {
 
     // Variáveis iniciais do game
     this.contaPerguntas = 1; // Serve para controlar se é a primeira questão - A primeira questão já começa sendo exibida
-    this.controlaDificuldade = 1; // Serve para controlar a dificuldade da questão - A primeira questão deve ser fácil
+    // this.controlaDificuldade = 1; // Serve para controlar a dificuldade da questão - A primeira questão deve ser fácil
 
     // Variáveis gerais
     this.totalPerguntas = this.desafios.length;	// Total de perguntas
@@ -136,8 +136,7 @@ export default {
      */
     handleResposta(opcao) {
       this.contaPerguntas += 1;
-      this.respostaCorreta = this.desafios[this.perguntaEscolhida].respostaCorreta;
-
+      this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta);
       if (opcao.id === this.respostaCorreta) { 	// Se o usuário acertou a questão
         // console.log('Acertou');
         this.contaAcertos += 1;
@@ -146,8 +145,7 @@ export default {
         this.calcDano(true);
         this.playerHit = true;
 
-        // Gerencia a próxima pergunta
-        this.gerenciaPerguntas();
+        
       } else { // Se o usuário errou a questão
         // console.log("Errou");
         this.contaErros += 1;
@@ -155,10 +153,9 @@ export default {
         // Sofre dano
         this.calcDano(false);
         this.playerHit = false;
-
-        this.gerenciaPerguntas();
       }
-
+      // Gerencia a próxima pergunta
+      this.gerenciaPerguntas();
       this.visible = true;
       setTimeout(() => {
         this.visible = false;
@@ -252,8 +249,14 @@ export default {
         this.countDown = 40;
         this.countDownTimer();
       }
-
-      if (this.contaPerguntas <= Math.floor(this.tamanhoDesafio / 3) || this.controlaDificuldade == 1) {
+      console.log(this.contaPerguntas, this.desafios.length);
+      if (this.contaPerguntas > this.desafios.length) {
+        this.atualizaPontos();
+        this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
+        return
+      }
+      this.auxGerencia();
+      /* if (this.contaPerguntas <= Math.floor(this.tamanhoDesafio / 3) || this.controlaDificuldade == 1) {
         // Randomizo as perguntas e respostas
         this.auxGerencia();
 
@@ -271,13 +274,7 @@ export default {
         // Randomizo as perguntas e respostas
         this.auxGerencia();
       } else { // Ao encerrar todas as questões do desafio, devemos prosseguir para uma próxima fase, conteúdo ou para tela de pontuação?
-        /*
-        console.log('Desafio concluído! Todas as perguntas do desafio foram respondidas!');
-        console.log(`Perguntas Marcadas: ${this.perguntasMarcadas}`);
-        console.log(`Você acertou: ${this.contaAcertos}`);
-        console.log(`Você errou: ${this.contaErros}`);
-        */
-      }
+      } */
     },
 
     /** Função auxiliar responsável por randomizar as perguntas e respostas.
@@ -285,9 +282,9 @@ export default {
     */
     auxGerencia() {
       // Randomizo a pergunta até encontrar o primeiro desafio com dificuldade esperada e que ainda não tenha sido respondida
-      let j = Math.floor(Math.random() * (this.desafios.length));
-      while (this.desafios[j].dificuldade != this.controlaDificuldade || (this.perguntasMarcadas.includes(j))) {
-        j = Math.floor(Math.random() * (this.desafios.length));
+      let j = Math.floor(Math.random() * (this.totalPerguntas));
+      while (this.perguntasMarcadas.includes(j)) {
+        j = Math.floor(Math.random() * (this.totalPerguntas));
       }
       this.perguntaEscolhida = j;
 
