@@ -22,7 +22,7 @@ export default {
         });
     },
     updateUser(context, payload) {
-      axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${payload.id}.json`, payload.userData)
+      axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${payload.id}.json`, payload)
         .then()
         .catch((err) => {
           throw new Error(err.message || 'Failed to Update User');

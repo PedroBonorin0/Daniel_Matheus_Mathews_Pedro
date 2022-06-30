@@ -4,7 +4,7 @@
       <h2 class="titulo">
         Ranking Geral
       </h2>
-      <p class="aluno-info" v-for="user in usersOrderedByPontos" :key="user.id"> 
+      <p class="aluno-info" v-for="user in usersOrderedByPontos" :key="user.id">
       Nome do aluno: {{user.nomeUsuario}} <br>
       Potuação total: {{user.totalPontos}}
       </p>
@@ -13,36 +13,36 @@
 </template>
 
 <script>
-//<div class="aluno-info">{{this.nomeAlunos}}</div>
-//<p v-for="user in users" :key="user.nomeUsuario">{{user.nomeUsuario}}</p>
+// <div class="aluno-info">{{this.nomeAlunos}}</div>
+// <p v-for="user in users" :key="user.nomeUsuario">{{user.nomeUsuario}}</p>
 import { orderBy } from 'lodash-es';
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
   name: 'Ranking',
-  data(){
-    return{
+  data() {
+    return {
       nomeAlunos: [],
       emailAlunos: [],
       totalPontos: [],
       turmaAlunos: [],
     };
   },
-  mounted(){
+  mounted() {
     // Busca os users no BD
     this.setUsers();
     this.nomeAlunos = [];
     this.teste();
   },
   methods: {
-    ...mapActions(['setUsers']), 
-    teste(){
-      //Salva os nomes dos alunos no BD
-      this.users.forEach(element => {
-        if (!element.isProfessor){ //Adiciono todos os alunos na lista de alunos
-          this.nomeAlunos.push(element.nomeUsuario)
-          this.emailAlunos.push(element.email)
-          this.totalPontos.push(element.totalPontos)
+    ...mapActions(['setUsers']),
+    teste() {
+      // Salva os nomes dos alunos no BD
+      this.users.forEach((element) => {
+        if (!element.isProfessor) { // Adiciono todos os alunos na lista de alunos
+          this.nomeAlunos.push(element.nomeUsuario);
+          this.emailAlunos.push(element.email);
+          this.totalPontos.push(element.totalPontos);
         }
       });
     },
@@ -50,10 +50,11 @@ export default {
   computed: {
     ...mapGetters(['users']),
     usersOrderedByPontos() {
-      return orderBy(this.users, 'pontos', 'desc').filter(user => !user.isProfessor);
+      return orderBy(this.users, 'totalPontos', 'desc')
+        .filter((user) => !user.isProfessor);
     },
   },
-}
+};
 
 </script>
 

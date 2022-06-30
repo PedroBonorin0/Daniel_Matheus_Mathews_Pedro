@@ -26,10 +26,7 @@ export default {
       this.setUsers();
       this.setTurmas();
       this.setDesafios();
-<<<<<<< HEAD
-=======
       this.setConteudos();
->>>>>>> exibeDesafios
     },
   },
 };

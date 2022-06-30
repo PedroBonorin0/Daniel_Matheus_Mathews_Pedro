@@ -144,8 +144,6 @@ export default {
         // Dano no enimigo
         this.calcDano(true);
         this.playerHit = true;
-
-        
       } else { // Se o usuário errou a questão
         // console.log("Errou");
         this.contaErros += 1;
@@ -253,7 +251,7 @@ export default {
       if (this.contaPerguntas > this.desafios.length) {
         this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
-        return
+        return;
       }
       this.auxGerencia();
       /* if (this.contaPerguntas <= Math.floor(this.tamanhoDesafio / 3) || this.controlaDificuldade == 1) {
@@ -297,6 +295,7 @@ export default {
     atualizaPontos() {
       const user = this.userLogado;
       user.totalPontos += this.contaAcertos;
+      console.log(user);
       this.updateUser(user);
     },
   },
