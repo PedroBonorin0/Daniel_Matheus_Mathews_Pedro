@@ -1,4 +1,4 @@
-<template>
+NewTurm<template>
   <div id="geral-turmas">
     <div class="add-turma">
       <BaseButton @click="criandoTurma = true">Criar Turma</BaseButton>

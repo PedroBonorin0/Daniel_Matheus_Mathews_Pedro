@@ -140,12 +140,23 @@ export default {
     submitCadastro() {
       this.verificaCadastro();
       if (this.cadastroValido) {
-        const userData = {
-          email: this.emailCadastro.value,
-          senha: this.senhaCadastro.value,
-          nomeUsuario: this.nomeExibicao.value,
-          isProfessor: this.isProfessor,
-        };
+        let userData = {};
+        if (this.isProfessor) {
+          userData = {
+            email: this.emailCadastro.value,
+            senha: this.senhaCadastro.value,
+            nomeUsuario: this.nomeExibicao.value,
+            isProfessor: this.isProfessor,
+          };
+        } else {
+          userData = {
+            email: this.emailCadastro.value,
+            senha: this.senhaCadastro.value,
+            nomeUsuario: this.nomeExibicao.value,
+            isProfessor: this.isProfessor,
+            turma: this.turmaCadastro.value,
+          };
+        }
 
         this.signup(userData);
         this.$router.replace('/');

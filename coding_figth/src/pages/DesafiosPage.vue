@@ -78,38 +78,42 @@
         </div>
       </form>
     </BaseDialog>
-    <ul class="list-desafios">
-      <li v-for="desafio in desafios" :key="desafio.id">
-        {{ desafio.nome }}
-      </li>
-    </ul>
+    <div class="linha-input">
+      <label for="desafio">
+          Desafio <br>
+          <select id="desafio" v-model="desafioSelecionado" @change="aa">
+            <option v-for="desafio in desafios" :key="desafio.id"
+            :value="desafio.id">{{ desafio.dica }}</option>
+          </select>
+      </label>
+    </div>
+    <DesafioInfo v-if="desafioSelecionado" :desafioId="desafioSelecionado"/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import DesafioInfo from '@/components/DesafioInfo.vue';
 
 export default {
+  components: {
+    DesafioInfo,
+  },
   data() {
     return {
       criandoDesafio: false,
+      desafioSelecionado: null,
 
-      dificuldade: 0,
-      conteudo: null,
+      conteudo: 0,
       pergunta: '',
+      picked: 0,
+      dificuldade: 1,
+      dica: '',
       opcao1: '',
       opcao2: '',
       opcao3: '',
       opcao4: '',
-      respostaCorreta: 0,
-      dica: '',
-
-      picked: null,
     };
-  },
-
-  created() {
-    this.setConteudos();
   },
 
   methods: {

@@ -40,8 +40,13 @@ export default {
         });
     },
     createNewDesafio(context, payload) {
-      axios.post('https://coding-fight-default-rtdb.firebaseio.com/desafios.json', payload)
-        .then(() => {
+      axios.post('https://coding-fight-default-rtdb.firebaseio.com/desafios/.json', payload)
+        .then((res) => {
+          const newTurma = {
+            ...payload,
+            id: res.data.name,
+          };
+          axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${res.data.name}.json`, newTurma);
           context.dispatch('setDesafios');
         })
         .catch((err) => {
