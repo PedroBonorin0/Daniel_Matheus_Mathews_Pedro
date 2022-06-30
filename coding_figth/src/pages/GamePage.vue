@@ -65,7 +65,7 @@ export default {
       visible: false,
       playerHit: false,
 
-      countDown: 40,
+      countDown: 10, // 2 minutos
       mensagemAviso: '',
       visibilidade: false,
 
@@ -109,22 +109,26 @@ export default {
     countDownTimer() {
       clearInterval(this.timer);
       this.timer = setInterval(() => {
+        if(this.countDown <= 120*0.5){
+          this.visibilidade = true;
+          this.mensagemAviso = 'Cuidado com o tempo, ele está na metade!';
+        }
         if (this.countDown > 0) {
           this.countDown--;
-        } else {
+        } else{
           clearInterval(this.timer); // Se o tempo acabar, o jogador leva dano
 
-          this.visibilidade = true;
-          this.mensagemAviso = 'Cuidado com o tempo, você sofreu dano!';
-          this.contaErros += 1;
-
-          // Sofre dano
-          this.calcDano(false);
-          this.playerHit = false;
+          // Morre
+          this.playerHp = 0;
+          this.atualizaPontos();
+          this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         }
       }, 1000);
     },
 
+    /**
+     * Função que gerencia a visibilidade da dica e do botão de dica
+     */
     handleDicas() {
       this.dica_visibilidade = true;
     },
@@ -244,11 +248,11 @@ export default {
      *
      */
     gerenciaPerguntas() {
-      if (this.contaPerguntas > 1) {
-        this.visibilidade = false;
-        this.countDown = 40;
-        this.countDownTimer();
-      }
+      // if (this.contaPerguntas > 1) {
+      //   this.visibilidade = false;
+      //   this.countDown = 90; // 1:30 minutos
+      //   this.countDownTimer();
+      // }
       console.log(this.contaPerguntas, this.desafios.length);
       if (this.contaPerguntas > this.desafios.length) {
         this.atualizaPontos();
@@ -256,25 +260,6 @@ export default {
         return
       }
       this.auxGerencia();
-      /* if (this.contaPerguntas <= Math.floor(this.tamanhoDesafio / 3) || this.controlaDificuldade == 1) {
-        // Randomizo as perguntas e respostas
-        this.auxGerencia();
-
-        if (this.contaPerguntas == Math.floor(this.tamanhoDesafio / 3)) { // Se for a última pergunta fácil, aumenta a dificuldade
-          this.controlaDificuldade = 2;
-        }
-      } else if (this.contaPerguntas > Math.floor(this.tamanhoDesafio / 3) && this.contaPerguntas <= 2 * Math.floor(this.tamanhoDesafio / 3) && this.controlaDificuldade == 2) {		// dificuldade média
-        // Randomizo as perguntas e respostas
-        this.auxGerencia();
-
-        if (this.contaPerguntas == 2 * Math.floor(this.tamanhoDesafio / 3)) { // Se for a última pergunta média, aumenta a dificuldade
-          this.controlaDificuldade = 3;
-        }
-      } else if (this.contaPerguntas <= this.tamanhoDesafio && this.contaPerguntas <= this.totalPerguntas) { // Se ainda não superamos o tamanho do desafio e ainda existem perguntas não respondidas
-        // Randomizo as perguntas e respostas
-        this.auxGerencia();
-      } else { // Ao encerrar todas as questões do desafio, devemos prosseguir para uma próxima fase, conteúdo ou para tela de pontuação?
-      } */
     },
 
     /** Função auxiliar responsável por randomizar as perguntas e respostas.
@@ -294,9 +279,10 @@ export default {
       // Randomiza as respostas de acordo com a pergunta
       this.shortRespostas(this.desafios[this.perguntaEscolhida].opcoesResposta);
     },
+
     atualizaPontos() {
       const user = this.userLogado;
-      user.totalPontos += this.contaAcertos;
+      user.totalPontos = this.contaAcertos;
       this.updateUser(user);
     },
   },
