@@ -19,12 +19,14 @@ export default {
   },
 
   methods: {
-    ...mapActions(['autoLogin', 'setTurmas', 'setDesafios']),
+    ...mapActions(['autoLogin', 'setTurmas', 'setDesafios', 'setConteudos', 'setUsers']),
 
     iniciaProjeto() {
       this.autoLogin();
+      this.setUsers();
       this.setTurmas();
-      // this.setDesafios();
+      this.setDesafios();
+      this.setConteudos();
     },
   },
 };
