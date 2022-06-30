@@ -1,7 +1,16 @@
 <template>
     <BaseCard>
       <p>Conteudo: {{ desafioData.nomeConteudo }}</p>
-      <p>Conteudo: {{ desafioData.pergunta }}</p>
+      <p>Pergunta: {{ desafioData.pergunta }}</p>
+      <ul>
+        <li v-for="opc in desafioData.opcoesResposta" :key="opc.id">
+          <span v-if="desafioData.respostaCorreta == opc.id">&#9989; {{ opc.resposta }}</span>
+          <span v-else>{{ opc.resposta }}</span>
+        </li>
+      </ul>
+      <p>Dica: {{ desafioData.dica }}</p>
+      <p>Dificuldade: {{ desafioData.dificuldade }}</p>
+      <p>Criador: {{ desafioData.nomeProfessor }}</p>
     </BaseCard>
 </template>
 
@@ -36,7 +45,7 @@ export default {
       });
 
       this.users.forEach((usr) => {
-        if (desafio.professor == usr.id)
+        if (desafio.professor === usr.id)
           this.nomeProfessor = usr.nomeUsuario;
       });
 
