@@ -208,24 +208,26 @@ export default {
     * @param {boolean} Verificador se o usuario acertou a pergunta
     */
     calcDano(verificador) {
+      const dano_base = 20; //Controlador do dano base sofrido
       this.dica_visibilidade = false;
+      //Modificações no range de dificuldade
       if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Fácil
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= 15;
+          this.enemyHp -= dano_base*0.5; 
         } else {
-          this.playerHp -= 30;
+          this.playerHp -= dano_base*1.5; 
         }
       } else if (this.desafios[this.perguntaEscolhida].dificuldade == 2) { // Médio
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= 20;
+          this.enemyHp -= dano_base;
         } else {
-          this.playerHp -= 20;
+          this.playerHp -= dano_base;
         }
       } else { // Difícil
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= 30;
+          this.enemyHp -= dano_base*1.5;
         } else {
-          this.playerHp -= 15;
+          this.playerHp -= dano_base*0.5;
         }
       }
 
@@ -248,12 +250,6 @@ export default {
      *
      */
     gerenciaPerguntas() {
-      // if (this.contaPerguntas > 1) {
-      //   this.visibilidade = false;
-      //   this.countDown = 90; // 1:30 minutos
-      //   this.countDownTimer();
-      // }
-      console.log(this.contaPerguntas, this.desafios.length);
       if (this.contaPerguntas > this.desafios.length) {
         this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
@@ -282,6 +278,7 @@ export default {
 
     atualizaPontos() {
       const user = this.userLogado;
+      this.countDown = 0;
       user.totalPontos = this.contaAcertos;
       this.updateUser(user);
     },
