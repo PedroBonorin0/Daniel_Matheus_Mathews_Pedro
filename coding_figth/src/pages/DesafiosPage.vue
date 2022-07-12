@@ -106,7 +106,7 @@ export default {
 
       conteudo: 0,
       pergunta: '',
-      picked: 0,
+      picked: 1,
       dificuldade: 1,
       dica: '',
       opcao1: '',
@@ -152,8 +152,11 @@ export default {
 <style scoped>
 
 #geral-desafios {
-  text-align: center;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
 }
 
 .linha-input {

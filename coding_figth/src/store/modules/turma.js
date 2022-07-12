@@ -13,23 +13,39 @@ export default {
     },
   },
   actions: {
-    setTurmas(context) {
-      axios.get('https://coding-fight-default-rtdb.firebaseio.com/turmas.json')
-        .then((res) => {
+    async setTurmas(context) {
+      try {
+        const res = await axios.get('https://coding-fight-default-rtdb.firebaseio.com/turmas.json');
+
+        if (res.data)
           context.commit('setAllTurmas', Object.values(res.data));
-        })
-        .catch((err) => {
-          throw new Error(err.message || 'Failed to get Turmas');
-        });
+      } catch (err) {
+        throw new Error(err.message || 'Failed to get Turmas');
+      }
     },
-    createNewTurma(context, payload) {
-      axios.post('https://coding-fight-default-rtdb.firebaseio.com/turmas.json', payload)
-        .then(() => {
-          context.dispatch('setTurmas');
-        })
-        .catch((err) => {
-          throw new Error(err.message || 'Failed to create Turma');
-        });
+    async updateTurma(context, payload) {
+      try {
+        await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/turmas/${payload.id}.json`, payload);
+        context.dispatch('setTurmas');
+      } catch (err) {
+        throw new Error(err.message || 'Failed to update turma');
+      }
+    },
+    async createNewTurma(context, payload) {
+      try {
+        const res = await axios.post('https://coding-fight-default-rtdb.firebaseio.com/turmas.json', payload);
+
+        const newTurma = {
+          ...payload,
+          id: res.data.name,
+        };
+
+        await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${res.data.name}.json`, newTurma);
+
+        context.dispatch('setTurmas');
+      } catch (err) {
+        throw new Error(err.message || 'Failed to create Turma');
+      }
     },
   },
   getters: {

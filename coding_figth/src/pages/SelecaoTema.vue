@@ -1,6 +1,5 @@
 <template>
   <div class="tema">
-    <img src="../assets/img/logo.png" alt="Coding Fight">
     <BaseCard class="menu-options">
       <div class="button">
         <BaseButton :link="true" to="/game">Introdução</BaseButton>
@@ -37,16 +36,11 @@ export default {
 </script>
 
 <style scoped>
-.home {
+.tema {
+  height: 100%;
   display: flex;
-  height: 80vh;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-}
-
-.home img {
-  width: 18rem;
+  justify-content: center;
 }
 
 .menu-options {

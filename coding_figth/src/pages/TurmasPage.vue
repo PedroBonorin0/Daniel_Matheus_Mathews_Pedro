@@ -1,4 +1,4 @@
-NewTurm<template>
+<template>
   <div id="geral-turmas">
     <div class="add-turma">
       <BaseButton @click="criandoTurma = true">Criar Turma</BaseButton>
@@ -36,7 +36,6 @@ export default {
     ...mapActions(['createNewTurma']),
     criaTurma() {
       const objTurma = {
-        id: Date.now(),
         nome: this.nomeTurma,
         professor: this.userLogado.id,
       };
@@ -49,12 +48,23 @@ export default {
   computed: {
     ...mapGetters(['turmas', 'userLogado']),
     turmasProf() {
-      return this.turmas.filter((trm) => trm.professor == this.userLogado.id);
+      return this.turmas.filter((trm) => String(trm.professor) === String(this.userLogado.id));
     },
   },
 };
 </script>
 
 <style scoped>
+#geral-turmas {
+  text-align: center;
+  margin: 30px auto;
+}
 
+.add-turma {
+  margin-bottom: 30px;
+}
+
+li {
+  margin: 5px;
+}
 </style>

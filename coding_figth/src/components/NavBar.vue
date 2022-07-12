@@ -3,7 +3,7 @@
     <router-link to="/"><img src="../assets/img/logo-espada.png" alt="Coding Fight"></router-link>
     <div>
       <router-link to="/login" class="btn-login" v-if="!isAuthenticated">Entrar</router-link>
-      <router-link to="/login" class="btn-login" @click="logout" v-else>Logout</router-link>
+      <router-link to="/login" class="btn-login" @click="doLogout" v-else>Logout</router-link>
     </div>
   </nav>
 </template>
@@ -14,6 +14,10 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   methods: {
     ...mapActions(['logout']),
+    doLogout() {
+      this.logout();
+      this.$router.replace('/');
+    },
   },
   computed: {
     ...mapGetters(['isAuthenticated', 'userLogado']),

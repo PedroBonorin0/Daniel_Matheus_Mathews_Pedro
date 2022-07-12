@@ -12,21 +12,21 @@ export default {
     },
   },
   actions: {
-    setUsers(context) {
-      axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json')
-        .then((res) => {
-          context.commit('setUsers', Object.values(res.data));
-        })
-        .catch((err) => {
-          throw new Error(err.message || 'Failed to fecth users');
-        });
+    async setUsers(context) {
+      try {
+        const res = await axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json');
+
+        context.commit('setUsers', Object.values(res.data));
+      } catch (err) {
+        throw new Error(err.message || 'Failed to fecth users');
+      }
     },
-    updateUser(context, payload) {
-      axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${payload.id}.json`, payload)
-        .then()
-        .catch((err) => {
-          throw new Error(err.message || 'Failed to Update User');
-        });
+    async updateUser(_context, payload) {
+      try {
+        axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${payload.id}.json`, payload);
+      } catch (err) {
+        throw new Error(err.message || 'Failed to Update users');
+      }
     },
   },
   getters: {

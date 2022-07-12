@@ -9,7 +9,7 @@ import SelecaoTema from '../pages/SelecaoTema.vue';
 import Ranking from '../pages/RankingPage.vue';
 import DesafiosPage from '../pages/DesafiosPage.vue';
 
-// import store from '../store/index';
+import store from '../store/index';
 
 const routes = [
   {
@@ -29,19 +29,24 @@ const routes = [
     path: '/endgame/:hp:hpinimigo',
     props: true,
     component: EndGame,
-    meta: { requiresAuth: true, requiresProf: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/ranking',
     props: true,
     component: Ranking,
-    meta: {  },
   },
   {
     path: '/turmas',
     component: TurmasPage,
     meta: { requiresAuth: true },
+    // meta: { requiresAuth: true, requiresProf: true },
   },
+  // {
+  //   path: '/turmas/:id',
+  //   component: TurmaDetails,
+  //   meta: { requiresAuth: true, requiresProf: true },
+  // },
   {
     path: '/desafios',
     component: DesafiosPage,
@@ -73,11 +78,9 @@ const router = createRouter({
   routes,
 });
 
-/*
 router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
   else next();
 });
-*/
 
 export default router;
