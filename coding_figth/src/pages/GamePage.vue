@@ -1,45 +1,46 @@
 <template>
-<div class="geral-game">
-  <div class="timer"> {{ countDown }} </div>
-  <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
-  <div class="personagens">
-    <SpritePersonagem
-      personagem="player"
-      :hp="playerHp"
+  <BaseLoading v-if="loading" />
+  <div class="geral-game" v-else>
+    <div class="timer"> {{ countDown }} </div>
+    <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
+    <div class="personagens">
+      <SpritePersonagem
+        personagem="player"
+        :hp="playerHp"
+      />
+      <SpritePersonagem
+        personagem="enemy"
+        :hp="enemyHp"
+      />
+    </div>
+    <HitMessage
+      :style="{ visibility: visible ? 'visible' : 'hidden'}"
+      :hit="playerHit"
     />
-    <SpritePersonagem
-      personagem="enemy"
-      :hp="enemyHp"
-    />
-  </div>
-  <HitMessage
-    :style="{ visibility: visible ? 'visible' : 'hidden'}"
-    :hit="playerHit"
-  />
-  <BaseCard :noUnderWidth="true">
-    <div class="conteudo">
-      <div class="pergunta">
-        <h1>Desafio: </h1>
-        <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
-      </div>
-      <div class="dica">
-        <BaseButton class="Dica" @click="handleDicas()"
-        :style="{visibility: dica_visibilidade ? 'hidden' : 'visible'}">Dica</BaseButton>
-        <div :style="{ visibility: dica_visibilidade ? 'visible' : 'hidden'}">
-          <h1>Dica: </h1>
-          <span> {{desafios[this.perguntaEscolhida].dica}} </span>
+    <BaseCard :noUnderWidth="true">
+      <div class="conteudo">
+        <div class="pergunta">
+          <h1>Desafio: </h1>
+          <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
+        </div>
+        <div class="dica">
+          <BaseButton class="Dica" @click="handleDicas()"
+          :style="{visibility: dica_visibilidade ? 'hidden' : 'visible'}">Dica</BaseButton>
+          <div :style="{ visibility: dica_visibilidade ? 'visible' : 'hidden'}">
+            <h1>Dica: </h1>
+            <span> {{desafios[this.perguntaEscolhida].dica}} </span>
+          </div>
+        </div>
+        <div class="container-botoes">
+          <BaseButton
+            class="opcoes"
+            v-for="opcao in opcoesResposta"
+            :key="opcao.id"
+            @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
         </div>
       </div>
-      <div class="container-botoes">
-        <BaseButton
-          class="opcoes"
-          v-for="opcao in opcoesResposta"
-          :key="opcao.id"
-          @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
-      </div>
-    </div>
-  </BaseCard>
-</div>
+    </BaseCard>
+  </div>
 </template>
 
 <script>
@@ -53,6 +54,8 @@ export default {
   modulo: undefined,
   data() {
     return {
+      loading: false,
+
       id: -0,
       pergunta: '',
       opcoesResposta: '',
@@ -82,7 +85,10 @@ export default {
     SpritePersonagem,
     HitMessage,
   },
-  created() {
+  async created() {
+    this.loading = true;
+
+    await this.setDesafios();
     // Conta a qtd total de desafios de mesma dificuldade
     // const totalPerguntasPorDificuldades = this.desafios.filter((obj) => obj.dificuldade === this.controlaDificuldade).length;
 
@@ -101,11 +107,13 @@ export default {
 
     this.timer = 0;
 
+    this.loading = false;
+
     // Inicializa e controla as exibição das perguntas
     this.gerenciaPerguntas();
   },
   methods: {
-    ...mapActions(['updateUser']),
+    ...mapActions(['updateUser', 'setDesafios']),
     countDownTimer() {
       clearInterval(this.timer);
       this.timer = setInterval(() => {

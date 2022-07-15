@@ -1,5 +1,6 @@
 <template>
-  <div id="geral-desafios">
+  <BaseLoading class="loader" v-if="loading"/>
+  <div id="geral-desafios" v-else>
     <div class="add-desafio">
       <BaseButton @click="criandoDesafio = true">Criar Desafio</BaseButton>
     </div>
@@ -101,6 +102,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       criandoDesafio: false,
       desafioSelecionado: null,
 
@@ -116,9 +118,17 @@ export default {
     };
   },
 
+  async created() {
+    this.loading = true;
+    await this.setDesafios();
+
+    await this.setConteudos();
+    this.loading = false;
+  },
+
   methods: {
-    ...mapActions(['createNewDesafio', 'setConteudos']),
-    criaDesafio() {
+    ...mapActions(['createNewDesafio', 'setConteudos', 'setDesafios']),
+    async criaDesafio() {
       this.respostaCorreta = this.picked;
 
       const objDesafio = {
@@ -135,15 +145,28 @@ export default {
         professor: this.userLogado.id,
       };
 
-      this.createNewDesafio(objDesafio);
+      await this.createNewDesafio(objDesafio);
+
+      this.resetAll();
 
       this.criandoDesafio = false;
     },
+    resetAll() {
+      this.conteudo = 0;
+      this.pergunta = '';
+      this.picked = 1;
+      this.dificuldade = 1;
+      this.dica = '';
+      this.opcao1 = '';
+      this.opcao2 = '';
+      this.opcao3 = '';
+      this.opcao4 = '';
+    },
   },
   computed: {
-    ...mapGetters(['desafios', 'userLogado', 'conteudos']),
+    ...mapGetters(['desafios', 'userLogado', 'conteudos', 'desafiosLoaded']),
     desafiosProfLogado() {
-      return this.desafios.filter((dsf) => dsf.professor == this.userLogado.id);
+      return this.desafios.filter((dsf) => String(dsf.professor) === String(this.userLogado.id));
     },
   },
 };
@@ -171,4 +194,9 @@ export default {
   max-width: 60%;
 }
 
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
 </style>

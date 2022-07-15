@@ -22,11 +22,13 @@ export default {
   state() {
     return {
       desafios: [],
+      desafiosLoaded: false,
     };
   },
   mutations: {
     armazenaDesafios(state, payload) {
       state.desafios = payload;
+      state.desafiosLoaded = true;
     },
   },
   actions: {
@@ -67,6 +69,9 @@ export default {
   getters: {
     desafios(state) {
       return state.desafios;
+    },
+    desafiosLoaded(state) {
+      return state.desafiosLoaded;
     },
   },
 };

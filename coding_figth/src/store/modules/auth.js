@@ -11,12 +11,17 @@ export default {
     return {
       userData: null,
       userId: null,
+      loginFinished: false,
     };
   },
   mutations: {
     setUser(state, payload) {
       state.userData = payload;
       state.userId = payload.id;
+      state.loginFinished = true;
+    },
+    load(state, payload) {
+      state.loginFinished = payload;
     },
     logoutUser(state) {
       state.userData = null;
@@ -84,12 +89,13 @@ export default {
       }
     },
     async login(context, payload) {
+      context.commit('load', false);
+
       const auth = getAuth();
       try {
         await signInWithEmailAndPassword(auth, payload.email, payload.senha);
 
         const res = await axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json');
-        console.log('login', res);
 
         Object.values(res.data).forEach((user) => {
           if (user.email === payload.email) {
@@ -102,6 +108,8 @@ export default {
       }
     },
     async autoLogin(context) {
+      context.commit('load', false);
+
       const userId = localStorage.getItem('userId');
 
       if (userId) {
@@ -114,6 +122,8 @@ export default {
         } catch (error) {
           throw new Error(error.message || 'Failed to Login');
         }
+      } else {
+        context.commit('load', true);
       }
     },
     logout(context) {
@@ -139,6 +149,9 @@ export default {
     },
     userLogado(state) {
       return state.userData;
+    },
+    loginFinished(state) {
+      return state.loginFinished;
     },
   },
 };

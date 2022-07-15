@@ -8,7 +8,6 @@
   </div>
 </template>
 
-
 <script>
 export default {
   name: 'EndGame',
@@ -19,13 +18,12 @@ export default {
       mensagem: '',
     };
   },
-  mounted(){
+  mounted() {
     this.playerhp = this.$route.params.hp;
     this.inimigohp = this.$route.params.hpinimigo;
-    if(this.playerhp > 0){
+    if (this.playerhp > 0) {
       this.mensagem = 'Você venceu, parabéns!';
-    }
-    else{
+    } else {
       this.mensagem = 'Você perdeu, tente novamente!';
     }
   },

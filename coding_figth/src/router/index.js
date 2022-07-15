@@ -9,7 +9,7 @@ import SelecaoTema from '../pages/SelecaoTema.vue';
 import Ranking from '../pages/RankingPage.vue';
 import DesafiosPage from '../pages/DesafiosPage.vue';
 
-import store from '../store/index';
+// import store from '../store/index';
 
 const routes = [
   {
@@ -79,7 +79,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, _from, next) => {
-  if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
+  if (to.meta.requiresAuth && !localStorage.getItem('userId')) next('/login');
   else next();
 });
 

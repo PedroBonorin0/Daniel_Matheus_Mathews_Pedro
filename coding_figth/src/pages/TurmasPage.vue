@@ -1,5 +1,6 @@
 <template>
-  <div id="geral-turmas">
+  <BaseLoading v-if="loading" />
+  <div id="geral-turmas" v-else>
     <div class="add-turma">
       <BaseButton @click="criandoTurma = true">Criar Turma</BaseButton>
     </div>
@@ -26,21 +27,28 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
+      loading: false,
+
       criandoTurma: false,
 
       nomeTurma: '',
     };
   },
 
+  async created() {
+    this.loading = true;
+    await this.setTurmas();
+    this.loading = false;
+  },
   methods: {
-    ...mapActions(['createNewTurma']),
-    criaTurma() {
+    ...mapActions(['createNewTurma', 'setTurmas']),
+    async criaTurma() {
       const objTurma = {
         nome: this.nomeTurma,
         professor: this.userLogado.id,
       };
 
-      this.createNewTurma(objTurma);
+      await this.createNewTurma(objTurma);
 
       this.criandoTurma = false;
     },

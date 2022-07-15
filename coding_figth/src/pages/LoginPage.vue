@@ -1,5 +1,6 @@
 <template>
-  <div id="geral-login">
+  <BaseLoading v-if="loading" />
+  <div id="geral-login" v-else>
     <div id="botao-switch-tipo">
       <span class="label-switch">Login</span>
       <label class="switch" for="checkbox">
@@ -95,6 +96,8 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
+      loading: false,
+
       emailLogin: '',
       senhaLogin: '',
 
@@ -127,13 +130,17 @@ export default {
 
   methods: {
     ...mapActions(['signup', 'login', 'getUserInfo']),
-    submitLogin() {
+    async submitLogin() {
+      this.loading = true;
+
       const loginData = {
         email: this.emailLogin,
         senha: this.senhaLogin,
       };
 
-      this.login(loginData);
+      await this.login(loginData);
+      this.loading = false;
+
       this.$router.replace('/');
     },
 

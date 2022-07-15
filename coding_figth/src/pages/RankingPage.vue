@@ -1,31 +1,34 @@
 <template>
-  <div class="ranking">
-    <Ranking></Ranking>
+  <BaseLoading v-if="loading" />
+  <div class="ranking" v-else>
+    <Ranking />
   </div>
 </template>
 
 <script>
 import Ranking from '@/components/Ranking.vue';
 
-import { mapGetters } from 'vuex';
-import axios from 'axios';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'RankingPage',
   data() {
     return {
+      loading: false,
     };
   },
   components: {
     Ranking,
   },
-  created() {
+
+  async created() {
+    this.loading = true;
+    await this.setUsers();
+    this.loading = false;
   },
+
   methods: {
-  },
-  mounted() {
-  },
-  computed: {
+    ...mapActions(['setUsers']),
   },
 };
 </script>
