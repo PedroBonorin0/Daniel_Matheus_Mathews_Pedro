@@ -1,11 +1,11 @@
 import numpy as np
 import pandas as pd
+from datetime import datetime
 
 #Constantes
 vida_player = 100
 vida_monster = 100
-dano_base = 10
-possibilidades_respostas_testes = []
+dano_base = 20
 
 def calcula_dano(dano_base:int, resposta:dict, player:int, monster:int):
       """ Calcula o dano que o player e o monster recebem 
@@ -69,7 +69,7 @@ def adicao_erros(erros, vida_player, vida_monster):
                   qualificacao(vetor, True)
                   # break
             vida_player, vida_monster = calcula_dano(dano_base, vetor[index] , vida_player, vida_monster)
-            auxiliar.append({'player': vida_player, 'monster': vida_monster, 'n': index, 'dificuldade': vetor[index].get('dificuldade')})
+            auxiliar.append({'player': vida_player, 'monster': vida_monster, 'n': index, 'dificuldade': vetor[index].get('dificuldade'), 'acerto': vetor[index].get('acerto')})
             index += 1
 
       return auxiliar
@@ -102,24 +102,59 @@ def min_len_respostas(dano_base, player, monster):
       index = 1
       while(vida_player > 0 and vida_monster > 0):
             vida_player, vida_monster = calcula_dano(dano_base, {'acerto': True, 'dificuldade': dificuldade}, vida_player, vida_monster)
-            auxiliar.append({'player': vida_player, 'monster': vida_monster, 'n': index, 'dificuldade': dificuldade})
+            auxiliar.append({'player': vida_player, 'monster': vida_monster, 'n': index, 'dificuldade': dificuldade, 'acerto': True})
             dificuldade += 1
             index += 1
             if(dificuldade>= 10):
                   dificuldade = 10
       return auxiliar
 
-possibilidades_respostas_testes.append(min_len_respostas(dano_base, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(1, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(2, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(3, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(4, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(5, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(6, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(7, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(8, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(9, vida_player, vida_monster))
-possibilidades_respostas_testes.append(adicao_erros(10, vida_player, vida_monster))
+data = {'Player': [], 'Monster': [], 'nº pergunta': [], 'nº acerto': [], 'nº erro': [], 'nº erros esperados': [], 'Dsiposição': []}
+Tamanho_teste = 100
+for index in range(Tamanho_teste):
+      possibilidades_respostas_testes = []
+      possibilidades_respostas_testes.append(adicao_erros(1, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(2, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(3, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(4, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(5, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(6, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(7, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(8, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(9, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(10, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(11, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(12, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(13, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(14, vida_player, vida_monster))
+      possibilidades_respostas_testes.append(adicao_erros(15, vida_player, vida_monster))
 
-for i in possibilidades_respostas_testes:
-      print(len(i))
+      for i in range(len(possibilidades_respostas_testes)):
+            acerto = 0
+            erro = 0
+            disposicao_perguntas = []
+            for perguntas in possibilidades_respostas_testes[i]:
+                  if(perguntas['acerto'] == True):
+                        acerto += 1
+                  else:
+                        erro += 1
+            data.get('Player').append(possibilidades_respostas_testes[i][-1]['player'])
+            data.get('Monster').append(possibilidades_respostas_testes[i][-1]['monster'])
+            data.get('nº acerto').append(acerto)
+            data.get('nº erro').append(erro)
+            data.get('nº pergunta').append(len(possibilidades_respostas_testes[i]))
+            data.get('nº erros esperados').append(i + 1)
+            for perguntas in possibilidades_respostas_testes[i]:
+                  if(len(possibilidades_respostas_testes[i]) == len(disposicao_perguntas)):
+                        disposicao_perguntas.append('FIM')
+                  if(perguntas['acerto']):
+                        disposicao_perguntas.append('acerto')
+                  else:
+                        disposicao_perguntas.append('erro')
+            data.get('Dsiposição').append(disposicao_perguntas)
+
+tabela = pd.DataFrame(data)
+
+datetime.today().strftime('%H:%M:%S_%d-%m-%Y')
+tabela.to_excel('Documentos/'+str(datetime.today().strftime('%H_%M %d-%m')+'Dano'+str(dano_base)+'.xlsx'), index=False)
+# print(tabela)
