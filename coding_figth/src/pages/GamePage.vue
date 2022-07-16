@@ -65,7 +65,7 @@ export default {
       visible: false,
       playerHit: false,
 
-      countDown: 10, // 2 minutos
+      countDown: 120, // 2 minutos talvez mais?
       mensagemAviso: '',
       visibilidade: false,
 
@@ -172,7 +172,6 @@ export default {
      */
     shortRespostas(opcoes) {
       this.opcoesResposta = this.desafios[this.perguntaEscolhida].opcoesResposta;
-
       for (let i = 0; i < opcoes.length / 2 + 1;) {
         const aux = Math.floor(Math.random() * (opcoes.length));
         if (aux !== i) {
@@ -262,7 +261,7 @@ export default {
     * Isso é feito "ignorando" as perguntas que já foram respondidas.
     */
     auxGerencia() {
-      // Randomizo a pergunta até encontrar o primeiro desafio com dificuldade esperada e que ainda não tenha sido respondida
+      // Falta adicionar sistema de progreção
       let j = Math.floor(Math.random() * (this.totalPerguntas));
       while (this.perguntasMarcadas.includes(j)) {
         j = Math.floor(Math.random() * (this.totalPerguntas));
