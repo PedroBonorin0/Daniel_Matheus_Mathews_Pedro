@@ -8,29 +8,46 @@ def main(base_de_dano):
       vida_player = 100
       vida_monster = 100
       dano_base = base_de_dano
+      Tamanho_teste = 100
 
+      #Divisao das dificuldades
+      Facil = (1, 3)
+      Medio = (Facil[1]+1, 6)
+      Dificil = (Medio[1]+1 ,10)
+      #Fim Constantes
       def calcula_pontuacao(vetor:list):
             """ Calcula a pontuacao do player (Mecanica de ranking)
             Arguments:
                   vetor: <List> Vetor que contem perguntas
             Returns:
-                  <Int> Pontuacao do player
+                  Em andamento
             """
             pontuacao_final = 0
             pontuacao_intermediaria = 0
-            sequencia = 0
+            sequencia = 1
+            maior_sequencia = 1
             for i in vetor:
                   if(i.get('acerto') == True):
-                        pontuacao_intermediaria += i.get('dificuldade')
+                        if(i.get('dificuldade') <= Facil[1]): #Facil
+                              pontuacao_intermediaria += 1
+                        elif(i.get('dificuldade') <= Medio[1] and i.get('dificuldade') > Medio[0]):#Medio
+                              pontuacao_intermediaria += 2
+                        else:                           #Dificil
+                              pontuacao_intermediaria += 3
                         sequencia += 1
                   else:
                         pontuacao_final += pontuacao_intermediaria*sequencia
                         pontuacao_intermediaria = 0
-                        sequencia = 0
-                  
-                  pontuacao_final += pontuacao_intermediaria*sequencia
-                  print(i, pontuacao_final)
-            return int(pontuacao_final)
+                        sequencia = 1
+                  if(sequencia > maior_sequencia):
+                        maior_sequencia = sequencia
+                  if(vetor[-1].get('monster') == 0):
+                        pontuacao_final += pontuacao_intermediaria*sequencia*vetor[-1].get('player')/1
+                  else:
+                        pontuacao_final += pontuacao_intermediaria*sequencia*vetor[-1].get('player')/vetor[-1].get('monster')
+            if(vetor[-1].get('player') == 0):
+                  pontuacao_final = 0 
+            return int(pontuacao_final/100), int(maior_sequencia-1)
 
       def calcula_dano(dano_base:int, resposta:dict, player:int, monster:int):
             """ Calcula o dano que o player e o monster recebem 
@@ -42,12 +59,12 @@ def main(base_de_dano):
             Returns:
                   <tuple[int, int]> (Vida do player, Vida do monster)
             """
-            if(resposta.get('dificuldade') <= 3):##Facil
+            if(resposta.get('dificuldade') <= Facil[1]):##Facil
                   if(resposta.get('acerto')):
                         monster -= dano_base * 0.5
                   else:
                         player -= dano_base * 1.5
-            elif(resposta.get('dificuldade') <= 7 and resposta.get('dificuldade') > 3):##Facil
+            elif(resposta.get('dificuldade') <= Medio[1] and resposta.get('dificuldade') > Medio[0]):##Facil
                   if(resposta.get('acerto')):
                         monster -= dano_base
                   else:
@@ -166,8 +183,10 @@ def main(base_de_dano):
                         dificuldade = 10
             return auxiliar
 
-      data = {'Player': [], 'Monster': [], 'nº pergunta': [], 'nº acerto': [], 'nº erro': [], 'nº erros esperados': [],'Pontuação': [], 'Dsiposição': []}
-      Tamanho_teste = 1
+      data = {'Player': [], 'Monster': [], 'nº pergunta': [], 'nº acerto': [], 
+      'nº erro': [], 'nº erros esperados': [],'Pontuação': [], 'Maior Sequencia': [],
+      'Dsiposição': []}
+      
       for index in range(Tamanho_teste):
             possibilidades_respostas_testes = []
             possibilidades_respostas_testes.append(min_len_respostas(dano_base, vida_player, vida_monster))
@@ -202,7 +221,9 @@ def main(base_de_dano):
                   data.get('nº erro').append(erro)
                   data.get('nº pergunta').append(len(possibilidades_respostas_testes[i]))
                   data.get('nº erros esperados').append(i)
-                  data.get('Pontuação').append(calcula_pontuacao(possibilidades_respostas_testes[i]))
+                  pontos, maior_sequencia = calcula_pontuacao(possibilidades_respostas_testes[i])
+                  data.get('Pontuação').append(pontos)
+                  data.get('Maior Sequencia').append(maior_sequencia)
                   for perguntas in possibilidades_respostas_testes[i]:
                         if(len(possibilidades_respostas_testes[i]) == len(disposicao_perguntas)):
                               disposicao_perguntas.append('FIM')
@@ -213,7 +234,7 @@ def main(base_de_dano):
                   data.get('Dsiposição').append(disposicao_perguntas)
 
       tabela = pd.DataFrame(data)
-      # tabela.to_excel('Documentos/'+str(datetime.today().strftime('%H_%M %d-%m')+'Dano'+str(dano_base)+'.xlsx'), index=False)
+      tabela.to_excel('Documentos/'+str(datetime.today().strftime('%H_%M %d-%m')+'Dano'+str(dano_base)+'.xlsx'), index=False)
       return 
 
 main(10)
