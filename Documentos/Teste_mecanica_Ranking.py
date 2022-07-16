@@ -1,6 +1,9 @@
 import numpy as np
 import pandas as pd
 from datetime import datetime
+import random
+
+from scipy import rand
 
 def main(base_de_dano):
 
@@ -111,11 +114,12 @@ def main(base_de_dano):
             np.random.shuffle(vetor)
 
             if(vetor[-1].get('acerto') == False):
-                  for i in vetor:
-                        if(i.get('acerto') == True):
+                  while(True):
+                        index_troca = random.randint(1, len(vetor)-1)
+                        if(vetor[index_troca].get('acerto') == True):
                               aux = vetor[-1] 
-                              vetor[-1] = i
-                              i = aux
+                              vetor[-1] = vetor[index_troca]
+                              vetor[index_troca] = aux
                               break
             
             qualificacao(vetor)
