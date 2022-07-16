@@ -115,7 +115,7 @@ def main(base_de_dano):
 
             if(vetor[-1].get('acerto') == False):
                   while(True):
-                        index_troca = random.randint(1, len(vetor)-1)
+                        index_troca = random.randint(1, len(vetor)-2)
                         if(vetor[index_troca].get('acerto') == True):
                               aux = vetor[-1] 
                               vetor[-1] = vetor[index_troca]
