@@ -40,7 +40,7 @@ export default {
           id: res.data.name,
         };
 
-        await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${res.data.name}.json`, newTurma);
+        await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/turmas/${res.data.name}.json`, newTurma);
 
         context.dispatch('setTurmas');
       } catch (err) {

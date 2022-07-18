@@ -17,5 +17,6 @@ module.exports = {
     'nonblock-statement-body-position': 'off',
     curly: 'off',
     'no-plusplus': 'off',
+    'vuejs-accessibility/click-events-have-key-events': 'off',
   },
 };

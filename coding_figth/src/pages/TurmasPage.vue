@@ -13,18 +13,21 @@
           <BaseButton type="submit">Criar</BaseButton>
       </form>
     </BaseDialog>
-    <ul class="list-turmas">
-      <li v-for="turma in turmasProf" :key="turma.id">
-        {{ turma.nome }}
-      </li>
-    </ul>
+    <div class="list-turmas">
+      <TurmaBlock v-for="turma in turmasProf" :key="turma.id" :turma="turma"
+      @delete-turma="deletaTurma"/>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import TurmaBlock from '@/components/TurmaBlock.vue';
 
 export default {
+  components: {
+    TurmaBlock,
+  },
   data() {
     return {
       loading: false,
@@ -51,6 +54,9 @@ export default {
       await this.createNewTurma(objTurma);
 
       this.criandoTurma = false;
+    },
+    deletaTurma(turma) {
+      console.log(turma);
     },
   },
   computed: {

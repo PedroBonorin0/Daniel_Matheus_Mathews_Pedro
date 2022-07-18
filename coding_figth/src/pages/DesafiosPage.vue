@@ -1,10 +1,21 @@
 <template>
   <BaseLoading class="loader" v-if="loading"/>
   <div id="geral-desafios" v-else>
-    <div class="add-desafio">
-      <BaseButton @click="criandoDesafio = true">Criar Desafio</BaseButton>
+    <div v-if="!criandoDesafio">
+      <div class="add-desafio">
+        <BaseButton @click="criandoDesafio = true">Criar Desafio</BaseButton>
+      </div>
+      <div class="linha-input">
+        <label for="desafio">
+            Desafio <br>
+            <select id="desafio" v-model="desafioSelecionado" @change="aa">
+              <option v-for="desafio in desafiosProfLogado" :key="desafio.id"
+              :value="desafio.id">{{ desafio.dica }}</option>
+            </select>
+        </label>
+      </div>
     </div>
-    <BaseDialog :show="criandoDesafio" title="Criar Novo Desafio" @close="criandoDesafio = false">
+    <BaseCard class="form-desafio" v-else>
       <form @submit.prevent="criaDesafio">
         <div class="linha-input">
             <label for="conteudo">
@@ -18,9 +29,9 @@
         <div class="linha-input">
             <label for="pergunta">
                 Pergunta do Desafio <br>
-                <input
-                    type="text" id="desafio" placeholder="Digite a pergunta do desafio"
-                    v-model="pergunta">
+                <textarea id="desafio" rows="4" cols="100" v-model="pergunta">
+                  Digite a sua pergunta...
+                </textarea>
             </label>
         </div>
         <div class="linha-input">
@@ -78,16 +89,7 @@
           <BaseButton type="submit">Criar</BaseButton>
         </div>
       </form>
-    </BaseDialog>
-    <div class="linha-input">
-      <label for="desafio">
-          Desafio <br>
-          <select id="desafio" v-model="desafioSelecionado" @change="aa">
-            <option v-for="desafio in desafiosProfLogado" :key="desafio.id"
-            :value="desafio.id">{{ desafio.dica }}</option>
-          </select>
-      </label>
-    </div>
+    </BaseCard>
     <DesafioInfo v-if="desafioSelecionado" :desafioId="desafioSelecionado"/>
   </div>
 </template>
@@ -198,5 +200,13 @@ export default {
   position: fixed;
   top: 50%;
   left: 50%;
+}
+
+.form-desafio {
+  background: blue;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
