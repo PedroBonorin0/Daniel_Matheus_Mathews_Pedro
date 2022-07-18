@@ -4,10 +4,12 @@
     <div class="add-turma">
       <BaseButton @click="criandoTurma = true">Criar Turma</BaseButton>
     </div>
-    <BaseDialog :show="criandoTurma" title="Criar Nova Turma" @close="criandoTurma = false">
-      <form @submit.prevent="criaTurma">
+    <BaseDialog :show="criandoTurma" title="Criar Nova Turma"
+      @close="criandoTurma = false"
+    >
+      <form @submit.prevent="criaTurma" class="cria-turma">
         <label for="turma">
-          Turma
+          Turma:
           <input type="text" placeholder="Digite o nome da turma" v-model="nomeTurma">
         </label>
           <BaseButton type="submit">Criar</BaseButton>
@@ -65,6 +67,7 @@ export default {
       await this.createNewTurma(objTurma);
 
       this.criandoTurma = false;
+      this.nomeTurma = '';
     },
     deletaTurma(turma) {
       this.turmaSelecionada = turma;
@@ -92,6 +95,27 @@ export default {
 
 .add-turma {
   margin-bottom: 30px;
+}
+
+.cria-turma {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cria-turma input {
+  width: 70%;
+  height: 24px;
+  background: #eee;
+  border: 0;
+  border-radius: 4px;
+  margin-top: 2px;
+  padding: 2px 5px;
+  margin: 8px 0;
+}
+
+.cria-turma button {
+  width: 80px;
 }
 
 li {
