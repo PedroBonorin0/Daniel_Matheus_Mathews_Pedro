@@ -73,10 +73,6 @@ export default {
     async confirmDeleteTurma() {
       await this.deleteTurma(this.turmaSelecionada.id);
       this.deletandoTurma = false;
-
-      this.loading = true;
-      await this.setTurmas();
-      this.loading = false;
     },
   },
   computed: {
