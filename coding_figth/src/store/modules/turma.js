@@ -19,6 +19,8 @@ export default {
 
         if (res.data)
           context.commit('setAllTurmas', Object.values(res.data));
+        else
+          context.commit('setAllTurmas', []);
       } catch (err) {
         throw new Error(err.message || 'Failed to get Turmas');
       }
@@ -45,6 +47,15 @@ export default {
         context.dispatch('setTurmas');
       } catch (err) {
         throw new Error(err.message || 'Failed to create Turma');
+      }
+    },
+    async deleteTurma(context, payload) {
+      try {
+        await axios.delete(`https://coding-fight-default-rtdb.firebaseio.com/turmas/${payload}.json`);
+
+        context.dispatch('setTurmas');
+      } catch (err) {
+        throw new Error(err.message || 'Failed to delete Turma');
       }
     },
   },

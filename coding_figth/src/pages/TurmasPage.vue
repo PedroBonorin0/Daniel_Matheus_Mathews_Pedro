@@ -17,6 +17,13 @@
       <TurmaBlock v-for="turma in turmasProf" :key="turma.id" :turma="turma"
       @delete-turma="deletaTurma"/>
     </div>
+    <BaseDialog :show="deletandoTurma" title="Deletar turma" @close="deletandoTurma = false">
+      <h1>Deseja Deletar turma {{ turmaSelecionada.nome }}</h1>
+      <div class="linha-btns">
+        <BaseButton @click="confirmDeleteTurma">Sim</BaseButton>
+        <BaseButton @click="deletandoTurma = false">Não</BaseButton>
+      </div>
+    </BaseDialog>
   </div>
 </template>
 
@@ -35,6 +42,10 @@ export default {
       criandoTurma: false,
 
       nomeTurma: '',
+
+      deletandoTurma: false,
+      turmaSelecionada: null,
+      delTurma: false,
     };
   },
 
@@ -44,7 +55,7 @@ export default {
     this.loading = false;
   },
   methods: {
-    ...mapActions(['createNewTurma', 'setTurmas']),
+    ...mapActions(['createNewTurma', 'setTurmas', 'deleteTurma']),
     async criaTurma() {
       const objTurma = {
         nome: this.nomeTurma,
@@ -56,7 +67,16 @@ export default {
       this.criandoTurma = false;
     },
     deletaTurma(turma) {
-      console.log(turma);
+      this.turmaSelecionada = turma;
+      this.deletandoTurma = true;
+    },
+    async confirmDeleteTurma() {
+      await this.deleteTurma(this.turmaSelecionada.id);
+      this.deletandoTurma = false;
+
+      this.loading = true;
+      await this.setTurmas();
+      this.loading = false;
     },
   },
   computed: {
