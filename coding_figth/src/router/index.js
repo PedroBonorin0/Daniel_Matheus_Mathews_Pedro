@@ -7,8 +7,9 @@ import LoginPage from '../pages/LoginPage.vue';
 import TurmasPage from '../pages/TurmasPage.vue';
 import TurmaInfo from '../pages/TurmaInfo.vue';
 import SelecaoTema from '../pages/SelecaoTema.vue';
-import Ranking from '../pages/RankingPage.vue';
+import RankingPage from '../pages/RankingPage.vue';
 import DesafiosPage from '../pages/DesafiosPage.vue';
+import SugestionsPage from '../pages/SugestionsPage.vue';
 
 // import store from '../store/index';
 
@@ -35,7 +36,13 @@ const routes = [
   {
     path: '/ranking',
     props: true,
-    component: Ranking,
+    component: RankingPage,
+  },
+  {
+    path: '/sugestions',
+    props: true,
+    component: SugestionsPage,
+    meta: { requiresAuth: true },
   },
   {
     path: '/turmas',
