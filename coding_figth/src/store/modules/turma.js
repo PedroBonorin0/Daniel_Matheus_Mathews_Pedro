@@ -58,6 +58,9 @@ export default {
         throw new Error(err.message || 'Failed to delete Turma');
       }
     },
+    setTurmaAluno(context, payload) {
+      return context.state.turmas.filter((tr) => tr.id === payload)[0];
+    },
   },
   getters: {
     turmas(state) {

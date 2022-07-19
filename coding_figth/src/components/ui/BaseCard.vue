@@ -7,7 +7,7 @@
 <script>
 export default {
   props: {
-    noUnderWidth: { type: Boolean, required: false, default: true },
+    noUnderWidth: { type: Boolean, required: false, default: false },
   },
 };
 </script>

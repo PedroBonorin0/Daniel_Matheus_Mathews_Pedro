@@ -128,8 +128,14 @@ export default {
     };
   },
 
+  created() {
+    this.loading = true;
+    this.setTurmas();
+    this.loading = false;
+  },
+
   methods: {
-    ...mapActions(['signup', 'login', 'getUserInfo']),
+    ...mapActions(['signup', 'login', 'getUserInfo', 'setTurmas']),
     async submitLogin() {
       this.loading = true;
 

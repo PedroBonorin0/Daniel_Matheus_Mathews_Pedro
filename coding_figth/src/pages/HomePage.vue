@@ -34,9 +34,7 @@ export default {
   computed: {
     ...mapGetters(['professorLogged', 'users', 'isAuthenticated', 'userLogado']),
     linkSalaAluno() {
-      const user = this.userLogado;
-      // console.log(user);
-      // return `/turmas/${user.turma.id}`;
+      return `/turmas/${this.userLogado.turma}`;
     },
   },
 };

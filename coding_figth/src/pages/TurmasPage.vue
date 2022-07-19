@@ -16,14 +16,16 @@
       </form>
     </BaseDialog>
     <div class="list-turmas">
-      <TurmaBlock v-for="turma in turmasProf" :key="turma.id" :turma="turma"
-      @delete-turma="deletaTurma"/>
+        <TurmaBlock v-for="turma in turmasProf" :key="turma.id" :turma="turma"
+        @delete-turma="deletaTurma"/>
     </div>
     <BaseDialog :show="deletandoTurma" title="Deletar turma" @close="deletandoTurma = false">
-      <h1>Deseja Deletar turma {{ turmaSelecionada.nome }}</h1>
-      <div class="linha-btns">
-        <BaseButton @click="confirmDeleteTurma">Sim</BaseButton>
-        <BaseButton @click="deletandoTurma = false">Não</BaseButton>
+      <div class="delete-turma">
+        <p>Deseja Deletar turma <strong>{{ turmaSelecionada.nome }}</strong></p>
+        <div class="linha-btns">
+          <BaseButton @click="confirmDeleteTurma">Sim</BaseButton>
+          <BaseButton @click="deletandoTurma = false">Não</BaseButton>
+        </div>
       </div>
     </BaseDialog>
   </div>
@@ -118,7 +120,23 @@ export default {
   width: 80px;
 }
 
-li {
-  margin: 5px;
+.list-turmas {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: auto;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  place-items: center;
+}
+
+.delete-turma {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.delete-turma p {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
 }
 </style>

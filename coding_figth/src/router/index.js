@@ -5,6 +5,7 @@ import GamePage from '../pages/GamePage.vue';
 import EndGame from '../pages/Endgame.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import TurmasPage from '../pages/TurmasPage.vue';
+import TurmaInfo from '../pages/TurmaInfo.vue';
 import SelecaoTema from '../pages/SelecaoTema.vue';
 import Ranking from '../pages/RankingPage.vue';
 import DesafiosPage from '../pages/DesafiosPage.vue';
@@ -42,22 +43,16 @@ const routes = [
     meta: { requiresAuth: true },
     // meta: { requiresAuth: true, requiresProf: true },
   },
-  // {
-  //   path: '/turmas/:id',
-  //   component: TurmaDetails,
-  //   meta: { requiresAuth: true, requiresProf: true },
-  // },
+  {
+    path: '/turmas/:id',
+    component: TurmaInfo,
+    meta: { requiresAuth: true },
+  },
   {
     path: '/desafios',
     component: DesafiosPage,
     meta: { requiresAuth: true },
   },
-  // {
-  //   path: '/turmas/:id',
-  //   component: TurmaDetails,
-  //   props: true,
-  //   meta: { requiresAuth: true },
-  // },
   {
     path: '/login',
     component: LoginPage,
