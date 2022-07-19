@@ -1,3 +1,6 @@
+<!-- eslint-disable no-lonely-if -->
+<!-- eslint-disable max-len -->
+<!-- eslint-disable max-len -->
 <template>
   <BaseLoading v-if="loading" />
   <div class="geral-game" v-else>
@@ -97,8 +100,8 @@ export default {
     // this.controlaDificuldade = 1; // Serve para controlar a dificuldade da questão - A primeira questão deve ser fácil
 
     // Variáveis gerais
-    this.totalPerguntas = this.desafios.length;	// Total de perguntas
-    this.perguntasMarcadas = [];	// Array que guarda as perguntas já marcadas
+    this.totalPerguntas = this.desafios.length;// Total de perguntas
+    this.perguntasMarcadas = [];// Array que guarda as perguntas já marcadas
 
     // Variáveis de controle do jogo
     this.tamanhoDesafio = 10; // Total de perguntas por desafio
@@ -144,8 +147,8 @@ export default {
      */
     handleResposta(opcao) {
       this.contaPerguntas += 1;
-      this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta);
-      if (opcao.id === this.respostaCorreta) { 	// Se o usuário acertou a questão
+      this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta, 10);
+      if (opcao.id === this.respostaCorreta) { // Se o usuário acertou a questão
         // console.log('Acertou');
         this.contaAcertos += 1;
 
@@ -178,9 +181,9 @@ export default {
       for (let i = 0; i < opcoes.length / 2 + 1;) {
         const aux = Math.floor(Math.random() * (opcoes.length));
         if (aux !== i) {
-          const i_aux = this.opcoesResposta[i];
+          const iAux = this.opcoesResposta[i];
           this.opcoesResposta[i] = this.opcoesResposta[aux];
-          this.opcoesResposta[aux] = i_aux;
+          this.opcoesResposta[aux] = iAux;
           i++;
         }
       }
@@ -211,13 +214,13 @@ export default {
     */
     calcDano(verificador) {
       this.dica_visibilidade = false;
-      if (this.desafios[this.perguntaEscolhida].dificuldade == 1) { // Fácil
+      if (this.desafios[this.perguntaEscolhida].dificuldade === 1) { // Fácil
         if (verificador) { // Acertou a pergunta
           this.enemyHp -= 15;
         } else {
           this.playerHp -= 30;
         }
-      } else if (this.desafios[this.perguntaEscolhida].dificuldade == 2) { // Médio
+      } else if (this.desafios[this.perguntaEscolhida].dificuldade === 2) { // Médio
         if (verificador) { // Acertou a pergunta
           this.enemyHp -= 20;
         } else {

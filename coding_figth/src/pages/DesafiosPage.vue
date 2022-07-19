@@ -203,7 +203,7 @@ export default {
 }
 
 .form-desafio {
-  background: blue;
+  background: rgb(115, 115, 245);
   width: 100%;
   display: flex;
   align-items: center;

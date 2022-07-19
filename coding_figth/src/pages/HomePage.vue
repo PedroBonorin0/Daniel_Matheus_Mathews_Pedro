@@ -11,6 +11,9 @@
       <div class="button">
         <BaseButton :link="true" to="/ranking">Ranking Geral</BaseButton>
       </div>
+      <div class="button">
+        <BaseButton :link="true" to="/sugestions">Sugestões/Reclamações</BaseButton>
+      </div>
       <div v-if="isAuthenticated" id="btn-turmas">
         <div v-if="!professorLogged" class="button-turmas">
           <BaseButton :link="true" :to="linkSalaAluno">Turma</BaseButton>
