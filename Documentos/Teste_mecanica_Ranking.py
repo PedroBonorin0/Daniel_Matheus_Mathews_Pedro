@@ -45,9 +45,9 @@ def main(base_de_dano):
                   if(sequencia > maior_sequencia):
                         maior_sequencia = sequencia
                   if(vetor[-1].get('monster') == 0):
-                        pontuacao_final += pontuacao_intermediaria*sequencia*vetor[-1].get('player')/1
+                        pontuacao_final += pontuacao_intermediaria*(sequencia/10)*vetor[-1].get('player')/1
                   else:
-                        pontuacao_final += pontuacao_intermediaria*sequencia*vetor[-1].get('player')/vetor[-1].get('monster')
+                        pontuacao_final += pontuacao_intermediaria*(sequencia/10)*vetor[-1].get('player')/vetor[-1].get('monster')
             if(vetor[-1].get('player') == 0):
                   pontuacao_final = 0 
             return int(pontuacao_final/100), int(maior_sequencia-1)
@@ -190,7 +190,8 @@ def main(base_de_dano):
       data = {'Player': [], 'Monster': [], 'nº pergunta': [], 'nº acerto': [], 
       'nº erro': [], 'nº erros esperados': [],'Pontuação': [], 'Maior Sequencia': [],
       'Dsiposição': []}
-      
+      data_saida = {'Maximo pontos': [], 'Minimo pontos': [], 'Media pontos': [],
+      'Max maior Sequencia': [],'Min maior Sequencia': [],'Med maior Sequencia': [], 'Erros Esperados': [], 'Vitorias': [], 'Derrotas': []}
       for index in range(Tamanho_teste):
             possibilidades_respostas_testes = []
             possibilidades_respostas_testes.append(min_len_respostas(dano_base, vida_player, vida_monster))
@@ -239,7 +240,42 @@ def main(base_de_dano):
 
       tabela = pd.DataFrame(data)
       tabela.to_excel('Documentos/'+str(datetime.today().strftime('%H_%M_%S %d-%m-%y')+'Dano'+str(dano_base)+'.xlsx'), index=False)
-      return 
+      
+      for i in range(Tamanho_teste):
+            for j in range(len(possibilidades_respostas_testes)):
+                  if(i == 0):
+                        data_saida['Maximo pontos'].append(data.get('Pontuação')[j])
+                        data_saida['Minimo pontos'].append(data.get('Pontuação')[j])
+                        data_saida['Media pontos'].append(data.get('Pontuação')[j])
+                        data_saida['Erros Esperados'].append(data.get('nº erros esperados')[j])
+                        data_saida['Max maior Sequencia'].append(data.get('Maior Sequencia')[j])
+                        data_saida['Min maior Sequencia'].append(data.get('Maior Sequencia')[j])
+                        data_saida['Med maior Sequencia'].append(data.get('Maior Sequencia')[j])
+                        if(data.get('Player')[j] >0 ):
+                              data_saida['Vitorias'].append(1)
+                              data_saida['Derrotas'].append(0)
+                        else:
+                              data_saida['Vitorias'].append(0)
+                              data_saida['Derrotas'].append(1)
+                  else:
+                        if(data_saida['Maximo pontos'][j] < data.get('Pontuação')[j+i*len(possibilidades_respostas_testes)]):
+                              data_saida['Maximo pontos'][j] = data.get('Pontuação')[j+i*len(possibilidades_respostas_testes)]
+                        if(data_saida['Minimo pontos'][j] > data.get('Pontuação')[j+i*len(possibilidades_respostas_testes)]):
+                              data_saida['Minimo pontos'][j] = data.get('Pontuação')[j+i*len(possibilidades_respostas_testes)]
+                        data_saida['Media pontos'][j] += data.get('Pontuação')[j+i*len(possibilidades_respostas_testes)]
+                        data_saida['Media pontos'][j] = data_saida['Media pontos'][j]/2
+                        if(data_saida['Max maior Sequencia'][j] < data.get('Maior Sequencia')[j+i*len(possibilidades_respostas_testes)]):
+                              data_saida['Max maior Sequencia'][j] = data.get('Maior Sequencia')[j+i*len(possibilidades_respostas_testes)]
+                        if(data_saida['Min maior Sequencia'][j] > data.get('Maior Sequencia')[j+i*len(possibilidades_respostas_testes)]):
+                              data_saida['Min maior Sequencia'][j] = data.get('Maior Sequencia')[j+i*len(possibilidades_respostas_testes)]
+                        data_saida['Med maior Sequencia'][j] += data.get('Maior Sequencia')[j+i*len(possibilidades_respostas_testes)]
+                        data_saida['Med maior Sequencia'][j] = data_saida['Med maior Sequencia'][j]/2
+                        if(data.get('Player')[j+i*len(possibilidades_respostas_testes)] >0 ):
+                              data_saida['Vitorias'][j] = data_saida['Vitorias'][j] + 1
+                        else:
+                              data_saida['Derrotas'][j] = data_saida['Derrotas'][j] + 1 
 
+      tabela_medias = pd.DataFrame(data_saida)
+      tabela_medias.to_excel('Documentos/'+str(datetime.today().strftime('%H_%M_%S %d-%m-%y')+'Dano'+str(dano_base)+'_Media.xlsx'), index=False)
 main(10)
 main(20)
