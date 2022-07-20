@@ -39,7 +39,8 @@
             class="opcoes"
             v-for="opcao in opcoesResposta"
             :key="opcao.id"
-            @click="handleResposta(opcao)">{{opcao.resposta}}</BaseButton>
+            @click="handleResposta(opcao)"
+          >{{opcao.resposta}}</BaseButton>
         </div>
       </div>
     </BaseCard>
@@ -152,7 +153,7 @@ export default {
         // console.log('Acertou');
         this.contaAcertos += 1;
 
-        // Dano no enimigo
+        // Dano no inimigo
         this.calcDano(true);
         this.playerHit = true;
       } else { // Se o usuário errou a questão
@@ -163,10 +164,12 @@ export default {
         this.calcDano(false);
         this.playerHit = false;
       }
-      // Gerencia a próxima pergunta
-      this.gerenciaPerguntas();
+
       this.visible = true;
       setTimeout(() => {
+        // Gerencia a próxima pergunta
+        this.exibeCorreta = false;
+        this.gerenciaPerguntas();
         this.visible = false;
       }, 1500);
     },
@@ -239,12 +242,16 @@ export default {
         this.playerHp = 0;
         this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
+        this.playerHp = 100;
+        this.enemyHp = 100;
       }
       // O Jogador venceu
       if (this.enemyHp <= 0) {
         this.enemyHp = 0;
         this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
+        this.playerHp = 100;
+        this.enemyHp = 100;
       }
     },
 
@@ -258,8 +265,9 @@ export default {
         this.countDown = 40;
         this.countDownTimer();
       }
-      console.log(this.contaPerguntas, this.desafios.length);
+      // console.log(this.contaPerguntas, this.desafios.length);
       if (this.contaPerguntas > this.desafios.length) {
+        console.log('conta');
         this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         return;
@@ -303,11 +311,10 @@ export default {
       // Randomiza as respostas de acordo com a pergunta
       this.shortRespostas(this.desafios[this.perguntaEscolhida].opcoesResposta);
     },
-    atualizaPontos() {
+    async atualizaPontos() {
       const user = this.userLogado;
       user.totalPontos += this.contaAcertos;
-      console.log(user);
-      this.updateUser(user);
+      await this.updateUser(user);
     },
   },
   mounted() {
@@ -381,5 +388,9 @@ export default {
   width: 100%;
   margin: 20px auto;
   text-align: center;
+}
+
+.res-correta {
+  background: #248b3e;
 }
 </style>
