@@ -416,6 +416,17 @@ export default {
 
     this.play(this.audios[0]);
   },
+  watch:{
+    // Pausa a trilha sonora ao sair da página
+      $route (to, from){
+        this.audios.forEach( function (key) {
+        if(key.isPlaying){
+          key.file.pause();
+          key.isPlaying = false;
+        }
+      });
+    }
+  },
   computed: {
     ...mapGetters(['desafios', 'userLogado']),
   },
