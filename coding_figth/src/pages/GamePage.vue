@@ -265,14 +265,7 @@ export default {
         this.visibilidade = false;
         this.countDownTimer();
       }
-<<<<<<< HEAD
       if (this.contaPerguntas > this.desafios.length) {
-=======
-      // console.log(this.contaPerguntas, this.desafios.length);
-      if (this.contaPerguntas > this.desafios.length) {
-        console.log('conta');
-        this.atualizaPontos();
->>>>>>> a17dee009246f6197173b40570ac7db10eae4df9
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         console.log('ERRO - Não foi possível encontrar o numero de perguntas para acabar com o jogo');
         return;
