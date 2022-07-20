@@ -5,6 +5,7 @@ import turma from './modules/turma';
 import conteudo from './modules/conteudo';
 import desafio from './modules/desafio';
 import auth from './modules/auth';
+import reclamacoes from './modules/reclamacoes';
 
 export default createStore({
   state: {
@@ -21,5 +22,6 @@ export default createStore({
     user,
     desafio,
     auth,
+    reclamacoes,
   },
 });

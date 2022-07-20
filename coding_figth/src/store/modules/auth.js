@@ -74,6 +74,8 @@ export default {
             turma: payload.turma,
             pontosDesafios: [],
             totalPontos: 0,
+            jaJogou: false,
+            exibeRanking: false,
           };
         }
 

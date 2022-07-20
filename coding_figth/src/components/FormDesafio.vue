@@ -1,92 +1,94 @@
 <template>
   <BaseCard class="form-desafio">
-      <form @submit.prevent="handleSubmit">
-        <div class="linha-input">
-            <label for="conteudo">
-                Conteúdo <br>
-                <select id="conteudo" v-model="conteudo">
-                    <option v-for="conteudo in conteudos" :key="conteudo.id"
-                    :value="conteudo.id">{{ conteudo.nome }}</option>
-                </select>
-            </label>
-        </div>
-        <div class="linha-input">
-            <label for="pergunta">
-                Pergunta do Desafio <br>
-                <textarea id="desafio" rows="4" cols="100" v-model="pergunta">
-                  Digite a sua pergunta...
-                </textarea>
-            </label>
-        </div>
-        <div class="linha-input">
-            <label for="opcao1">
-              Opção de Resposta 1 <br>
+    <form @submit.prevent="handleSubmit">
+      <button v-if="editando" @click="confirmDeleteDesafio"
+        class="btn-remove">&#x2718;</button>
+      <div class="linha-input">
+          <label for="conteudo">
+              Conteúdo <br>
+              <select id="conteudo" v-model="conteudo">
+                  <option v-for="conteudo in conteudos" :key="conteudo.id"
+                  :value="conteudo.id">{{ conteudo.nome }}</option>
+              </select>
+          </label>
+      </div>
+      <div class="linha-input">
+          <label for="pergunta">
+              Pergunta do Desafio <br>
+              <textarea id="desafio" rows="4" cols="100" v-model="pergunta">
+                Digite a sua pergunta...
+              </textarea>
+          </label>
+      </div>
+      <div class="linha-input">
+          <label for="opcao1">
+            Opção de Resposta 1 <br>
+            <div class="radio-input">
+              <input class="radio-circle"
+                type="radio" id="opc1" value="1" v-model="picked" checked>
+              <input
+                type="text" id="opcao1" placeholder="Digite a opção 1"
+                class="text-input" v-model="opcao1">
+            </div>
+          </label>
+      </div>
+      <div class="linha-input">
+          <label for="opcao2">
+            Opção de Resposta 2 <br>
+            <div class="radio-input">
+              <input class="radio-circle"
+                type="radio" id="opc2" value="2" v-model="picked">
+              <input
+                type="text" id="opcao2" placeholder="Digite a opção 2"
+                class="text-input" v-model="opcao2">
+            </div>
+          </label>
+      </div>
+      <div class="linha-input">
+          <label for="opcao3">
+            Opção de Resposta 3 <br>
+            <div class="radio-input">
+              <input class="radio-circle"
+                type="radio" id="opc3" value="3" v-model="picked">
+              <input
+                type="text" id="opcao3" placeholder="Digite a opção 3"
+                class="text-input" v-model="opcao3">
+            </div>
+          </label>
+      </div>
+      <div class="linha-input">
+          <label for="opcao4">
+              Opção de Resposta 4 <br>
               <div class="radio-input">
                 <input class="radio-circle"
-                  type="radio" id="opc1" value="1" v-model="picked" checked>
+                type="radio" id="opc4" value="4" v-model="picked">
                 <input
-                  type="text" id="opcao1" placeholder="Digite a opção 1"
-                  class="text-input" v-model="opcao1">
+                  type="text" id="opcao4" placeholder="Digite a opção 4"
+                  class="text-input" v-model="opcao4">
               </div>
-            </label>
-        </div>
-        <div class="linha-input">
-            <label for="opcao2">
-              Opção de Resposta 2 <br>
-              <div class="radio-input">
-                <input class="radio-circle"
-                  type="radio" id="opc2" value="2" v-model="picked">
-                <input
-                  type="text" id="opcao2" placeholder="Digite a opção 2"
-                  class="text-input" v-model="opcao2">
-              </div>
-            </label>
-        </div>
-        <div class="linha-input">
-            <label for="opcao3">
-              Opção de Resposta 3 <br>
-              <div class="radio-input">
-                <input class="radio-circle"
-                  type="radio" id="opc3" value="3" v-model="picked">
-                <input
-                  type="text" id="opcao3" placeholder="Digite a opção 3"
-                  class="text-input" v-model="opcao3">
-              </div>
-            </label>
-        </div>
-        <div class="linha-input">
-            <label for="opcao4">
-                Opção de Resposta 4 <br>
-                <div class="radio-input">
-                  <input class="radio-circle"
-                  type="radio" id="opc4" value="4" v-model="picked">
-                  <input
-                    type="text" id="opcao4" placeholder="Digite a opção 4"
-                    class="text-input" v-model="opcao4">
-                </div>
-            </label>
-        </div>
-        <div class="linha-input">
-            <label for="dificuldade">
-                Dificuldade<br>
-                <input
-                    type="number" id="dificuldade"
-                    v-model="dificuldade">
-            </label>
-        </div>
-        <div class="linha-input">
-            <label for="dica">
-                Dica <br>
-                <input type="text" id="dica" placeholder="Digite a dica"
-                v-model="dica">
-            </label>
-        </div>
-        <div>
-          <BaseButton v-if="!desafioSelecionado" class="btn-submit" type="submit">Criar</BaseButton>
-          <BaseButton v-else class="btn-submit" type="submit">Editar</BaseButton>
-        </div>
-      </form>
-    </BaseCard>
+          </label>
+      </div>
+      <div class="linha-input">
+          <label for="dificuldade">
+              Dificuldade<br>
+              <input
+                  type="number" id="dificuldade"
+                  v-model="dificuldade">
+          </label>
+      </div>
+      <div class="linha-input">
+          <label for="dica">
+              Dica <br>
+              <input type="text" id="dica" placeholder="Digite a dica"
+              v-model="dica">
+          </label>
+      </div>
+      <div>
+        <BaseButton v-if="!desafioSelecionado" class="btn-submit" type="submit">Criar</BaseButton>
+        <BaseButton v-else class="btn-submit" type="submit">Editar</BaseButton>
+      </div>
+    </form>
+  </BaseCard>
 </template>
 
 <script>
@@ -107,6 +109,7 @@ export default {
       opcao4: '',
 
       editando: false,
+      deletandoDesafio: false,
     };
   },
 
@@ -132,7 +135,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(['createNewDesafio', 'updateDesafio']),
+    ...mapActions(['createNewDesafio', 'updateDesafio', 'deleteDesafio']),
     async handleSubmit() {
       const objDesafio = {
         dificuldade: this.dificuldade,
@@ -174,6 +177,13 @@ export default {
       this.opcao2 = '';
       this.opcao3 = '';
       this.opcao4 = '';
+    },
+    async confirmDeleteDesafio() {
+      const res = window.confirm(`Deseja deletar desafio de dica: ${this.desafioSelecionado.dica}?`);
+
+      if (res) await this.deleteDesafio(this.desafioSelecionado.id);
+
+      this.deletandoDesafio = false;
     },
   },
   computed: {
@@ -255,4 +265,31 @@ export default {
   margin-top: 15px;
 }
 
+.btn-remove {
+  float: right;
+  background: #b44646;
+  color: white;
+  border: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  position: relative;
+  top: 5px;
+  cursor: pointer;
+}
+
+.btn-remove:hover {
+  background: #9a3b3b;
+}
+
+.delete-turma {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.delete-turma p {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
 </style>

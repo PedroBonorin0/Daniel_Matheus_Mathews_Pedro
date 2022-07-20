@@ -58,12 +58,20 @@ export default {
       }
     },
     async updateDesafio(context, payload) {
-      console.log('payload', payload);
       try {
         await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${payload.id}.json`, payload);
         context.dispatch('setDesafios');
       } catch (err) {
         throw new Error(err.message || 'Failed to update Desafios');
+      }
+    },
+    async deleteDesafio(context, payload) {
+      console.log(payload);
+      try {
+        await axios.delete(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${payload}.json`);
+        context.dispatch('setDesafios');
+      } catch (err) {
+        throw new Error(err.message || 'Failed to delete Desafios');
       }
     },
   },
