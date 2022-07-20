@@ -11,10 +11,14 @@
       <SpritePersonagem
         personagem="player"
         :hp="playerHp"
+        :status="playerStatus"
+        :attack="playerAttack"
       />
       <SpritePersonagem
         personagem="enemy"
         :hp="enemyHp"
+        :status="enemyStatus"
+        :attack="enemyAttack"
       />
     </div>
     <HitMessage
@@ -72,6 +76,12 @@ export default {
 
       playerHp: 100,
       enemyHp: 100,
+
+      playerStatus: false,
+      enemyStatus: false,
+
+      playerAttack: false,
+      enemyAttack: false,
 
       visible: false,
       playerHit: false,
@@ -247,7 +257,14 @@ export default {
         this.contaAcertos += 1;
         this.calcDano(true); // Dano no inimigo
         this.playerHit = true;
-
+        this.playerStatus = true;
+        setTimeout(() => {
+          this.playerAttack = true;
+          this.playerStatus = false;
+        }, "500")
+        setTimeout(() => {
+          this.playerAttack = false;
+        }, "1000")
       } else { // Se o usuário errou a questão        
         //Som
         this.play(this.audios[2]);
@@ -256,6 +273,14 @@ export default {
         this.contaErros += 1;
         this.calcDano(false);// Sofre dano
         this.playerHit = false;
+        this.enemyStatus = true;
+        setTimeout(() => {
+          this.enemyAttack = true;
+          this.enemyStatus = false;
+        }, "500")
+        setTimeout(() => {
+          this.enemyAttack = false;
+        }, "1000")
       }
 
       // Destaca a resposta marcada
