@@ -1,9 +1,9 @@
-<!-- eslint-disable no-lonely-if -->
-<!-- eslint-disable max-len -->
-<!-- eslint-disable max-len -->
 <template>
   <BaseLoading v-if="loading" />
   <div class="geral-game" v-else>
+    <div class="sons">
+      <BaseButton class="opcoes" @click="desativaSons()">Silencia Audio</BaseButton>
+    </div>
     <div class="timer"> {{ countDown }} </div>
     <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
     <div class="personagens">
@@ -40,10 +40,11 @@
             v-for="opcao in opcoesResposta"
             :key="opcao.id"
             @click="handleResposta(opcao)"
-          >{{opcao.resposta}}</BaseButton>
+          :disabled="botoesdesabilitados">{{opcao.resposta}}</BaseButton>
         </div>
       </div>
     </BaseCard>
+    
   </div>
 </template>
 
@@ -83,6 +84,43 @@ export default {
 
       dica_visibilidade: false,
       dica_cont: 0,
+      botoesdesabilitados: false,
+
+      //Variáveis de efeitos sonoros
+      somOn: true,
+      audios: [
+      {
+        id: 'batalhaSound',
+        name: 'Som de batalha',
+        file: new Audio(require("../assets/sound_effects/epic_battle_music_1-6275.mp3")),
+        isPlaying: false,
+      },
+      {
+        id: 'acertoSound',
+        name: 'Som de Acerto',
+        file: new Audio(require("../assets/sound_effects/success-1-6297.mp3")),
+        isPlaying: false,
+      },
+      {
+        id: 'erroSound',
+        name: 'Som de erro',
+        file: new Audio(require("../assets/sound_effects/negative_beeps-6008.mp3")),
+        isPlaying: false,
+      },
+      {
+        id: 'derrotaSound',
+        name: 'Som de derrota',
+        file: new Audio(require("../assets/sound_effects/videogame-death-sound-43894.mp3")),
+        isPlaying: false,
+      },
+      {
+        id: 'vitoriaSound',
+        name: 'Som de vitoria',
+        file: new Audio(require("../assets/sound_effects/announcement-sound-4-21464.mp3")),
+        isPlaying: false,
+      },
+      
+      ],
     };
   },
   components: {
@@ -123,18 +161,56 @@ export default {
       this.timer = setInterval(() => {
         if (this.countDown > 0) {
           this.countDown--;
-        } else if (this.countDown <= 60 * 3 / 2){
-          //clearInterval(this.timer); // Se o tempo acabar, o jogador perde
+        } else if (this.countDown <= (60 * 3) / 2) {
+          // Se o tempo acabar, o jogador perde
           this.visibilidade = true;
-          this.mensagemAviso = 'Cuidado com o tempo esta na metade!';
+          this.mensagemAviso = 'Resta metade do tempo!';
         }
         if (this.countDown < 0) {
+          this.mensagemAviso = 'O tempo acabou!';
           this.playerHp = 0;
           this.countDown = 0;
           this.atualizaPontos();
           this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         }
       }, 1000);
+    },
+
+    desativaSons(){
+      if (this.somOn){
+      this.audios.forEach( function (key) {
+        if(key.isPlaying){
+          key.file.volume = 0;
+          key.isPlaying = false;
+        }
+      });
+      }
+      else{
+        this.audios.forEach( function (key) {
+          if(!key.isPlaying){
+            key.file.volume = 1;
+            key.isPlaying = true;
+          }
+        });
+      }
+      this.somOn = !this.somOn;
+    },
+
+    play (audio) {
+      if (this.somOn) {
+        audio.isPlaying = true;
+        audio.file.play();
+        //audio.file.play().then(function() {
+        //  audio.isPlaying = false
+        //});
+      }
+    },
+    
+    pause (audio) {
+      if (this.somOn) {
+      audio.isPlaying = false;
+      audio.file.pause();
+      }
     },
 
     handleDicas() {
@@ -147,19 +223,21 @@ export default {
      * pressionado, ID e conteudo
      */
     handleResposta(opcao) {
+      this.botoesdesabilitados = true;
       this.contaPerguntas += 1;
       this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta, 10);
       if (opcao.id === this.respostaCorreta) { // Se o usuário acertou a questão
+        this.play(this.audios[1]);
+        this.audios[1].isPlaying = false;
         this.contaAcertos += 1;
-
-        // Dano no inimigo
-        this.calcDano(true);
+        this.calcDano(true); // Dano no inimigo
         this.playerHit = true;
-      } else { // Se o usuário errou a questão
-        this.contaErros += 1;
 
-        // Sofre dano
-        this.calcDano(false);
+      } else { // Se o usuário errou a questão
+        this.play(this.audios[2]);
+        this.audios[2].isPlaying = false;
+        this.contaErros += 1;
+        this.calcDano(false);// Sofre dano
         this.playerHit = false;
       }
 
@@ -215,41 +293,54 @@ export default {
     */
     calcDano(verificador) {
       this.dica_visibilidade = false;
-      const dano_base = 10;
+      const danoBase = 10;
       if (this.desafios[this.perguntaEscolhida].dificuldade === 1) { // Fácil
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= dano_base * 0.5;
+          this.enemyHp -= danoBase * 0.5;
         } else {
-          this.playerHp -= dano_base * 1.5;
+          this.playerHp -= danoBase * 1.5;
         }
       } else if (this.desafios[this.perguntaEscolhida].dificuldade === 2) { // Médio
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= dano_base;
+          this.enemyHp -= danoBase;
         } else {
-          this.playerHp -= dano_base;
+          this.playerHp -= danoBase;
         }
       } else { // Difícil
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= dano_base * 1.5;
+          this.enemyHp -= danoBase * 1.5;
         } else {
-          this.playerHp -= dano_base * 0.5;
+          this.playerHp -= danoBase * 0.5;
         }
       }
 
-      // O Jogador perdeu
-      if (this.playerHp <= 0) {
+      if (this.playerHp <= 0) { // O Jogador perdeu
+        //Som
+        this.pause(this.audios[0]); // Pausa o som de batalha
+        this.play(this.audios[3]) // Toca o som de derrota
+        this.audios[3].isPlaying = false;
+
         this.playerHp = 0;
         this.countDown = 0;
         this.atualizaPontos();
+        
+        // Muda a view
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         this.playerHp = 100;
         this.enemyHp = 100;
       }
       // O Jogador venceu
       if (this.enemyHp <= 0) {
+        //Som
+        this.pause(this.audios[0]); // Pausa o som de batalha
+        this.play(this.audios[4]) // Toca o som de vitória
+        this.audios[4].isPlaying = false;
+
         this.enemyHp = 0;
         this.countDown = 0;
         this.atualizaPontos();
+
+        // Muda a view
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         this.playerHp = 100;
         this.enemyHp = 100;
@@ -261,9 +352,9 @@ export default {
      *
      */
     gerenciaPerguntas() {
+      this.botoesdesabilitados = false;
       if (this.contaPerguntas > 1) {
         this.visibilidade = false;
-        this.countDownTimer();
       }
       if (this.contaPerguntas > this.desafios.length) {
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
@@ -317,6 +408,24 @@ export default {
   },
   mounted() {
     this.countDownTimer();
+
+    if (this.audios[0].isPlaying){
+      this.audios[0].isPlaying = false;
+      this.audios[0].file.pause();
+    }
+
+    this.play(this.audios[0]);
+  },
+  watch:{
+    // Pausa a trilha sonora ao sair da página
+      $route (to, from){
+        this.audios.forEach( function (key) {
+        if(key.isPlaying){
+          key.file.pause();
+          key.isPlaying = false;
+        }
+      });
+    }
   },
   computed: {
     ...mapGetters(['desafios', 'userLogado']),
