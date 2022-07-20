@@ -5,9 +5,11 @@ import GamePage from '../pages/GamePage.vue';
 import EndGame from '../pages/Endgame.vue';
 import LoginPage from '../pages/LoginPage.vue';
 import TurmasPage from '../pages/TurmasPage.vue';
+import TurmaInfo from '../pages/TurmaInfo.vue';
 import SelecaoTema from '../pages/SelecaoTema.vue';
-import Ranking from '../pages/RankingPage.vue';
+import RankingPage from '../pages/RankingPage.vue';
 import DesafiosPage from '../pages/DesafiosPage.vue';
+import SugestionsPage from '../pages/SugestionsPage.vue';
 
 // import store from '../store/index';
 
@@ -29,17 +31,28 @@ const routes = [
     path: '/endgame/:hp:hpinimigo',
     props: true,
     component: EndGame,
-    meta: { requiresAuth: true, requiresProf: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/ranking',
     props: true,
-    component: Ranking,
-    meta: {  },
+    component: RankingPage,
+  },
+  {
+    path: '/sugestions',
+    props: true,
+    component: SugestionsPage,
+    meta: { requiresAuth: true },
   },
   {
     path: '/turmas',
     component: TurmasPage,
+    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true, requiresProf: true },
+  },
+  {
+    path: '/turmas/:id',
+    component: TurmaInfo,
     meta: { requiresAuth: true },
   },
   {
@@ -47,12 +60,6 @@ const routes = [
     component: DesafiosPage,
     meta: { requiresAuth: true },
   },
-  // {
-  //   path: '/turmas/:id',
-  //   component: TurmaDetails,
-  //   props: true,
-  //   meta: { requiresAuth: true },
-  // },
   {
     path: '/login',
     component: LoginPage,
@@ -73,11 +80,9 @@ const router = createRouter({
   routes,
 });
 
-/*
 router.beforeEach((to, _from, next) => {
-  if (to.meta.requiresAuth && !store.getters.isAuthenticated) next('/login');
+  if (to.meta.requiresAuth && !localStorage.getItem('userId')) next('/login');
   else next();
 });
-*/
 
 export default router;

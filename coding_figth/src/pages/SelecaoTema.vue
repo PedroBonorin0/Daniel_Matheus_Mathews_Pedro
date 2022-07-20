@@ -1,27 +1,12 @@
 <template>
-  <div class="tema">
-    <img src="../assets/img/logo.png" alt="Coding Fight">
+  <BaseLoading v-if="loading" />
+  <div class="tema" v-else>
     <BaseCard class="menu-options">
-      <div class="button">
-        <BaseButton :link="true" to="/game">Introdução</BaseButton>
-      </div>
-      <div class="button">
-        <BaseButton :link="true" to="/game">Noções de uma Linguagem de Programação</BaseButton>
-      </div>
-      <div class="button">
-        <BaseButton :link="true" to="/game">Funções</BaseButton>
-      </div>
-      <div class="button">
-        <BaseButton :link="true" to="/game">Estruturas de Controle Condicional</BaseButton>
-      </div>
-      <div class="button">
-        <BaseButton :link="true" to="/game">Estruturas de Controle de Repetição</BaseButton>
-      </div>
-      <div class="button">
-        <BaseButton :link="true" to="/game">Estruturas de Dados Homogêneas</BaseButton>
-      </div>
-      <div class="button">
-        <BaseButton :link="true" to="/game">Estruturas de Dados Heterogêneas</BaseButton>
+      <div
+        v-for="cont in conteudosOrdered" :key="cont.id"
+        class="button"
+      >
+        <BaseButton :link="true" to="/game">{{ cont.nome }}</BaseButton>
       </div>
     </BaseCard>
 
@@ -29,24 +14,39 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
+import { orderBy } from 'lodash-es';
 
 export default {
   name: 'SelecaoTema',
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  async created() {
+    this.loading = true;
+    await this.setConteudos();
+    this.loading = false;
+  },
+  methods: {
+    ...mapActions(['setConteudos']),
+  },
+  computed: {
+    ...mapGetters(['conteudos']),
+    conteudosOrdered() {
+      return orderBy(this.conteudos, 'id');
+    },
+  },
 };
 </script>
 
 <style scoped>
-.home {
+.tema {
+  height: calc(100vh - 5rem);
   display: flex;
-  height: 80vh;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-}
-
-.home img {
-  width: 18rem;
+  justify-content: center;
 }
 
 .menu-options {

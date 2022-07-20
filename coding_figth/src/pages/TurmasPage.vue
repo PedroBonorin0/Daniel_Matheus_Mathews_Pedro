@@ -1,60 +1,142 @@
-NewTurm<template>
-  <div id="geral-turmas">
+<template>
+  <BaseLoading v-if="loading" />
+  <div id="geral-turmas" v-else>
     <div class="add-turma">
       <BaseButton @click="criandoTurma = true">Criar Turma</BaseButton>
     </div>
-    <BaseDialog :show="criandoTurma" title="Criar Nova Turma" @close="criandoTurma = false">
-      <form @submit.prevent="criaTurma">
+    <BaseDialog :show="criandoTurma" title="Criar Nova Turma"
+      @close="criandoTurma = false"
+    >
+      <form @submit.prevent="criaTurma" class="cria-turma">
         <label for="turma">
-          Turma
+          Turma:
           <input type="text" placeholder="Digite o nome da turma" v-model="nomeTurma">
         </label>
           <BaseButton type="submit">Criar</BaseButton>
       </form>
     </BaseDialog>
-    <ul class="list-turmas">
-      <li v-for="turma in turmasProf" :key="turma.id">
-        {{ turma.nome }}
-      </li>
-    </ul>
+    <div class="list-turmas">
+        <TurmaBlock v-for="turma in turmasProf" :key="turma.id" :turma="turma"
+        @delete-turma="deletaTurma"/>
+    </div>
+    <BaseDialog :show="deletandoTurma" title="Deletar turma" @close="deletandoTurma = false">
+      <div class="delete-turma">
+        <p>Deseja Deletar turma <strong>{{ turmaSelecionada.nome }}</strong></p>
+        <div class="linha-btns">
+          <BaseButton @click="confirmDeleteTurma">Sim</BaseButton>
+          <BaseButton @click="deletandoTurma = false">Não</BaseButton>
+        </div>
+      </div>
+    </BaseDialog>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import TurmaBlock from '@/components/TurmaBlock.vue';
 
 export default {
+  components: {
+    TurmaBlock,
+  },
   data() {
     return {
+      loading: false,
+
       criandoTurma: false,
 
       nomeTurma: '',
+
+      deletandoTurma: false,
+      turmaSelecionada: null,
+      delTurma: false,
     };
   },
 
+  async created() {
+    this.loading = true;
+    await this.setTurmas();
+    this.loading = false;
+  },
   methods: {
-    ...mapActions(['createNewTurma']),
-    criaTurma() {
+    ...mapActions(['createNewTurma', 'setTurmas', 'deleteTurma']),
+    async criaTurma() {
       const objTurma = {
-        id: Date.now(),
         nome: this.nomeTurma,
         professor: this.userLogado.id,
       };
 
-      this.createNewTurma(objTurma);
+      await this.createNewTurma(objTurma);
 
       this.criandoTurma = false;
+      this.nomeTurma = '';
+    },
+    deletaTurma(turma) {
+      this.turmaSelecionada = turma;
+      this.deletandoTurma = true;
+    },
+    async confirmDeleteTurma() {
+      await this.deleteTurma(this.turmaSelecionada.id);
+      this.deletandoTurma = false;
     },
   },
   computed: {
     ...mapGetters(['turmas', 'userLogado']),
     turmasProf() {
-      return this.turmas.filter((trm) => trm.professor == this.userLogado.id);
+      return this.turmas.filter((trm) => String(trm.professor) === String(this.userLogado.id));
     },
   },
 };
 </script>
 
 <style scoped>
+#geral-turmas {
+  text-align: center;
+  margin: 30px auto;
+}
 
+.add-turma {
+  margin-bottom: 30px;
+}
+
+.cria-turma {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.cria-turma input {
+  width: 70%;
+  height: 24px;
+  background: #eee;
+  border: 0;
+  border-radius: 4px;
+  margin-top: 2px;
+  padding: 2px 5px;
+  margin: 8px 0;
+}
+
+.cria-turma button {
+  width: 80px;
+}
+
+.list-turmas {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: auto;
+  grid-column-gap: 5px;
+  grid-row-gap: 5px;
+  place-items: center;
+}
+
+.delete-turma {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.delete-turma p {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
 </style>

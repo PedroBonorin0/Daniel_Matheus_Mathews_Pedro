@@ -11,12 +11,17 @@ export default {
     return {
       userData: null,
       userId: null,
+      loginFinished: false,
     };
   },
   mutations: {
     setUser(state, payload) {
       state.userData = payload;
       state.userId = payload.id;
+      state.loginFinished = true;
+    },
+    load(state, payload) {
+      state.loginFinished = payload;
     },
     logoutUser(state) {
       state.userData = null;
@@ -24,102 +29,101 @@ export default {
     },
   },
   actions: {
-    signup(context, payload) {
+    async signup(context, payload) {
       const auth = getAuth();
-      createUserWithEmailAndPassword(auth, payload.email, payload.senha)
-        .then(() => {
-          // Signed in
-          let userData = {};
-          if (payload.isProfessor) {
-            userData = {
-              id: -1,
-              email: payload.email,
-              nomeUsuario: payload.nomeUsuario,
-              isProfessor: payload.isProfessor,
-            };
-          } else {
-            userData = {
-              id: -1,
-              email: payload.email,
-              nomeUsuario: payload.nomeUsuario,
-              isProfessor: payload.isProfessor,
-              turma: payload.turma,
-              pontosDesafios: [],
-              totalPontos: 0,
-            };
-          }
+      try {
+        await createUserWithEmailAndPassword(auth, payload.email, payload.senha);
+        // Signed in
+        let userData = {};
+        if (payload.isProfessor) {
+          userData = {
+            id: -1,
+            email: payload.email,
+            nomeUsuario: payload.nomeUsuario,
+            isProfessor: payload.isProfessor,
+          };
+        } else {
+          userData = {
+            id: -1,
+            email: payload.email,
+            nomeUsuario: payload.nomeUsuario,
+            isProfessor: payload.isProfessor,
+            turma: payload.turma,
+            pontosDesafios: [],
+            totalPontos: 0,
+          };
+        }
 
-          axios.post('https://coding-fight-default-rtdb.firebaseio.com/users.json', userData)
-            .then((res) => {
-              const newId = String(res.data.name);
-              let newUser = {};
-              if (payload.isProfessor) {
-                newUser = {
-                  id: newId,
-                  email: payload.email,
-                  nomeUsuario: payload.nomeUsuario,
-                  isProfessor: payload.isProfessor,
-                };
-              } else {
-                newUser = {
-                  id: newId,
-                  email: payload.email,
-                  nomeUsuario: payload.nomeUsuario,
-                  isProfessor: payload.isProfessor,
-                  turma: payload.turma,
-                  pontosDesafios: [],
-                  totalPontos: 0,
-                };
-              }
-              axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${newId}.json`, newUser)
-                .then(() => {
-                  const objLogin = {
-                    email: payload.email,
-                    senha: payload.senha,
-                  };
-                  context.dispatch('login', objLogin);
-                });
-            })
-            .catch((err) => {
-              throw new Error(err.message || 'Failed to add User to list');
-            });
-        })
-        .catch((error) => {
-          throw new Error(error.message || 'Failed to Create User');
-        });
+        const res = await axios.post('https://coding-fight-default-rtdb.firebaseio.com/users.json', userData);
+
+        const newId = String(res.data.name);
+        let newUser = {};
+        if (payload.isProfessor) {
+          newUser = {
+            id: newId,
+            email: payload.email,
+            nomeUsuario: payload.nomeUsuario,
+            isProfessor: payload.isProfessor,
+          };
+        } else {
+          newUser = {
+            id: newId,
+            email: payload.email,
+            nomeUsuario: payload.nomeUsuario,
+            isProfessor: payload.isProfessor,
+            turma: payload.turma,
+            pontosDesafios: [],
+            totalPontos: 0,
+          };
+        }
+
+        await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/users/${newId}.json`, newUser);
+        const objLogin = {
+          email: payload.email,
+          senha: payload.senha,
+        };
+
+        context.dispatch('login', objLogin);
+      } catch (error) {
+        throw new Error(error.message || 'Failed to Create User');
+      }
     },
-    login(context, payload) {
+    async login(context, payload) {
+      context.commit('load', false);
+
       const auth = getAuth();
-      signInWithEmailAndPassword(auth, payload.email, payload.senha)
-        .then(() => {
-          axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json')
-            .then((res) => {
-              Object.values(res.data).forEach((user) => {
-                if (user.email === payload.email) {
-                  localStorage.setItem('userId', user.id);
-                  context.dispatch('setLoggedUserInfo', user);
-                }
-              });
-            });
-        })
-        .catch((error) => {
-          throw new Error(error.message || 'Failed to Login');
+      try {
+        await signInWithEmailAndPassword(auth, payload.email, payload.senha);
+
+        const res = await axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json');
+
+        Object.values(res.data).forEach((user) => {
+          if (user.email === payload.email) {
+            localStorage.setItem('userId', user.id);
+            context.dispatch('setLoggedUserInfo', user);
+          }
         });
+      } catch (error) {
+        throw new Error(error.message || 'Failed to Login');
+      }
     },
-    autoLogin(context) {
+    async autoLogin(context) {
+      context.commit('load', false);
+
       const userId = localStorage.getItem('userId');
+
       if (userId) {
-        axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json')
-          .then((res) => {
-            Object.values(res.data).forEach((user) => {
-              if (user.id === userId) {
-                context.dispatch('setLoggedUserInfo', user);
-              }
-            });
-          })
-          .catch((error) => {
-            throw new Error(error.message || 'Failed to Login');
+        try {
+          const res = await axios.get('https://coding-fight-default-rtdb.firebaseio.com/users.json');
+          Object.values(res.data).forEach((user) => {
+            if (user.id === userId)
+              context.dispatch('setLoggedUserInfo', user);
           });
+        } catch (error) {
+          throw new Error(error.message || 'Failed to Login');
+        }
+      } else {
+        context.commit('load', true);
       }
     },
     logout(context) {
@@ -145,6 +149,9 @@ export default {
     },
     userLogado(state) {
       return state.userData;
+    },
+    loginFinished(state) {
+      return state.loginFinished;
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <img src="../assets/img/logo.png" alt="Coding Fight">
-    <BaseCard class="menu-options">
+    <BaseCard :class="!isAuthenticated? 'menu-options' : 'menu-logado'">
       <div class="button">
         <BaseButton :link="true" to="/tema">Jogar</BaseButton>
       </div>
@@ -11,17 +11,19 @@
       <div class="button">
         <BaseButton :link="true" to="/ranking">Ranking Geral</BaseButton>
       </div>
-      <div v-if="isAuthenticated" id="btn-turmas">
-        <div v-if="!professorLogged" class="button-turmas">
-          <BaseButton :link="true" :to="linkSalaAluno">Turma</BaseButton>
-        </div>
-        <div v-else class="button-turmas">
-          <BaseButton :link="true" to="/turmas">Turmas</BaseButton>
-          <BaseButton :link="true" to="/desafios">Desafios</BaseButton>
-        </div>
+      <div class="button">
+        <BaseButton :link="true" to="/sugestions">Sugestões/Reclamações</BaseButton>
+      </div>
+      <div v-if="isAuthenticated && !professorLogged" class="button-meio">
+        <BaseButton :link="true" :to="linkSalaAluno">Turma</BaseButton>
+      </div>
+      <div class="button" v-if="isAuthenticated && professorLogged">
+        <BaseButton :link="true" to="/turmas">Turmas</BaseButton>
+      </div>
+      <div class="button" v-if="isAuthenticated && professorLogged">
+        <BaseButton :link="true" to="/desafios">Desafios</BaseButton>
       </div>
     </BaseCard>
-
   </div>
 </template>
 
@@ -34,9 +36,7 @@ export default {
   computed: {
     ...mapGetters(['professorLogged', 'users', 'isAuthenticated', 'userLogado']),
     linkSalaAluno() {
-      const user = this.userLogado;
-      //console.log(user);
-      //return `/turmas/${user.turma.id}`;
+      return `/turmas/${this.userLogado.turma}`;
     },
   },
 };
@@ -45,7 +45,7 @@ export default {
 <style scoped>
 .home {
   display: flex;
-  height: 80vh;
+  height: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -60,7 +60,23 @@ export default {
   text-align: center;
 }
 
-.button {
-  margin: 2rem;
+.menu-logado {
+  margin: 0 auto;
+  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  place-items: center;
+}
+
+.button, .button-meio {
+  margin: 1.2rem;
+}
+
+.button-meio {
+  grid-column-start: 1;
+  grid-column-end: 3;
 }
 </style>

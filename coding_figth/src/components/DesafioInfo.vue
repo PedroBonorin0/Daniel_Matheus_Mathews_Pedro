@@ -1,26 +1,13 @@
 <template>
-    <BaseCard>
-      <p>Conteudo: {{ desafioData.nomeConteudo }}</p>
-      <p>Pergunta: {{ desafioData.pergunta }}</p>
-      <p>
-        Respostas: <br>
-        <ol>
-          <li v-for="opc in desafioData.opcoesResposta" :key="opc.id">
-            <span v-if="desafioData.respostaCorreta == opc.id">&#9989; {{ opc.resposta }}</span>
-            <span v-else>{{ opc.resposta }}</span>
-          </li>
-        </ol>
-      </p>
-      <p>Dica: {{ desafioData.dica }}</p>
-      <p>Dificuldade: {{ desafioData.dificuldade }}</p>
-      <p>Criador: {{ desafioData.nomeProfessor }}</p>
-    </BaseCard>
+  <FormDesafio :desafioSelecionado="desafioData" @close-edicao="fechaEdicao"/>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import FormDesafio from './FormDesafio.vue';
 
 export default {
+  components: { FormDesafio },
   name: 'DesafioInfo',
   data() {
     return {
@@ -30,6 +17,11 @@ export default {
   },
   props: {
     desafioId: { type: String, required: true },
+  },
+  methods: {
+    fechaEdicao() {
+      this.$emit('close-edicao');
+    },
   },
   computed: {
     ...mapGetters(['desafios', 'conteudos', 'users']),
@@ -57,8 +49,6 @@ export default {
         nomeProfessor: this.nomeProfessor,
         nomeConteudo: this.nomeConteudo,
       };
-
-      console.log(obj);
 
       return obj;
     },

@@ -13,14 +13,14 @@ export default {
     },
   },
   actions: {
-    setConteudos(context) {
-      axios.get('https://coding-fight-default-rtdb.firebaseio.com/conteudos.json')
-        .then((res) => {
-          context.commit('armazenaConteudos', Object.values(res.data));
-        })
-        .catch((err) => {
-          throw new Error(err.message || 'Failed to create Desafio');
-        });
+    async setConteudos(context) {
+      try {
+        const res = await axios.get('https://coding-fight-default-rtdb.firebaseio.com/conteudos.json');
+
+        context.commit('armazenaConteudos', Object.values(res.data));
+      } catch (err) {
+        throw new Error(err.message || 'Failed to fetch conteudos');
+      }
     },
   },
   getters: {

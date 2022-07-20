@@ -22,41 +22,57 @@ export default {
   state() {
     return {
       desafios: [],
+      desafiosLoaded: false,
     };
   },
   mutations: {
     armazenaDesafios(state, payload) {
       state.desafios = payload;
+      state.desafiosLoaded = true;
     },
   },
   actions: {
-    setDesafios(context) {
-      axios.get('https://coding-fight-default-rtdb.firebaseio.com/desafios.json')
-        .then((res) => {
-          context.commit('armazenaDesafios', Object.values(res.data));
-        })
-        .catch((err) => {
-          throw new Error(err.message || 'Failed to create Desafio');
-        });
+    async setDesafios(context) {
+      try {
+        const res = await axios.get('https://coding-fight-default-rtdb.firebaseio.com/desafios.json');
+
+        context.commit('armazenaDesafios', Object.values(res.data));
+      } catch (err) {
+        throw new Error(err.message || 'Failed to fetch Desafio');
+      }
     },
-    createNewDesafio(context, payload) {
-      axios.post('https://coding-fight-default-rtdb.firebaseio.com/desafios/.json', payload)
-        .then((res) => {
-          const newTurma = {
-            ...payload,
-            id: res.data.name,
-          };
-          axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${res.data.name}.json`, newTurma);
-          context.dispatch('setDesafios');
-        })
-        .catch((err) => {
-          throw new Error(err.message || 'Failed to create Desafio');
-        });
+    async createNewDesafio(context, payload) {
+      try {
+        const res = await axios.post('https://coding-fight-default-rtdb.firebaseio.com/desafios.json', payload);
+
+        const newDesafio = {
+          ...payload,
+          id: res.data.name,
+        };
+
+        await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${res.data.name}.json`, newDesafio);
+
+        context.dispatch('setDesafios');
+      } catch (err) {
+        throw new Error(err.message || 'Failed to create Desafio');
+      }
+    },
+    async updateDesafio(context, payload) {
+      console.log('payload', payload);
+      try {
+        await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${payload.id}.json`, payload);
+        context.dispatch('setDesafios');
+      } catch (err) {
+        throw new Error(err.message || 'Failed to update Desafios');
+      }
     },
   },
   getters: {
     desafios(state) {
       return state.desafios;
+    },
+    desafiosLoaded(state) {
+      return state.desafiosLoaded;
     },
   },
 };

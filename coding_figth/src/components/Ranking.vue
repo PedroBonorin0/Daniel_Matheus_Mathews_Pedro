@@ -51,7 +51,8 @@ export default {
     ...mapGetters(['users']),
     usersOrderedByPontos() {
       return orderBy(this.users, 'totalPontos', 'desc')
-        .filter((user) => !user.isProfessor);
+        .filter((user) => !user.isProfessor)
+        .slice(0, 10);
     },
   },
 };

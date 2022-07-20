@@ -9,6 +9,9 @@ module.exports = {
   ],
   parserOptions: {
     parser: '@babel/eslint-parser',
+    requireConfigFile: false, // <== ADD THIS
+    ecmaVersion: 2018, // Allows for the parsing of modern ECMAScript features
+    sourceType: 'module', // Allows for the use of imports
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -17,5 +20,6 @@ module.exports = {
     'nonblock-statement-body-position': 'off',
     curly: 'off',
     'no-plusplus': 'off',
+    'vuejs-accessibility/click-events-have-key-events': 'off',
   },
 };
