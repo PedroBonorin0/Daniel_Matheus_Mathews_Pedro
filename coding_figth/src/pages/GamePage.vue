@@ -91,6 +91,7 @@ export default {
       // Aux Botões
       botoesdesabilitados: false,
       pausaCount: false,
+      botoesResposta: [],
 
       //Variáveis de efeitos sonoros
       somOn: true,
@@ -189,7 +190,6 @@ export default {
     },
 
     desativaSons(){
-      console.log('desativasons')
       if (this.somOn){
       this.audios.forEach( function (key) {
         if(key.isPlaying){
@@ -233,31 +233,50 @@ export default {
      * pressionado, ID e conteudo
      */
     handleResposta(opcao) {
+      this.botoesResposta = document.getElementsByClassName("opcoes");
       this.botoesdesabilitados = true;
       this.contaPerguntas += 1;
       this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta, 10);
       if (opcao.id === this.respostaCorreta) { // Se o usuário acertou a questão
+        //Som
         this.play(this.audios[1]);
         this.audios[1].isPlaying = false;
+
         this.contaAcertos += 1;
         this.calcDano(true); // Dano no inimigo
         this.playerHit = true;
 
-      } else { // Se o usuário errou a questão
+      } else { // Se o usuário errou a questão        
+        //Som
         this.play(this.audios[2]);
         this.audios[2].isPlaying = false;
+
         this.contaErros += 1;
         this.calcDano(false);// Sofre dano
         this.playerHit = false;
       }
 
+      // Destaca a resposta marcada
+      const indexMarcada = this.opcoesResposta.findIndex(object => { return object.id === opcao.id;});
+      this.botoesResposta[indexMarcada].style.color = '#000000';
+      this.botoesResposta[indexMarcada].style.fontWeight = "1000";
+
+      // Destaca a resposta correta
+      const index = this.opcoesResposta.findIndex(object => { return object.id === this.respostaCorreta;});
+      this.botoesResposta[index].style.backgroundColor = '#00ff00';
+
       this.visible = true;
-      setTimeout(() => {
-        // Gerencia a próxima pergunta
-        this.exibeCorreta = false;
+      // Próxima pergunta
+      setTimeout(() => {  
+        // Reseta a cor das opções
+        for (let item of this.botoesResposta) {
+          item.style.backgroundColor = '#248b8b';
+          item.style.color = '#ffffff';
+          item.style.fontWeight = "normal";}
+
         this.gerenciaPerguntas();
         this.visible = false;
-      }, 1500);
+      }, 2000);
     },
 
     /**
@@ -266,7 +285,7 @@ export default {
      */
     shortRespostas(opcoes) {
       this.opcoesResposta = this.desafios[this.perguntaEscolhida].opcoesResposta;
-
+      
       for (let i = 0; i < opcoes.length / 2 + 1;) {
         const aux = Math.floor(Math.random() * (opcoes.length));
         if (aux !== i) {
@@ -511,15 +530,4 @@ export default {
   background: #248b3e;
 }
 
-.configuracoes{
-  display: flex;
-  align-items: center;
-  margin: 20px auto;
-
-  padding: 1em;
-  width: fit-content;
-  height: 1em;
-
-  font-size: 1.5em;
-}
 </style>
