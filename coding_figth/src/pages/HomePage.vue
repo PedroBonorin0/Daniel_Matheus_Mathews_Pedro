@@ -45,9 +45,9 @@ export default {
 <style scoped>
 .home {
   display: flex;
-  height: 100%;
+  height: calc(100vh - 5rem);
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
 }
 

@@ -65,6 +65,15 @@ export default {
         throw new Error(err.message || 'Failed to update Desafios');
       }
     },
+    async deleteDesafio(context, payload) {
+      console.log(payload);
+      try {
+        await axios.delete(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${payload}.json`);
+        context.dispatch('setDesafios');
+      } catch (err) {
+        throw new Error(err.message || 'Failed to delete Desafios');
+      }
+    },
   },
   getters: {
     desafios(state) {

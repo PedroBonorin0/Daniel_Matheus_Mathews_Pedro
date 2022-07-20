@@ -16,12 +16,12 @@
       </form>
     </BaseDialog>
     <div class="list-turmas">
-        <TurmaBlock v-for="turma in turmasProf" :key="turma.id" :turma="turma"
-        @delete-turma="deletaTurma"/>
+      <TurmaBlock v-for="turma in turmasProf" :key="turma.id" :turma="turma"
+      @delete-turma="deletaTurma"/>
     </div>
     <BaseDialog :show="deletandoTurma" title="Deletar turma" @close="deletandoTurma = false">
       <div class="delete-turma">
-        <p>Deseja Deletar turma <strong>{{ turmaSelecionada.nome }}</strong></p>
+        <p>Deseja Deletar turma <strong>{{ turmaSelecionada.nome }}?</strong></p>
         <div class="linha-btns">
           <BaseButton @click="confirmDeleteTurma">Sim</BaseButton>
           <BaseButton @click="deletandoTurma = false">Não</BaseButton>
@@ -49,17 +49,17 @@ export default {
 
       deletandoTurma: false,
       turmaSelecionada: null,
-      delTurma: false,
     };
   },
 
   async created() {
     this.loading = true;
     await this.setTurmas();
+    await this.setUsers();
     this.loading = false;
   },
   methods: {
-    ...mapActions(['createNewTurma', 'setTurmas', 'deleteTurma']),
+    ...mapActions(['createNewTurma', 'setTurmas', 'deleteTurma', 'setUsers']),
     async criaTurma() {
       const objTurma = {
         nome: this.nomeTurma,
@@ -121,12 +121,8 @@ export default {
 }
 
 .list-turmas {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: auto;
-  grid-column-gap: 5px;
-  grid-row-gap: 5px;
-  place-items: center;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .delete-turma {
