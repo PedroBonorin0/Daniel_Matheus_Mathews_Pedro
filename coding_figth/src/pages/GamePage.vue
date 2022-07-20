@@ -1,8 +1,9 @@
 <template>
   <BaseLoading v-if="loading" />
   <div class="geral-game" v-else>
-    <div class="sons">
-      <BaseButton class="opcoes" @click="desativaSons()">Silencia Audio</BaseButton>
+    <div class="configuracoes">
+      <BaseButton @click="desativaSons()">Silencia audio</BaseButton>
+      <BaseButton @click="pausaTempo()">Pausa tempo</BaseButton>
     </div>
     <div class="timer"> {{ countDown }} </div>
     <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
@@ -84,7 +85,10 @@ export default {
 
       dica_visibilidade: false,
       dica_cont: 0,
+
+      // Aux Botões
       botoesdesabilitados: false,
+      pausaCount: false,
 
       //Variáveis de efeitos sonoros
       somOn: true,
@@ -159,7 +163,7 @@ export default {
     countDownTimer() {
       clearInterval(this.timer);
       this.timer = setInterval(() => {
-        if (this.countDown > 0) {
+        if (this.countDown > 0 && !this.pausaCount) {
           this.countDown--;
         } else if (this.countDown <= (60 * 3) / 2) {
           // Se o tempo acabar, o jogador perde
@@ -174,6 +178,10 @@ export default {
           this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         }
       }, 1000);
+    },
+
+    pausaTempo(){
+      this.pausaCount = !this.pausaCount;
     },
 
     desativaSons(){
@@ -499,5 +507,17 @@ export default {
 
 .res-correta {
   background: #248b3e;
+}
+
+.configuracoes{
+  display: flex;
+  align-items: center;
+  margin: 20px auto;
+
+  padding: 1em;
+  width: fit-content;
+  height: 1em;
+
+  font-size: 1.5em;
 }
 </style>
