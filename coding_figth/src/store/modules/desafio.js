@@ -58,7 +58,6 @@ export default {
       }
     },
     async updateDesafio(context, payload) {
-      console.log('payload', payload);
       try {
         await axios.put(`https://coding-fight-default-rtdb.firebaseio.com/desafios/${payload.id}.json`, payload);
         context.dispatch('setDesafios');
