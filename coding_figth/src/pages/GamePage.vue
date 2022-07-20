@@ -72,12 +72,12 @@ export default {
       visible: false,
       playerHit: false,
 
-      countDown: 40,
+      countDown: 60 * 3, // 3 minutos
       mensagemAviso: '',
       visibilidade: false,
 
       // Variáveis de controle do jogo
-      tamanhoDesafio: 10, // Total de perguntas por desafio
+      tamanhoDesafio: 30, // Total de perguntas por desafio
       contaAcertos: 0, // Conta a qtd de acertos
       contaErros: 0, // Conta a qtd de erros
 
@@ -105,7 +105,7 @@ export default {
     this.perguntasMarcadas = [];// Array que guarda as perguntas já marcadas
 
     // Variáveis de controle do jogo
-    this.tamanhoDesafio = 10; // Total de perguntas por desafio
+    this.tamanhoDesafio = 30; // Total de perguntas por desafio
     this.contaAcertos = 0; // Conta a qtd de acertos
     this.contaErros = 0; // Conta a qtd de erros
 
@@ -123,16 +123,16 @@ export default {
       this.timer = setInterval(() => {
         if (this.countDown > 0) {
           this.countDown--;
-        } else {
-          clearInterval(this.timer); // Se o tempo acabar, o jogador leva dano
-
+        } else if (this.countDown <= 60 * 3 / 2){
+          //clearInterval(this.timer); // Se o tempo acabar, o jogador perde
           this.visibilidade = true;
-          this.mensagemAviso = 'Cuidado com o tempo, você sofreu dano!';
-          this.contaErros += 1;
-
-          // Sofre dano
-          this.calcDano(false);
-          this.playerHit = false;
+          this.mensagemAviso = 'Cuidado com o tempo esta na metade!';
+        }
+        if (this.countDown < 0) {
+          this.playerHp = 0;
+          this.countDown = 0;
+          this.atualizaPontos();
+          this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         }
       }, 1000);
     },
@@ -150,14 +150,12 @@ export default {
       this.contaPerguntas += 1;
       this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta, 10);
       if (opcao.id === this.respostaCorreta) { // Se o usuário acertou a questão
-        // console.log('Acertou');
         this.contaAcertos += 1;
 
         // Dano no inimigo
         this.calcDano(true);
         this.playerHit = true;
       } else { // Se o usuário errou a questão
-        // console.log("Errou");
         this.contaErros += 1;
 
         // Sofre dano
@@ -217,29 +215,31 @@ export default {
     */
     calcDano(verificador) {
       this.dica_visibilidade = false;
+      const dano_base = 10;
       if (this.desafios[this.perguntaEscolhida].dificuldade === 1) { // Fácil
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= 15;
+          this.enemyHp -= dano_base * 0.5;
         } else {
-          this.playerHp -= 30;
+          this.playerHp -= dano_base * 1.5;
         }
       } else if (this.desafios[this.perguntaEscolhida].dificuldade === 2) { // Médio
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= 20;
+          this.enemyHp -= dano_base;
         } else {
-          this.playerHp -= 20;
+          this.playerHp -= dano_base;
         }
       } else { // Difícil
         if (verificador) { // Acertou a pergunta
-          this.enemyHp -= 30;
+          this.enemyHp -= dano_base * 1.5;
         } else {
-          this.playerHp -= 15;
+          this.playerHp -= dano_base * 0.5;
         }
       }
 
       // O Jogador perdeu
       if (this.playerHp <= 0) {
         this.playerHp = 0;
+        this.countDown = 0;
         this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         this.playerHp = 100;
@@ -248,6 +248,7 @@ export default {
       // O Jogador venceu
       if (this.enemyHp <= 0) {
         this.enemyHp = 0;
+        this.countDown = 0;
         this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         this.playerHp = 100;
@@ -262,14 +263,11 @@ export default {
     gerenciaPerguntas() {
       if (this.contaPerguntas > 1) {
         this.visibilidade = false;
-        this.countDown = 40;
         this.countDownTimer();
       }
-      // console.log(this.contaPerguntas, this.desafios.length);
       if (this.contaPerguntas > this.desafios.length) {
-        console.log('conta');
-        this.atualizaPontos();
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
+        console.log('ERRO - Não foi possível encontrar o numero de perguntas para acabar com o jogo');
         return;
       }
       this.auxGerencia();

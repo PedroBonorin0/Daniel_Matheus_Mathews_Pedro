@@ -11,7 +11,7 @@ def main(base_de_dano):
       vida_player = 100
       vida_monster = 100
       dano_base = base_de_dano
-      Tamanho_teste = 200
+      Tamanho_teste = 500
 
       #Divisao das dificuldades
       Facil = (1, 3)
@@ -191,7 +191,8 @@ def main(base_de_dano):
       'nº erro': [], 'nº erros esperados': [],'Pontuação': [], 'Maior Sequencia': [],
       'Dsiposição': []}
       data_saida = {'Maximo pontos': [], 'Minimo pontos': [], 'Media pontos': [],
-      'Max maior Sequencia': [],'Min maior Sequencia': [],'Med maior Sequencia': [], 'Erros Esperados': [], 'Vitorias': [], 'Derrotas': []}
+      'Max maior Sequencia': [],'Min maior Sequencia': [],'Med maior Sequencia': [],
+      'Erros Esperados': [], 'Vitorias': [], 'Derrotas': [], 'Maior n de perguntas': [], 'Disposição': []}
       for index in range(Tamanho_teste):
             possibilidades_respostas_testes = []
             possibilidades_respostas_testes.append(min_len_respostas(dano_base, vida_player, vida_monster))
@@ -251,6 +252,8 @@ def main(base_de_dano):
                         data_saida['Max maior Sequencia'].append(data.get('Maior Sequencia')[j])
                         data_saida['Min maior Sequencia'].append(data.get('Maior Sequencia')[j])
                         data_saida['Med maior Sequencia'].append(data.get('Maior Sequencia')[j])
+                        data_saida['Maior n de perguntas'].append(data.get('nº pergunta')[j])
+                        data_saida['Disposição'].append(data.get('Dsiposição')[j])
                         if(data.get('Player')[j] >0 ):
                               data_saida['Vitorias'].append(1)
                               data_saida['Derrotas'].append(0)
@@ -274,7 +277,9 @@ def main(base_de_dano):
                               data_saida['Vitorias'][j] = data_saida['Vitorias'][j] + 1
                         else:
                               data_saida['Derrotas'][j] = data_saida['Derrotas'][j] + 1 
-
+                        if(data_saida['Maior n de perguntas'][j] < data.get('nº pergunta')[j+i*len(possibilidades_respostas_testes)]):
+                              data_saida['Disposição'][j] = data.get('Dsiposição')[j+i*len(possibilidades_respostas_testes)]
+                              data_saida['Maior n de perguntas'][j] = data.get('nº pergunta')[j+i*len(possibilidades_respostas_testes)]
       tabela_medias = pd.DataFrame(data_saida)
       tabela_medias.to_excel('Documentos/'+str(datetime.today().strftime('%H_%M_%S %d-%m-%y')+'Dano'+str(dano_base)+'_Media.xlsx'), index=False)
 main(10)
