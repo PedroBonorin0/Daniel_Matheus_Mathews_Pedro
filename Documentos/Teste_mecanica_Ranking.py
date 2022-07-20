@@ -11,7 +11,7 @@ def main(base_de_dano):
       vida_player = 100
       vida_monster = 100
       dano_base = base_de_dano
-      Tamanho_teste = 100
+      Tamanho_teste = 200
 
       #Divisao das dificuldades
       Facil = (1, 3)
