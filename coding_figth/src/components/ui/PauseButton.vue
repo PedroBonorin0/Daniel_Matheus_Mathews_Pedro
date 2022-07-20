@@ -1,14 +1,14 @@
 <template>
   <div>
-    <img src="@/assets/img/soundOn.png" v-if="soundOn">
-    <img src="@/assets/img/soundOff.png" v-else>
+    <img src="@/assets/img/play.png" v-if="gameOn">
+    <img src="@/assets/img/pause.png" v-else>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    soundOn: { type: Boolean, required: true },
+    gameOn: { type: Boolean, required: true },
   }
 }
 </script>
@@ -25,7 +25,7 @@ div {
   justify-content: center;
   position: absolute;
   top: 5.5rem;
-  right: 3rem;
+  right: 6.5rem;
 }
 
 img {

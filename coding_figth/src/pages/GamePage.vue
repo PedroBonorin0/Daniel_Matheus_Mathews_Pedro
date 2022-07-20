@@ -2,7 +2,8 @@
   <BaseLoading v-if="loading" />
   <div class="geral-game" v-else>
     <div class="sons">
-      <SoundButton class="opcoes" @click="desativaSons" :soundOn="somOn"/>
+      <SoundButton @click="desativaSons" :soundOn="somOn"/>
+      <PauseButton @click="pausaTempo" :gameOn="pausaCount"/>
     </div>
     <div class="timer"> {{ countDown }} </div>
     <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
@@ -53,6 +54,7 @@ import { mapActions, mapGetters } from 'vuex';
 import SpritePersonagem from '@/components/SpritePersonagem.vue';
 import HitMessage from '@/components/HitMessage.vue';
 import SoundButton from '@/components/ui/SoundButton.vue';
+import PauseButton from '@/components/ui/PauseButton.vue';
 
 export default {
   name: 'GamePage',
@@ -85,7 +87,10 @@ export default {
 
       dica_visibilidade: false,
       dica_cont: 0,
+
+      // Aux Botões
       botoesdesabilitados: false,
+      pausaCount: false,
 
       //Variáveis de efeitos sonoros
       somOn: true,
@@ -127,7 +132,8 @@ export default {
   components: {
     SpritePersonagem,
     HitMessage,
-    SoundButton
+    SoundButton,
+    PauseButton
   },
   async created() {
     this.loading = true;
@@ -161,7 +167,7 @@ export default {
     countDownTimer() {
       clearInterval(this.timer);
       this.timer = setInterval(() => {
-        if (this.countDown > 0) {
+        if (this.countDown > 0 && !this.pausaCount) {
           this.countDown--;
         } else if (this.countDown <= (60 * 3) / 2) {
           // Se o tempo acabar, o jogador perde
@@ -178,7 +184,12 @@ export default {
       }, 1000);
     },
 
+    pausaTempo(){
+      this.pausaCount = !this.pausaCount;
+    },
+
     desativaSons(){
+      console.log('desativasons')
       if (this.somOn){
       this.audios.forEach( function (key) {
         if(key.isPlaying){
@@ -498,5 +509,17 @@ export default {
 
 .res-correta {
   background: #248b3e;
+}
+
+.configuracoes{
+  display: flex;
+  align-items: center;
+  margin: 20px auto;
+
+  padding: 1em;
+  width: fit-content;
+  height: 1em;
+
+  font-size: 1.5em;
 }
 </style>
