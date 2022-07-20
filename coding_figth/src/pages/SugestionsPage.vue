@@ -29,7 +29,7 @@
 
 <script>
 
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
@@ -46,10 +46,19 @@ export default {
     };
   },
   methods: {
-    criarSugestao() {
+    ...mapActions(['createNewReclamacao']),
+    async criarSugestao() {
       if (this.sugestao.length > 0 && this.tipo.length > 0) {
         this.loading = true;
         this.visible = true;
+
+        const reclamacao = {
+          tipo: this.tipo,
+          sugestao: this.sugestao,
+        };
+
+        await this.createNewReclamacao(reclamacao);
+
         this.mensagem = `Agradecemos sua ${this.tipo}!`;
         this.sugestao = '';
         this.tipo = '';
