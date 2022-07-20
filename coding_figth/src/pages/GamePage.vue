@@ -2,7 +2,7 @@
   <BaseLoading v-if="loading" />
   <div class="geral-game" v-else>
     <div class="sons">
-      <BaseButton class="opcoes" @click="desativaSons()">Silencia Audio</BaseButton>
+      <SoundButton class="opcoes" @click="desativaSons" :soundOn="somOn"/>
     </div>
     <div class="timer"> {{ countDown }} </div>
     <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
@@ -44,7 +44,7 @@
         </div>
       </div>
     </BaseCard>
-    
+
   </div>
 </template>
 
@@ -52,6 +52,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import SpritePersonagem from '@/components/SpritePersonagem.vue';
 import HitMessage from '@/components/HitMessage.vue';
+import SoundButton from '@/components/ui/SoundButton.vue';
 
 export default {
   name: 'GamePage',
@@ -119,13 +120,14 @@ export default {
         file: new Audio(require("../assets/sound_effects/announcement-sound-4-21464.mp3")),
         isPlaying: false,
       },
-      
+
       ],
     };
   },
   components: {
     SpritePersonagem,
     HitMessage,
+    SoundButton
   },
   async created() {
     this.loading = true;
@@ -200,12 +202,9 @@ export default {
       if (this.somOn) {
         audio.isPlaying = true;
         audio.file.play();
-        //audio.file.play().then(function() {
-        //  audio.isPlaying = false
-        //});
       }
     },
-    
+
     pause (audio) {
       if (this.somOn) {
       audio.isPlaying = false;
@@ -323,7 +322,7 @@ export default {
         this.playerHp = 0;
         this.countDown = 0;
         this.atualizaPontos();
-        
+
         // Muda a view
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         this.playerHp = 100;
