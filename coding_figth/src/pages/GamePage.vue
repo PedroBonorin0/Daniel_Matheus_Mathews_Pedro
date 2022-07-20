@@ -170,15 +170,17 @@ export default {
       this.timer = setInterval(() => {
         if (this.countDown > 0 && !this.pausaCount) {
           this.countDown--;
-        } else if (this.countDown <= (60 * 3) / 2) {
+        } 
+        if (this.countDown <= (60 * 3) / 2 && this.countDown > 0) {
           // Se o tempo acabar, o jogador perde
           this.visibilidade = true;
           this.mensagemAviso = 'Resta metade do tempo!';
         }
-        if (this.countDown < 0) {
+        if (this.countDown <= 0) {
+          console.log("Cai fora")
           this.mensagemAviso = 'O tempo acabou!';
           this.playerHp = 0;
-          this.countDown = 0;
+          this.countDown = 60*3;
           this.atualizaPontos();
           this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         }
@@ -263,7 +265,7 @@ export default {
 
       // Destaca a resposta correta
       const index = this.opcoesResposta.findIndex(object => { return object.id === this.respostaCorreta;});
-      this.botoesResposta[index].style.backgroundColor = '#00ff00';
+      this.botoesResposta[index].style.backgroundColor = '#0f6123';
 
       this.visible = true;
       // Próxima pergunta
@@ -386,6 +388,7 @@ export default {
         this.visibilidade = false;
       }
       if (this.contaPerguntas > this.desafios.length) {
+        console("gerenciaPerguntas: Fim do jogo");
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         console.log('ERRO - Não foi possível encontrar o numero de perguntas para acabar com o jogo');
         return;
