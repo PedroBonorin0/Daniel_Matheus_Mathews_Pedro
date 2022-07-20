@@ -8,12 +8,18 @@
         <p>Número de Alunos: {{ numAlunos }}</p>
         <h4 v-if="numAlunos > 0">Media geral da turma</h4>
         <p v-if="numAlunos > 0">{{ mediaTurma.toFixed(2) }}</p>
+        <h4 v-if="numAlunos > 0">Top 3 alunos</h4>
+        <ol>
+          <li v-for="top in top3" :key="top.id">
+            {{ top.nomeUsuario }} - {{ top.totalPontos }}
+          </li>
+        </ol>
       </div>
   </div>
 </template>
 
 <script>
-import { meanBy } from 'lodash-es';
+import { meanBy, orderBy } from 'lodash-es';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -37,6 +43,9 @@ export default {
     numAlunos() {
       return this.users.filter((usr) => usr.turma === this.turma.id).length;
     },
+    top3() {
+      return orderBy(this.users.filter((usr) => usr.turma === this.turma.id), 'totalPontos', 'desc').slice(0, 3);
+    },
   },
 };
 </script>
@@ -54,6 +63,10 @@ export default {
     cursor: pointer;
     transition: .5s;
     overflow: hidden;
+  }
+
+  .block-turma h4 {
+    margin: 5px 0;
   }
 
   .block-header {

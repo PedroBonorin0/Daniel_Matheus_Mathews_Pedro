@@ -5,17 +5,17 @@
       <div class="add-desafio">
         <BaseButton @click="iniciaCriacao">Criar Desafio</BaseButton>
       </div>
-      <div class="linha-input">
+    </div>
+    <div class="linha-input">
         <label for="desafio">
             Desafio <br>
-            <select id="desafio" v-model="desafioSelecionado">
+            <select id="desafio" v-model="desafioSelecionado" @change="criandoDesafio = false">
               <option v-for="desafio in desafiosProfLogado" :key="desafio.id"
               :value="desafio.id">{{ desafio.dica }}</option>
             </select>
         </label>
       </div>
-    </div>
-    <FormDesafio v-else/>
+    <FormDesafio v-if="criandoDesafio"/>
     <DesafioInfo v-if="desafioSelecionado" @close-edicao="desafioSelecionado = null"
     :desafioId="desafioSelecionado"/>
   </div>
