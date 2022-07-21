@@ -23,7 +23,8 @@ const routes = [
     component: InstructionPage,
   },
   {
-    path: '/game',
+    path: '/game/:temaID',
+    props: true,
     component: GamePage,
     meta: { requiresAuth: true },
   },

@@ -6,7 +6,7 @@
         v-for="cont in conteudosOrdered" :key="cont.id"
         class="button"
       >
-        <BaseButton :link="true" to="/game">{{ cont.nome }}</BaseButton>
+        <BaseButton @click=temaId(cont)>{{ cont.nome }}</BaseButton>
       </div>
     </BaseCard>
 
@@ -31,12 +31,16 @@ export default {
   },
   methods: {
     ...mapActions(['setConteudos']),
+      temaId(cont) {
+        this.$router.replace(`/game/${cont.id}`);
+    },
   },
   computed: {
     ...mapGetters(['conteudos']),
     conteudosOrdered() {
       return orderBy(this.conteudos, 'id');
     },
+
   },
 };
 </script>
