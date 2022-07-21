@@ -79,6 +79,7 @@ export default {
       countDown: 60 * 3, // 3 minutos
       mensagemAviso: '',
       visibilidade: false,
+      sequencia: [],
 
       // Variáveis de controle do jogo
       tamanhoDesafio: 30, // Total de perguntas por desafio
@@ -150,7 +151,7 @@ export default {
     // Variáveis gerais
     this.totalPerguntas = this.desafios.length;// Total de perguntas
     this.perguntasMarcadas = [];// Array que guarda as perguntas já marcadas
-
+    this.sequencia = [];// Array que guarda as sequências de perguntas
     // Variáveis de controle do jogo
     this.tamanhoDesafio = 30; // Total de perguntas por desafio
     this.contaAcertos = 0; // Conta a qtd de acertos
@@ -176,11 +177,10 @@ export default {
           this.visibilidade = true;
           this.mensagemAviso = 'Resta metade do tempo!';
         }
-        if (this.countDown <= 0) {
-          console.log("Cai fora")
+        if (this.countDown < 0) {
           this.mensagemAviso = 'O tempo acabou!';
           this.playerHp = 0;
-          this.countDown = 60*3;
+          this.countDown = 0;
           this.atualizaPontos();
           this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         }
@@ -239,6 +239,8 @@ export default {
       this.botoesdesabilitados = true;
       this.contaPerguntas += 1;
       this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta, 10);
+
+      this.sequencia.push({pergunta: this.desafios[this.perguntaEscolhida],marcada: opcao.id, acertou: opcao.id === this.respostaCorreta});
       if (opcao.id === this.respostaCorreta) { // Se o usuário acertou a questão
         //Som
         this.play(this.audios[1]);
@@ -434,9 +436,44 @@ export default {
     },
     async atualizaPontos() {
       const user = this.userLogado;
-      user.totalPontos += this.contaAcertos;
+      user.totalPontos += this.gerenciaPontos()
       await this.updateUser(user);
     },
+
+    /**
+     * Função responsavel por gerenciar a pontuação do jogador.
+     * @returns {number}
+     */
+    gerenciaPontos() {
+      let pontuacao_final = 0;
+      let pontuacao_intermediaria = pontuacao_final;
+      let sequencia = 1;
+      let sequencia_inter = 1;
+      for(const element of this.sequencia) {
+        if(element['acertou']) {
+          if(element['pergunta']['dificuldade'] <= 3){ //Facil
+                pontuacao_intermediaria += 1
+          }else if(element['pergunta']['dificuldade'] <= 7 && element['pergunta']['dificuldade'] > 3){//Medio
+                pontuacao_intermediaria += 2
+          }else{                           //Dificil
+                pontuacao_intermediaria += 3}
+          sequencia_inter++;
+        } else {
+          pontuacao_final += pontuacao_intermediaria*sequencia_inter;
+          pontuacao_intermediaria = 0;
+          sequencia_inter = 1;
+        }
+        if(sequencia_inter > sequencia){
+          sequencia = sequencia_inter}
+      }
+      if(this.playerHp > 0){
+        pontuacao_final += pontuacao_intermediaria*(sequencia)*this.playerHp;
+      }else{
+        pontuacao_final = 0
+      }
+
+      return parseInt(pontuacao_final/100);
+    }
   },
   mounted() {
     this.countDownTimer();
