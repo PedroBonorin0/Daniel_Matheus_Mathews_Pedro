@@ -8,18 +8,22 @@
     <div class="timer"> {{ countDown }} </div>
     <div class="aviso" v-show="visibilidade"> {{ mensagemAviso }} </div>
     <div class="personagens">
-      <SpritePersonagem
-        personagem="player"
-        :hp="playerHp"
-        :status="playerStatus"
-        :attack="playerAttack"
-      />
-      <SpritePersonagem
-        personagem="enemy"
-        :hp="enemyHp"
-        :status="enemyStatus"
-        :attack="enemyAttack"
-      />
+      <div class="player">
+        <SpritePersonagem
+          personagem="player"
+          :hp="playerHp"
+          :status="playerStatus"
+          :attack="playerAttack"
+        />
+      </div>
+      <div class="enemy">
+        <SpritePersonagem
+          personagem="enemy"
+          :hp="enemyHp"
+          :status="enemyStatus"
+          :attack="enemyAttack"
+        />
+      </div>
     </div>
     <HitMessage
       :style="{ visibility: visible ? 'visible' : 'hidden'}"
@@ -257,14 +261,10 @@ export default {
         this.contaAcertos += 1;
         this.calcDano(true); // Dano no inimigo
         this.playerHit = true;
-        this.playerStatus = true;
-        setTimeout(() => {
-          this.playerAttack = true;
-          this.playerStatus = false;
-        }, "500")
+        this.playerAttack = true;
         setTimeout(() => {
           this.playerAttack = false;
-        }, "1000")
+        }, "400")
       } else { // Se o usuário errou a questão        
         //Som
         this.play(this.audios[2]);
@@ -273,14 +273,10 @@ export default {
         this.contaErros += 1;
         this.calcDano(false);// Sofre dano
         this.playerHit = false;
-        this.enemyStatus = true;
-        setTimeout(() => {
-          this.enemyAttack = true;
-          this.enemyStatus = false;
-        }, "500")
+        this.enemyAttack = true;
         setTimeout(() => {
           this.enemyAttack = false;
-        }, "1000")
+        }, "400")
       }
 
       // Destaca a resposta marcada
@@ -549,13 +545,15 @@ export default {
 }
 
 .personagens {
-  width: 100%;
-  margin: 20px auto;
-  text-align: center;
+    width: 100%;
+    margin: 20px auto;
+    text-align: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 }
 
 .res-correta {
   background: #248b3e;
 }
-
 </style>

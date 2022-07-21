@@ -13,17 +13,21 @@
         v-if="personagem === 'player' && hp < 0"
         src="../assets/img/playerMorto.png" alt="personagemMorto">
       <img
-        v-if="personagem === 'player' && hp > 0 && status"
+        v-if="personagem === 'player' && hp > 0 && status && !attack"
         src="../assets/img/playerCorrendo.png" alt="personagemCorrendo">
       <img
-        v-if="personagem === 'enemy' && hp > 0 && status"
+        v-if="personagem === 'enemy' && hp > 0 && status && !attack"
         src="../assets/img/inimigoCorrendo.png" alt="inimigoCorrendo">
+      <transition name="player">
       <img
-        v-if="personagem === 'player' && hp > 0 && attack"
+        v-if="personagem === 'player' && hp > 0 && !status && attack"
         src="../assets/img/playerAtaque.png" alt="personagemAtaque">
+      </transition>
+      <transition name="enemy">
       <img
-        v-if="personagem === 'enemy' && hp > 0 && attack"
+        v-if="personagem === 'enemy' && hp > 0 && !status && attack"
         src="../assets/img/inimigoAtaque.png" alt="inimigoAtaque">
+      </transition>
     <span class="vidaPersonagem">HP: {{ hp }}</span>
     </div>
 </template>
@@ -36,6 +40,11 @@ export default {
     hp: { type: Number, required: true },
     attack: {type: Boolean, required: true},
     status: {type: Boolean, required: true},
+  },
+
+  data(){
+    playerAparece: false;
+    enemyAparece: false;
   },
 };
 
@@ -63,4 +72,29 @@ span {
   width: 50px;
   font-weight: bold;
 }
+
+.player-enter-active, .player-leave-active{
+  transition: transform .4s;
+}
+
+.player-enter, .player-leave-to{
+  transform: translateX(300%);
+}
+
+.player-leave, .player-enter-to{
+  transform: translateX(0);
+}
+
+.enemy-enter-active, .enemy-leave-active{
+  transition: transform .4s;
+}
+
+.enemy-enter, .enemy-leave-to{
+  transform: translateX(-400%);
+}
+
+.enemy-leave, .enemy-enter-to{
+  transform: translateX(0);
+}
+
 </style>
