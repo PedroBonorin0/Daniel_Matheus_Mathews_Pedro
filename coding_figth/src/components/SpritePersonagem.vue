@@ -1,10 +1,10 @@
 <template>
   <div class="content">
       <img
-        v-if="personagem === 'player' && hp > 0 && !status && !attack"
+        v-if="personagem === 'player' && hp > 0 && !attack"
         src="../assets/img/playerParado.png" alt="personagemVivo">
       <img
-        v-if="personagem === 'enemy' && hp > 0  && !status && !attack"
+        v-if="personagem === 'enemy' && hp > 0  && !attack"
         src="../assets/img/inimigoParado.png" alt="inimigoVivo">
       <img
         v-if="personagem === 'enemy' && hp < 0"
@@ -20,12 +20,12 @@
         src="../assets/img/inimigoCorrendo.png" alt="inimigoCorrendo">
       <transition name="player">
       <img
-        v-if="personagem === 'player' && hp > 0 && !status && attack"
+        v-if="personagem === 'player' && hp > 0 && attack"
         src="../assets/img/playerAtaque.png" alt="personagemAtaque">
       </transition>
       <transition name="enemy">
       <img
-        v-if="personagem === 'enemy' && hp > 0 && !status && attack"
+        v-if="personagem === 'enemy' && hp > 0 && attack"
         src="../assets/img/inimigoAtaque.png" alt="inimigoAtaque">
       </transition>
     <span class="vidaPersonagem">HP: {{ hp }}</span>

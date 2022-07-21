@@ -262,9 +262,11 @@ export default {
         this.calcDano(true); // Dano no inimigo
         this.playerHit = true;
         this.playerAttack = true;
+        this.playerStatus = true;
         setTimeout(() => {
           this.playerAttack = false;
-        }, "400")
+          this.playerStatus = false;
+        }, "100")
       } else { // Se o usuário errou a questão        
         //Som
         this.play(this.audios[2]);
@@ -274,9 +276,11 @@ export default {
         this.calcDano(false);// Sofre dano
         this.playerHit = false;
         this.enemyAttack = true;
+        this.enemyStatus = true;
         setTimeout(() => {
           this.enemyAttack = false;
-        }, "400")
+          this.enemyStatus = false;
+        }, "100")
       }
 
       // Destaca a resposta marcada
