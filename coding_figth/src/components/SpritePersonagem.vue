@@ -1,18 +1,34 @@
 <template>
   <div class="content">
-    <img
-      v-if="personagem === 'player' && hp > 0"
-      src="../assets/img/playerIdle.png" alt="personagemVivo">
-    <img
-      v-else-if="personagem === 'player' && hp <= 0"
-      src="../assets/img/playerDead.png" alt="personagemMorto">
-    <img
-      v-else-if="personagem === 'enemy' && hp > 0"
-      src="../assets/img/enemyIdle.png" alt="inimigoVivo">
-    <img
-      v-else
-      src="../assets/img/enemyDead.png" alt="inimigoMorto">
-      <span class="vidaPersonagem">HP: {{ hp }}</span>
+      <img
+        v-if="personagem === 'player' && hp > 0 && !status && !attack"
+        src="../assets/img/playerParado.png" alt="personagemVivo">
+      <img
+        v-if="personagem === 'enemy' && hp > 0  && !status && !attack"
+        src="../assets/img/inimigoParado.png" alt="inimigoVivo">
+      <img
+        v-if="personagem === 'enemy' && hp < 0"
+        src="../assets/img/inimigoMorto.png" alt="inimigoMorto">
+      <img
+        v-if="personagem === 'player' && hp < 0"
+        src="../assets/img/playerMorto.png" alt="personagemMorto">
+      <img
+        v-if="personagem === 'player' && hp > 0 && status && !attack"
+        src="../assets/img/playerCorrendo.png" alt="personagemCorrendo">
+      <img
+        v-if="personagem === 'enemy' && hp > 0 && status && !attack"
+        src="../assets/img/inimigoCorrendo.png" alt="inimigoCorrendo">
+      <transition name="player">
+      <img
+        v-if="personagem === 'player' && hp > 0 && !status && attack"
+        src="../assets/img/playerAtaque.png" alt="personagemAtaque">
+      </transition>
+      <transition name="enemy">
+      <img
+        v-if="personagem === 'enemy' && hp > 0 && !status && attack"
+        src="../assets/img/inimigoAtaque.png" alt="inimigoAtaque">
+      </transition>
+    <span class="vidaPersonagem">HP: {{ hp }}</span>
     </div>
 </template>
 
@@ -23,8 +39,22 @@ export default {
   props: {
     personagem: { type: String, required: true },
     hp: { type: Number, required: true },
+    attack: {type: Boolean, required: true},
+    status: {type: Boolean, required: true},
+  },
+
+  data(){
+    playerAparece: false;
+    enemyAparece: false;
   },
 };
+
+function animaSprite(img){
+  if(this.personagem === 'player' && this.hp > 0 && !this.attack){
+    document.getElementById(img).src = "../assets/img/ldle_000.png";
+  }
+}
+
 </script>
 
 <style scoped>
@@ -43,4 +73,29 @@ span {
   width: 50px;
   font-weight: bold;
 }
+
+.player-enter-active, .player-leave-active{
+  transition: transform .4s;
+}
+
+.player-enter, .player-leave-to{
+  transform: translateX(300%);
+}
+
+.player-leave, .player-enter-to{
+  transform: translateX(0);
+}
+
+.enemy-enter-active, .enemy-leave-active{
+  transition: transform .4s;
+}
+
+.enemy-enter, .enemy-leave-to{
+  transform: translateX(-400%);
+}
+
+.enemy-leave, .enemy-enter-to{
+  transform: translateX(0);
+}
+
 </style>
