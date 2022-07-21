@@ -12,7 +12,8 @@
           Turma:
           <input type="text" placeholder="Digite o nome da turma" v-model="nomeTurma">
         </label>
-          <BaseButton type="submit">Criar</BaseButton>
+        <p class="msg-erro" v-if="erro">O nome da turma não pode ser vazio.</p>
+        <BaseButton type="submit">Criar</BaseButton>
       </form>
     </BaseDialog>
     <div class="list-turmas">
@@ -41,6 +42,7 @@ export default {
   },
   data() {
     return {
+      erro: false,
       loading: false,
 
       criandoTurma: false,
@@ -61,6 +63,13 @@ export default {
   methods: {
     ...mapActions(['createNewTurma', 'setTurmas', 'deleteTurma', 'setUsers']),
     async criaTurma() {
+      if(this.nomeTurma === '') {
+        this.erro = true;
+        setTimeout(() => {
+          this.erro = false;
+        }, 2000);
+        return;
+      }
       const objTurma = {
         nome: this.nomeTurma,
         professor: this.userLogado.id,
@@ -134,5 +143,10 @@ export default {
 .delete-turma p {
   font-size: 1.4rem;
   margin-bottom: 8px;
+}
+
+.msg-erro {
+  color: #bc2020;
+  margin-bottom: 5px;
 }
 </style>

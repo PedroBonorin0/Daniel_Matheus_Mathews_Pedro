@@ -1,5 +1,5 @@
 <template>
-  <BaseLoading class="loader" v-if="loading"/>
+  <BaseLoading v-if="loading"/>
   <div id="geral-desafios" v-else>
     <div v-if="!criandoDesafio">
       <div class="add-desafio">
@@ -84,12 +84,6 @@ export default {
 
 #desafio {
   max-width: 60%;
-}
-
-.loader {
-  position: fixed;
-  top: 50%;
-  left: 50%;
 }
 
 </style>

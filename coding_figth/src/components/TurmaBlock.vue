@@ -1,10 +1,10 @@
 <template>
-  <div class="block-turma" @click="redirectPageTurma" title="Clique para ir para página da turma">
+  <div class="block-turma" title="Clique na descricao da turma para ir para página dela">
       <div class="block-header">
         <h2>{{ turma.nome }}</h2>
         <button @click="removeTurma" class="btn-remove">&#x2718;</button>
       </div>
-      <div class="block-body">
+      <div class="block-body" @click="redirectPageTurma">
         <p>Número de Alunos: {{ numAlunos }}</p>
         <h4 v-if="numAlunos > 0">Media geral da turma</h4>
         <p v-if="numAlunos > 0">{{ mediaTurma.toFixed(2) }}</p>

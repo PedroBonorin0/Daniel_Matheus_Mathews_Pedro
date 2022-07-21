@@ -83,6 +83,9 @@
               v-model="dica">
           </label>
       </div>
+      <p class="msg-erro" v-if="erro">
+        Verifique se todos so campos foram preenchidos e se a dificuldade está entre 1 e 3!
+      </p>
       <div>
         <BaseButton v-if="!desafioSelecionado" class="btn-submit" type="submit">Criar</BaseButton>
         <BaseButton v-else class="btn-submit" type="submit">Editar</BaseButton>
@@ -97,6 +100,8 @@ import { mapActions, mapGetters } from 'vuex';
 export default {
   data() {
     return {
+      erro: false,
+
       id: '',
       conteudo: 0,
       pergunta: '',
@@ -137,6 +142,14 @@ export default {
   methods: {
     ...mapActions(['createNewDesafio', 'updateDesafio', 'deleteDesafio']),
     async handleSubmit() {
+      if(!this.desafioValido()) {
+        this.erro = true;
+        setTimeout(() => {
+          this.erro = false;
+        }, 2000);
+        return;
+      }
+
       const objDesafio = {
         dificuldade: this.dificuldade,
         conteudo: this.conteudo,
@@ -163,6 +176,25 @@ export default {
 
       this.$emit('close-edicao');
       this.resetAll();
+    },
+
+    desafioValido() {
+      let valido = true;
+
+      if(
+        this.conteudo <= 0 || this.conteudo >= 8||
+        this.pergunta === '' ||
+        this.picked <= 0 || this.picked >= 5 ||
+        this.dificuldade <= 0 || this.dificuldade >= 4 ||
+        this.dica === '' ||
+        this.opcao1 === '' ||
+        this.opcao2 === '' ||
+        this.opcao3 === '' ||
+        this.opcao4 === ''
+        ) {
+          valido = false;
+        }
+      return valido;
     },
 
     resetAll() {
@@ -291,5 +323,9 @@ export default {
 .delete-turma p {
   font-size: 1.4rem;
   margin-bottom: 8px;
+}
+
+.msg-erro {
+  color: #bc2020;
 }
 </style>

@@ -1,9 +1,8 @@
 <template>
-  <div class="geral" v-if="!loading">
+  <div class="geral">
     <NavBar/>
     <router-view/>
   </div>
-  <BaseLoading v-else />
 </template>
 
 <script>
@@ -11,11 +10,6 @@ import NavBar from '@/components/NavBar.vue';
 import { mapActions } from 'vuex';
 
 export default {
-  data() {
-    return {
-      loading: false,
-    };
-  },
   components: {
     NavBar,
   },
@@ -28,9 +22,7 @@ export default {
     ...mapActions(['autoLogin', 'loginFinished']),
 
     async iniciaProjeto() {
-      this.loading = true;
       await this.autoLogin();
-      this.loading = false;
     },
   },
 };
@@ -46,4 +38,5 @@ export default {
   background: #bedadf;
   min-height: 100vh;
 }
+
 </style>

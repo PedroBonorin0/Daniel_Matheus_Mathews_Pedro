@@ -1,5 +1,6 @@
 <template>
-  <div class="ranking-information">
+  <BaseLoading class="loader" v-if="loading" />
+  <div class="ranking-information" v-else>
     <BaseCard class="menu-options">
       <h2 class="titulo">
         Ranking Geral
@@ -22,17 +23,21 @@ export default {
   name: 'Ranking',
   data() {
     return {
+      loading: false,
+
       nomeAlunos: [],
       emailAlunos: [],
       totalPontos: [],
       turmaAlunos: [],
     };
   },
-  mounted() {
+  async mounted() {
+    this.loading = true;
     // Busca os users no BD
-    this.setUsers();
+    await this.setUsers();
     this.nomeAlunos = [];
-    this.teste();
+    await this.teste();
+    this.loading = false;
   },
   methods: {
     ...mapActions(['setUsers']),
@@ -96,5 +101,11 @@ export default {
 }
 .menu-options {
   margin: auto auto;
+}
+
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
 </style>

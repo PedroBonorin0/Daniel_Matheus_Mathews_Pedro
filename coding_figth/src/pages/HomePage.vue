@@ -1,5 +1,6 @@
 <template>
-  <div class="home">
+  <BaseLoading class="loader" v-if="loading" />
+  <div class="home" v-else>
     <img src="../assets/img/logo.png" alt="Coding Fight">
     <BaseCard :class="!isAuthenticated? 'menu-options' : 'menu-logado'">
       <div class="button">
@@ -28,11 +29,26 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'HomePage',
+  data() {
+    return {
+      loading: false,
+    }
+  },
 
+  async created() {
+    if(localStorage.getItem('userId')) {
+      this.loading = true;
+      await this.autoLogin()
+      this.loading = false;
+    }
+  },
+  methods: {
+    ...mapActions(['autoLogin'])
+  },
   computed: {
     ...mapGetters(['professorLogged', 'users', 'isAuthenticated', 'userLogado']),
     linkSalaAluno() {
@@ -78,5 +94,11 @@ export default {
 .button-meio {
   grid-column-start: 1;
   grid-column-end: 3;
+}
+
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
 </style>

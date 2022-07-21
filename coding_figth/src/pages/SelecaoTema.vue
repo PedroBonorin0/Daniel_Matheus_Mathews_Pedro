@@ -1,5 +1,5 @@
 <template>
-  <BaseLoading v-if="loading" />
+  <BaseLoading class="loader" v-if="loading" />
   <div class="tema" v-else>
     <BaseCard class="menu-options">
       <div
@@ -61,5 +61,11 @@ export default {
 
 .button {
   margin: 2rem;
+}
+
+.loader {
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
 </style>
