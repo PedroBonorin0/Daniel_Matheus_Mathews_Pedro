@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       loading: false,
+      desafiosfiltrados: [],
 
       id: -0,
       pergunta: '',
@@ -85,6 +86,8 @@ export default {
       tamanhoDesafio: 30, // Total de perguntas por desafio
       contaAcertos: 0, // Conta a qtd de acertos
       contaErros: 0, // Conta a qtd de erros
+
+      temaID: 0,
 
       dica_visibilidade: false,
       dica_cont: 0,
@@ -141,15 +144,21 @@ export default {
     this.loading = true;
 
     await this.setDesafios();
+    //Linka o modulo com o tema escolhido
+    this.desafiosfiltrados = this.desafios.filter(item => item.conteudo === this.temaID);
+
     // Conta a qtd total de desafios de mesma dificuldade
-    // const totalPerguntasPorDificuldades = this.desafios.filter((obj) => obj.dificuldade === this.controlaDificuldade).length;
+    // const totalPerguntasPorDificuldades = this.desafiosfiltrados.filter((obj) => obj.dificuldade === this.controlaDificuldade).length;
 
     // Variáveis iniciais do game
     this.contaPerguntas = 1; // Serve para controlar se é a primeira questão - A primeira questão já começa sendo exibida
     // this.controlaDificuldade = 1; // Serve para controlar a dificuldade da questão - A primeira questão deve ser fácil
 
     // Variáveis gerais
-    this.totalPerguntas = this.desafios.length;// Total de perguntas
+    this.totalPerguntas = this.desafiosfiltrados.length;// Total de perguntas
+
+    
+
     this.perguntasMarcadas = [];// Array que guarda as perguntas já marcadas
     this.sequencia = [];// Array que guarda as sequências de perguntas
     // Variáveis de controle do jogo
@@ -238,9 +247,9 @@ export default {
       this.botoesResposta = document.getElementsByClassName("opcoes");
       this.botoesdesabilitados = true;
       this.contaPerguntas += 1;
-      this.respostaCorreta = parseInt(this.desafios[this.perguntaEscolhida].respostaCorreta, 10);
+      this.respostaCorreta = parseInt(this.desafiosfiltrados[this.perguntaEscolhida].respostaCorreta, 10);
 
-      this.sequencia.push({pergunta: this.desafios[this.perguntaEscolhida],marcada: opcao.id, acertou: opcao.id === this.respostaCorreta});
+      this.sequencia.push({pergunta: this.desafiosfiltrados[this.perguntaEscolhida],marcada: opcao.id, acertou: opcao.id === this.respostaCorreta});
       if (opcao.id === this.respostaCorreta) { // Se o usuário acertou a questão
         //Som
         this.play(this.audios[1]);
@@ -288,7 +297,7 @@ export default {
      * @param {object} Opcoes Recebe como parâmetro as opções de respostas da questão
      */
     shortRespostas(opcoes) {
-      this.opcoesResposta = this.desafios[this.perguntaEscolhida].opcoesResposta;
+      this.opcoesResposta = this.desafiosfiltrados[this.perguntaEscolhida].opcoesResposta;
       
       for (let i = 0; i < opcoes.length / 2 + 1;) {
         const aux = Math.floor(Math.random() * (opcoes.length));
@@ -327,13 +336,13 @@ export default {
     calcDano(verificador) {
       this.dica_visibilidade = false;
       const danoBase = 10;
-      if (this.desafios[this.perguntaEscolhida].dificuldade === 1) { // Fácil
+      if (this.desafiosfiltrados[this.perguntaEscolhida].dificuldade === 1) { // Fácil
         if (verificador) { // Acertou a pergunta
           this.enemyHp -= danoBase * 0.5;
         } else {
           this.playerHp -= danoBase * 1.5;
         }
-      } else if (this.desafios[this.perguntaEscolhida].dificuldade === 2) { // Médio
+      } else if (this.desafiosfiltrados[this.perguntaEscolhida].dificuldade === 2) { // Médio
         if (verificador) { // Acertou a pergunta
           this.enemyHp -= danoBase;
         } else {
@@ -389,7 +398,7 @@ export default {
       if (this.contaPerguntas > 1) {
         this.visibilidade = false;
       }
-      if (this.contaPerguntas > this.desafios.length) {
+      if (this.contaPerguntas > this.desafiosfiltrados.length) {
         console("gerenciaPerguntas: Fim do jogo");
         this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
         console.log('ERRO - Não foi possível encontrar o numero de perguntas para acabar com o jogo');
@@ -432,7 +441,7 @@ export default {
       this.perguntasMarcadas.push(this.perguntaEscolhida);
 
       // Randomiza as respostas de acordo com a pergunta
-      this.shortRespostas(this.desafios[this.perguntaEscolhida].opcoesResposta);
+      this.shortRespostas(this.desafiosfiltrados[this.perguntaEscolhida].opcoesResposta);
     },
     async atualizaPontos() {
       const user = this.userLogado;
@@ -476,6 +485,7 @@ export default {
     }
   },
   mounted() {
+    this.temaID = parseInt(this.$route.params.temaID);
     this.countDownTimer();
 
     if (this.audios[0].isPlaying){
