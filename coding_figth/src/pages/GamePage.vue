@@ -25,14 +25,14 @@
       <div class="conteudo">
         <div class="pergunta">
           <h1>Desafio: </h1>
-          <span> {{desafios[this.perguntaEscolhida].pergunta}} </span>
+          <span> {{desafiosfiltrados[this.perguntaEscolhida].pergunta}} </span>
         </div>
         <div class="dica">
           <BaseButton class="Dica" @click="handleDicas()"
           :style="{visibility: dica_visibilidade ? 'hidden' : 'visible'}">Dica</BaseButton>
           <div :style="{ visibility: dica_visibilidade ? 'visible' : 'hidden'}">
             <h1>Dica: </h1>
-            <span> {{desafios[this.perguntaEscolhida].dica}} </span>
+            <span> {{desafiosfiltrados[this.perguntaEscolhida].dica}} </span>
           </div>
         </div>
         <div class="container-botoes">
