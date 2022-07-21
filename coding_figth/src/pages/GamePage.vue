@@ -171,7 +171,7 @@ export default {
     this.loading = false;
 
     // Inicializa e controla as exibição das perguntas
-    this.gerenciaPerguntas();
+    this.gerenciaPerguntas(undefined,undefined);
   },
   methods: {
     ...mapActions(['updateUser', 'setDesafios']),
@@ -287,7 +287,7 @@ export default {
           item.style.color = '#ffffff';
           item.style.fontWeight = "normal";}
 
-        this.gerenciaPerguntas();
+        this.gerenciaPerguntas(this.desafios[this.perguntaEscolhida], (opcao.id === this.respostaCorreta));
         this.visible = false;
       }, 2000);
     },
@@ -393,46 +393,52 @@ export default {
      * Controla toda a lógica por trás das questões e desafios do jogo.
      *
      */
-    gerenciaPerguntas() {
-      this.botoesdesabilitados = false;
-      if (this.contaPerguntas > 1) {
-        this.visibilidade = false;
-      }
-      if (this.contaPerguntas > this.desafiosfiltrados.length) {
-        console("gerenciaPerguntas: Fim do jogo");
-        this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
-        console.log('ERRO - Não foi possível encontrar o numero de perguntas para acabar com o jogo');
-        return;
-      }
-      this.auxGerencia();
-      /* if (this.contaPerguntas <= Math.floor(this.tamanhoDesafio / 3) || this.controlaDificuldade == 1) {
-        // Randomizo as perguntas e respostas
-        this.auxGerencia();
-
-        if (this.contaPerguntas == Math.floor(this.tamanhoDesafio / 3)) { // Se for a última pergunta fácil, aumenta a dificuldade
-          this.controlaDificuldade = 2;
+    gerenciaPerguntas(pergunta_anterior, verificador) {
+      console.log(pergunta_anterior , verificador);
+      if(pergunta_anterior == undefined && verificador == undefined){
+        this.botoesdesabilitados = false;
+        if (this.contaPerguntas > 1) {
+          this.visibilidade = false;
         }
-      } else if (this.contaPerguntas > Math.floor(this.tamanhoDesafio / 3) && this.contaPerguntas <= 2 * Math.floor(this.tamanhoDesafio / 3) && this.controlaDificuldade == 2) {		// dificuldade média
-        // Randomizo as perguntas e respostas
-        this.auxGerencia();
-
-        if (this.contaPerguntas == 2 * Math.floor(this.tamanhoDesafio / 3)) { // Se for a última pergunta média, aumenta a dificuldade
-          this.controlaDificuldade = 3;
+        if (this.contaPerguntas > this.desafios.length) {
+          this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
+          console.log('ERRO - Não foi possível encontrar o numero de perguntas para acabar com o jogo');
+          return;
         }
-      } else if (this.contaPerguntas <= this.tamanhoDesafio && this.contaPerguntas <= this.totalPerguntas) { // Se ainda não superamos o tamanho do desafio e ainda existem perguntas não respondidas
-        // Randomizo as perguntas e respostas
-        this.auxGerencia();
-      } else { // Ao encerrar todas as questões do desafio, devemos prosseguir para uma próxima fase, conteúdo ou para tela de pontuação?
-      } */
+        this.auxGerencia(1);
+      }else{
+        this.botoesdesabilitados = false;
+        if (this.contaPerguntas > 1) {
+          this.visibilidade = false;
+        }
+        if (this.contaPerguntas > this.desafios.length) {
+          this.$router.replace(`/endgame/${this.playerHp}${this.enemyHp}`);
+          console.log('ERRO - Não foi possível encontrar o numero de perguntas para acabar com o jogo');
+          return;
+        }
+        if(verificador){
+          if (pergunta_anterior['dificuldade']+1 > 10) {
+            this.auxGerencia(pergunta_anterior['dificuldade']);
+          }else{
+            this.auxGerencia(pergunta_anterior['dificuldade']+1);
+          }
+        }else{
+          if (pergunta_anterior['dificuldade']-1 < 1) {
+            this.auxGerencia(pergunta_anterior['dificuldade']);
+            }else{
+            this.auxGerencia(pergunta_anterior['dificuldade']-1);
+          }
+        }
+      }
     },
 
     /** Função auxiliar responsável por randomizar as perguntas e respostas.
     * Isso é feito "ignorando" as perguntas que já foram respondidas.
     */
-    auxGerencia() {
+    auxGerencia(dificuldade) {
       // Randomizo a pergunta até encontrar o primeiro desafio com dificuldade esperada e que ainda não tenha sido respondida
       let j = Math.floor(Math.random() * (this.totalPerguntas));
-      while (this.perguntasMarcadas.includes(j)) {
+      while (this.perguntasMarcadas.includes(j) && this.desafios[j].dificuldade !== dificuldade) {
         j = Math.floor(Math.random() * (this.totalPerguntas));
       }
       this.perguntaEscolhida = j;
@@ -443,6 +449,7 @@ export default {
       // Randomiza as respostas de acordo com a pergunta
       this.shortRespostas(this.desafiosfiltrados[this.perguntaEscolhida].opcoesResposta);
     },
+
     async atualizaPontos() {
       const user = this.userLogado;
       user.totalPontos += this.gerenciaPontos()
