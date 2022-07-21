@@ -17,13 +17,9 @@
 </template>
 
 <script>
-import ProgressBar from 'vue-simple-progress'
 
 export default {
   name: 'SpritePersonagem',
-  components: {
-    ProgressBar,
-  },
   props: {
     personagem: { type: String, required: true },
     hp: { type: Number, required: true },
